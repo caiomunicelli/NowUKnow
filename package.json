@@ -1,0 +1,48 @@
+{
+  "name": "nowuknow",
+  "version": "1.0.0",
+  "description": "NowUKnow",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caiomunicelli/NowUKnow.git"
+  },
+  "keywords": [
+    "plataforma",
+    "de",
+    "aprendizado",
+    "hub",
+    "de",
+    "conhecimento",
+    "compartilhamento",
+    "de",
+    "conteúdo",
+    "discussão",
+    "de",
+    "tópicos",
+    "comunidade",
+    "educacional",
+    "aprendizado",
+    "democrático",
+    "conteúdo",
+    "gratuito",
+    "resolução",
+    "de",
+    "dúvidas",
+    "aprendizado",
+    "colaborativo",
+    "ensino",
+    "acessível",
+    "educação",
+    "online"
+  ],
+  "author": "Arthur Siqueira de Cunha, Caio Henrique Diniz Municelli, Lorenzo Messias Lacerda, Luiz Guilherme de Souza",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/caiomunicelli/NowUKnow/issues"
+  },
+  "homepage": "https://github.com/caiomunicelli/NowUKnow#readme"
+}
