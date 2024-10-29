@@ -13,3 +13,8 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Servidor rodando em https://nowuknow-dev.azurewebsites.net:${port}`);
 });
+
+
+setInterval(() => {
+  console.log('Servidor rodando e funcionando...');
+}, 30000);
