@@ -4,8 +4,7 @@
   "description": "NowUKnow",
   "main": "server/server.js",
   "scripts": {
-    "start": "node server/server.js",
-    "test": "mocha --recursive --require server/test/setup.js 'server/test/**/*.test.js'"
+    "start": "node server/server.js"
   },
   "repository": {
     "type": "git",
