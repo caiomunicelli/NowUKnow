@@ -32,7 +32,6 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "express": "^4.21.1",
-    "mssql": "^11.0.1",
-    "nowuknow": "file:"
+    "mssql": "^11.0.1"
   }
 }
