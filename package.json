@@ -5,7 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
-    "test": "echo \"No test command specified\" && exit 0"
+    "test": "mocha --recursive --require server/test/setup.js 'server/test/**/*.test.js'"
   },
   "repository": {
     "type": "git",
@@ -33,5 +33,9 @@
     "bcryptjs": "^2.4.3",
     "express": "^4.21.1",
     "mssql": "^11.0.1"
+  },
+  "devDependencies": {
+    "mocha": "^10.8.2",
+    "sinon": "^19.0.2"
   }
 }
