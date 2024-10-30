@@ -52,6 +52,7 @@ class UserRepository {
     }
 
     async createUser(nome, email, senha, tipo) {
+        console.log("Criando usuário")
         const pool = await this.dbConnection.connect();
         const hashedPassword = senha;
         const result = await pool.request()
@@ -60,7 +61,7 @@ class UserRepository {
             .input('senha', sql.VarChar, hashedPassword)
             .input('tipo', sql.VarChar, tipo)
             .query(`INSERT INTO dbo.Usuarios (nome, email, senha, tipo) OUTPUT INSERTED.* VALUES (@nome, @email, @senha, @tipo)`);
-        
+        console.log("Usuário criado")
         return result.recordset[0]; // Retorna o usuário criado
     }
 
