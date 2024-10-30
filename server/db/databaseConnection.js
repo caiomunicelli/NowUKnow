@@ -1,5 +1,5 @@
 const sql = require('mssql');
-const DatabaseConfig = require('./NowUKnow/server/config/databaseConfig.js');
+const DatabaseConfig = require('../config/databaseConfig.js');
 
 class DatabaseConnection {
     constructor() {
