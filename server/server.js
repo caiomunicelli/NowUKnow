@@ -4,8 +4,6 @@ const clientPath = path.join(__dirname, '../client/')
 const app = express();
 const port = process.env.PORT || 8080;
 const UserRepository = require('./controllers/userController.js');
-//require('dotenv').config();
-
 
 
 // Rota principal
@@ -83,5 +81,6 @@ app.delete('/users/:id', async (req, res) => {
 });
 // Inicia o servidor
 app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhost:${port}`);
+  console.log(`Servidor rodando em https://nowuknow-dev.azurewebsites.net:${port}`);
 });
+
