@@ -17,6 +17,7 @@ app.use(express.json());
 const userRepository = new UserRepository();
 // Rota: Criar um usuário (POST /users)
 app.post('/users', async (req, res) => {
+    console.log("Request POST recebido")
     const { nome, email, senha, tipo } = req.body;
     try {
         const user = await userRepository.createUser(nome, email, senha, tipo);
