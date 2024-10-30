@@ -1,10 +1,9 @@
 const express = require('express');
-const path = require('path');
-const clientPath = path.join(__dirname, '../client/')
 const app = express();
 const port = process.env.PORT || 8080;
 const UserRepository = require('./controllers/userController.js');
-
+const path = require('path');
+const clientPath = path.join(__dirname, '../client/')
 
 // Rota principal
 app.get('/', (req, res) => {
@@ -17,6 +16,7 @@ app.use(express.json());
 const userRepository = new UserRepository();
 // Rota: Criar um usuário (POST /users)
 app.post('/users', async (req, res) => {
+    console.log("Request POST recebido")
     const { nome, email, senha, tipo } = req.body;
     try {
         const user = await userRepository.createUser(nome, email, senha, tipo);
