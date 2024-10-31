@@ -6,7 +6,6 @@ const usuarioController = new UsuarioController(); // Instancia do controlador
 
 // Rota: Criar um usuário (POST /)
 router.post('/', async (req, res) => {
-    console.log("Request POST recebido");
     const { nome, email, senha, tipo } = req.body;
     try {
         const resultado = await usuarioController.criarUsuario(nome, email, senha, tipo);
@@ -50,7 +49,7 @@ router.put('/:id', async (req, res) => {
         if (!resultado.sucesso) {
             return res.status(400).json({ errors: resultado.erros });
         }
-        res.status(200).json(resultado.usuarioAtualizado); // Retorna o usuário atualizado
+        res.status(200).json(resultado.usuario); // Retorna o usuário atualizado
     } catch (error) {
         res.status(500).json({ error: 'Erro ao atualizar usuário', details: error.message });
     }

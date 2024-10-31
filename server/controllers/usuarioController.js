@@ -75,7 +75,15 @@ class UsuarioController {
     
     async listarUsuarios() {
         const usuarios = await userRepository.getAllUsers();
-        return { sucesso: true, usuario: usuarios };
+        return { sucesso: true, usuarios };
+    }
+
+    async listarUsuarioPorEmail(email) {
+        const usuario = await userRepository.getUserByEmail(email);
+        if (!usuario) {
+            return { sucesso: false, erros: [{ campo: 'id', mensagem: "Usuário não encontrado." }] };
+        }
+        return { sucesso: true, usuario };
     }
 
     async listarUsuarioPorId(id) {
@@ -83,9 +91,9 @@ class UsuarioController {
         if (!usuario) {
             return { sucesso: false, erros: [{ campo: 'id', mensagem: "Usuário não encontrado." }] };
         }
-        return { sucesso: true, usuario: usuario };
+        return { sucesso: true, usuario };
     }
-
+    
     async atualizarUsuario(id, nome, email, senha, tipo) {
         const usuarioExistente = await userRepository.getUserById(id);
         if (!usuarioExistente) {
