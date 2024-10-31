@@ -1,38 +1,45 @@
 const assert = require('assert');
-const UserRepository = require('../../controllers/userController.js');
+const UsuarioController = require('../../controllers/usuarioController.js');
 describe('UserRepository - Integration Tests', () => {
-    let userRepository;
-
+    let usuarioController;
+    const dataAtual = new Date();
+    const ano = dataAtual.getFullYear(); // Ano com 4 dígitos
+    const mes = String(dataAtual.getMonth() + 1).padStart(2, '0'); // Mês (0-11, então +1) com 2 dígitos
+    const dia = String(dataAtual.getDate()).padStart(2, '0'); // Dia com 2 dígitos
+    const horas = String(dataAtual.getHours()).padStart(2, '0'); // Horas com 2 dígitos
+    const minutos = String(dataAtual.getMinutes()).padStart(2, '0'); // Minutos com 2 dígitos
+    const segundos = String(dataAtual.getSeconds()).padStart(2, '0'); // Segundos com 2 dígitos
+    const sequenciaNumeros = `${ano}${mes}${dia}${horas}${minutos}${segundos}`; // Exemplo: "20241030235959" para 30 de outubro de 2024 às 23:59:59
     before(() => {
-        userRepository = new UserRepository();
+        usuarioController = new UsuarioController();
     });
 
     it('Cria um usuário no banco', async () => {
-        const result = await userRepository.createUser('John Doe', 'johndoe@example.com', 'password123', 'moderador');
-        assert.strictEqual(typeof result.id, 'number'); // Verifica se 'id' é um número
-        assert.strictEqual(result.nome, 'John Doe'); // Verifica se o nome é igual ao esperado
+        const result = await usuarioController.criarUsuario('LG Souza', 'lgsouza'+sequenciaNumeros+'@example.com', 'passWord@123', 'moderador');
+        assert.strictEqual(typeof result.usuario.id, 'number'); // Verifica se 'id' é um número
+        assert.strictEqual(result.usuario.nome, 'LG Souza'); // Verifica se o nome é igual ao esperado
     });
 
     it('Recupera um usuário no banco pelo ID', async () => {
-        const createdUser = await userRepository.createUser('Jane Doe', 'janedoe@example.com', 'password123', 'estudante');
-        const retrievedUser = await userRepository.getUserById(createdUser.id);
+        const createdUser = await usuarioController.criarUsuario('LG lgzito', 'lgzito'+sequenciaNumeros+ '@example.com', 'passWord@123', 'estudante');
+        const retrievedUser = await usuarioController.listarUsuarioPorId(createdUser.usuario.id);
 
         assert.deepStrictEqual(retrievedUser, createdUser); // Verifica se o usuário recuperado é igual ao criado
     });
 
     it('Atualiza um usuário no banco', async () => {
-        const createdUser = await userRepository.createUser('Mark Doe', 'markdoe@example.com', 'password123', 'estudante');
-        const updated = await userRepository.updateUser(createdUser.id, 'Mark Updated', 'markupdated@example.com', 'newpassword123', 'moderador');
-        assert.strictEqual(updated, true); // Verifica se a atualização foi bem-sucedida
-        const updatedUser = await userRepository.getUserById(createdUser.id);
-        assert.strictEqual(updatedUser.nome, 'Mark Updated'); // Verifica se o nome foi atualizado
+        const createdUser = await usuarioController.criarUsuario('Lorenzo Doe', 'lorenzo'+sequenciaNumeros+'@example.com', 'passWord@123', 'estudante');
+        const updated = await usuarioController.atualizarUsuario(createdUser.usuario.id, 'Lorenzo Updated', 'lorenzoUpdate'+sequenciaNumeros+'@example.com', 'newpassWord*123', 'moderador');
+        assert.strictEqual(updated.sucesso, true); // Verifica se a atualização foi bem-sucedida
+        const updatedUser = await usuarioController.listarUsuarioPorId(createdUser.usuario.id);
+        assert.strictEqual(updatedUser.usuario.nome, 'Lorenzo Updated'); // Verifica se o nome foi atualizado
     });
 
     it('Delete um usuário do banco', async () => {
-        const createdUser = await userRepository.createUser('Delete User', 'deleteuser@example.com', 'password123', 'moderador');
-        const deleted = await userRepository.deleteUser(createdUser.id);
-        assert.strictEqual(deleted, true); // Verifica se a deleção foi bem-sucedida
-        const retrievedUser = await userRepository.getUserById(createdUser.id);
-        assert.strictEqual(retrievedUser, undefined); // Verifica se o usuário foi realmente deletado
+        const createdUser = await usuarioController.criarUsuario('Delete User', 'deleteuser'+sequenciaNumeros+ '@example.com', 'passWord@123', 'moderador');
+        const deleted = await usuarioController.deletarUsuario(createdUser.usuario.id);
+        assert.strictEqual(deleted.sucesso, true); // Verifica se a deleção foi bem-sucedida
+        const retrievedUser = await usuarioController.listarUsuarioPorId(createdUser.id);
+        assert.strictEqual(retrievedUser.sucesso, false); // Verifica se o usuário foi realmente deletado
     });
 });

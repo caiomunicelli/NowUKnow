@@ -6,6 +6,19 @@
   "scripts": {
     "start": "node server/server.js"
   },
+  "nyc": {
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "include": [
+      "src/**/*.js"
+    ],
+    "exclude": [
+      "test/**/*.js"
+    ],
+    "all": true
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/caiomunicelli/NowUKnow.git"
@@ -36,6 +49,7 @@
   },
   "devDependencies": {
     "mocha": "^10.8.2",
+    "nyc": "^17.1.0",
     "sinon": "^19.0.2"
   }
 }
