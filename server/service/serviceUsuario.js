@@ -2,7 +2,8 @@ const sql = require('mssql');
 const DatabaseConnection = require('../db/databaseConnection.js');
 const bcrypt = require('bcryptjs');
 const Usuario = require('../models/usuario.js')
-
+const jwt = require('jsonwebtoken');
+const SECRET = process.env.SECRET_KEY;
 class UserRepository {
     constructor() {
         this.dbConnection = new DatabaseConnection();
@@ -51,7 +52,7 @@ class UserRepository {
         const pool = await this.dbConnection.connect();
         const hashedPassword = await bcrypt.hash(usuario.senha, 10);
         const result = await pool.request()
-            .input('id', sql.Int, id)
+            .input('id', sql.Int, usuario.id)
             .input('nome', sql.VarChar,  usuario.nome)
             .input('email', sql.VarChar, usuario.email)
             .input('senha', sql.VarChar, hashedPassword)

@@ -4,8 +4,8 @@ const UsuarioController = require('../controllers/usuarioController.js');
 
 const usuarioController = new UsuarioController(); // Instancia do controlador
 
-// Rota: Criar um usuário (POST /users)
-router.post('/users', async (req, res) => {
+// Rota: Criar um usuário (POST /)
+router.post('/', async (req, res) => {
     console.log("Request POST recebido");
     const { nome, email, senha, tipo } = req.body;
     try {
@@ -19,8 +19,8 @@ router.post('/users', async (req, res) => {
     }
 });
 
-// Rota: Listar todos os usuários (GET /users)
-router.get('/users', async (req, res) => {
+// Rota: Listar todos os usuários (GET /)
+router.get('/', async (req, res) => {
     try {
         const resultado = await usuarioController.listarUsuarios();
         res.status(200).json(resultado.usuarios); // Retorna a lista de usuários
@@ -29,8 +29,8 @@ router.get('/users', async (req, res) => {
     }
 });
 
-// Rota: Buscar usuário por ID (GET /users/:id)
-router.get('/users/:id', async (req, res) => {
+// Rota: Buscar usuário por ID (GET //:id)
+router.get('/:id', async (req, res) => {
     try {
         const resultado = await usuarioController.listarUsuarioPorId(req.params.id);
         if (!resultado.sucesso) {
@@ -42,8 +42,8 @@ router.get('/users/:id', async (req, res) => {
     }
 });
 
-// Rota: Atualizar usuário por ID (PUT /users/:id)
-router.put('/users/:id', async (req, res) => {
+// Rota: Atualizar usuário por ID (PUT //:id)
+router.put('/:id', async (req, res) => {
     const { nome, email, senha, tipo } = req.body;
     try {
         const resultado = await usuarioController.atualizarUsuario(req.params.id, nome, email, senha, tipo);
@@ -56,8 +56,8 @@ router.put('/users/:id', async (req, res) => {
     }
 });
 
-// Rota: Deletar usuário por ID (DELETE /users/:id)
-router.delete('/users/:id', async (req, res) => {
+// Rota: Deletar usuário por ID (DELETE //:id)
+router.delete('/:id', async (req, res) => {
     try {
         const resultado = await usuarioController.deletarUsuario(req.params.id);
         if (!resultado.sucesso) {

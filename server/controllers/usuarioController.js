@@ -7,6 +7,8 @@ const regex_maiusculo = /[A-Z]/;
 const regex_minusculo = /[a-z]/;
 const regex_email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const userRepository = new UserRepository()
+
 class UsuarioController {
     validarNome(nome) {
         if (!nome) {
@@ -67,17 +69,17 @@ class UsuarioController {
         if (!validacao.isValid) {
             return { sucesso: false, erros: validacao.errors };
         }
-        const novoUsuario = await UserRepository.createUser(usuario);
+        const novoUsuario = await userRepository.createUser(usuario);
         return { sucesso: true, usuario: novoUsuario };
     }
     
     async listarUsuarios() {
-        const usuarios = await UserRepository.getAllUsers();
+        const usuarios = await userRepository.getAllUsers();
         return { sucesso: true, usuarios };
     }
 
     async listarUsuarioPorId(id) {
-        const usuario = await UserRepository.getUserById(id);
+        const usuario = await userRepository.getUserById(id);
         if (!usuario) {
             return { sucesso: false, erros: [{ campo: 'id', mensagem: "Usuário não encontrado." }] };
         }
@@ -85,7 +87,7 @@ class UsuarioController {
     }
 
     async atualizarUsuario(id, nome, email, senha, tipo) {
-        const usuarioExistente = await UserRepository.getUserById(id);
+        const usuarioExistente = await userRepository.getUserById(id);
         if (!usuarioExistente) {
             return { sucesso: false, erros: [{ campo: 'id', mensagem: "Usuário não encontrado." }] };
         }
@@ -97,16 +99,16 @@ class UsuarioController {
             return { sucesso: false, erros: validacao.errors };
         }
 
-        const resultadoAtualizacao = await UserRepository.updateUser(usuarioAtualizado);
+        const resultadoAtualizacao = await userRepository.updateUser(usuarioAtualizado);
         return { sucesso: true, usuarioAtualizado: resultadoAtualizacao };
     }
 
     async deletarUsuario(id) {
-        const usuarioExistente = await UserRepository.getUserById(id);
+        const usuarioExistente = await userRepository.getUserById(id);
         if (!usuarioExistente) {
             return { sucesso: false, erros: [{ campo: 'id', mensagem: "Usuário não encontrado." }] };
         }
-        await UserRepository.deleteUser(id);
+        await userRepository.deleteUser(id);
         return { sucesso: true, mensagem: "Usuário deletado com sucesso." };
     }
 }
