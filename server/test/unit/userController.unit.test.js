@@ -29,8 +29,8 @@ describe('UserController - Unit Tests', () => {
         const result = await usuarioController.criarUsuario('Lorenzo Calca', 'lorenzo@example.com', 'new@Password123', 'estudante');
 
         assert.strictEqual(mockRequest.query.calledOnce, true); //Verifica quantidade de chamadas
-        console.log(result);
-        assert.deepStrictEqual(result, {sucesso:true, usuario: { id: 1,  nome: 'Lorenzo Calca', email: 'lorenzo@example.com' }}); //Verifica se o usuário foi criado
+        // console.log(result);
+        assert.deepStrictEqual(result, {sucesso:true, usuario: { id: 1,  nome: 'Lorenzo Calca', email: 'lorenzo@example.com' }});             //Verifica se o usuário foi criado
     });
 
     it('Recupera todos os usuários', async () => {
@@ -42,7 +42,7 @@ describe('UserController - Unit Tests', () => {
         const result = await usuarioController.listarUsuarios();
 
         assert.strictEqual(mockRequest.query.calledOnce, true); //Verifica quantidade de chamadas
-        assert.strictEqual(result.usuario.length, 2); //Verifica quantidade de registros
+        assert.strictEqual(result.usuarios.length, 2); //Verifica quantidade de registros
     });
 
     it('Recupera um usuário pelo ID', async () => {
@@ -69,7 +69,7 @@ describe('UserController - Unit Tests', () => {
         const result = await usuarioController.atualizarUsuario(1, 'Arthur Doe', 'arthur@example.com', 'new@Password123', 'admin');
 
         assert.strictEqual(mockRequest.query.calledOnce, true); //Verifica quantidade de chamadas
-        assert.deepStrictEqual(result, {  sucesso: true,  usuario: true }); //Verifica se o usuário foi atualizado
+        assert.deepStrictEqual(result, {  sucesso: true,  usuario: "Usuário alterado com sucesso." }); //Verifica se o usuário foi atualizado
     });
 
     it('Deleta um usuário pelo ID', async () => {

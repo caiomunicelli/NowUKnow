@@ -11,7 +11,7 @@ class DatabaseConnection {
         try {
             if (!this.pool) {
                 this.pool = await sql.connect(this.config);
-                console.log("Conexão bem-sucedida!");
+                // console.log("Conexão bem-sucedida!");
             }
             return this.pool;
         } catch (err) {
@@ -24,7 +24,7 @@ class DatabaseConnection {
         if (this.pool) {
             await this.pool.close();
             this.pool = null;
-            console.log("Conexão encerrada!");
+            // console.log("Conexão encerrada!");
         }
     }
 }

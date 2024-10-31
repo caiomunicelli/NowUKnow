@@ -1,12 +1,13 @@
-
+const Info = require('../info.js')
+info = new Info()
 // DatabaseConfig.js
 class DatabaseConfig {
     constructor() {
         this.config = {
-            user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            server: process.env.DB_SERVER,
-            database: process.env.DB_NAME,
+            user: info.DB_USER         || process.env.DB_USER,
+            password: info.DB_PASSWORD || process.env.DB_PASSWORD,
+            server: info.DB_SERVER     || process.env.DB_SERVER,
+            database: info.DB_NAME     || process.env.DB_NAME,
         };
     }
 

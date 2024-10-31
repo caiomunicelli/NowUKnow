@@ -29,7 +29,8 @@ describe('UserRepository - Integration Tests', () => {
 
     it('Atualiza um usuário no banco', async () => {
         const createdUser = await usuarioController.criarUsuario('Lorenzo Doe', 'lorenzo'+sequenciaNumeros+'@example.com', 'passWord@123', 'estudante');
-        const updated = await usuarioController.atualizarUsuario(createdUser.usuario.id, 'Lorenzo Updated', 'lorenzoUpdate'+sequenciaNumeros+'@example.com', 'newpassWord*123', 'moderador');
+        const updated = await usuarioController.atualizarUsuario(createdUser.usuario.id, 'Lorenzo Updated', 'lorenzoUpdate'+sequenciaNumeros+'@example.com', 
+            'newpassWord*123', 'moderador');
         assert.strictEqual(updated.sucesso, true); // Verifica se a atualização foi bem-sucedida
         const updatedUser = await usuarioController.listarUsuarioPorId(createdUser.usuario.id);
         assert.strictEqual(updatedUser.usuario.nome, 'Lorenzo Updated'); // Verifica se o nome foi atualizado

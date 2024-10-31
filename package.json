@@ -4,7 +4,8 @@
   "description": "NowUKnow",
   "main": "server/server.js",
   "scripts": {
-    "start": "node server/server.js"
+    "start": "node server/server.js",
+    "test": "mocha --recursive --require server/test/setup.js 'server/test/**/*.test.js'"
   },
   "nyc": {
     "reporter": [
@@ -44,6 +45,7 @@
   "homepage": "https://github.com/caiomunicelli/NowUKnow#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "mssql": "^11.0.1"
   },
