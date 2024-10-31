@@ -1,8 +1,6 @@
+
 // DatabaseConfig.js
-DB_USER=""
-DB_PASSWORD=""
-DB_SERVER=""
-DB_NAME=""
+
 class DatabaseConfig {
     constructor() {
         this.config = {
