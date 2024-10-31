@@ -1,0 +1,72 @@
+const express = require('express');
+const router = express.Router();
+const UsuarioController = require('../controllers/usuarioController.js');
+
+const usuarioController = new UsuarioController(); // Instancia do controlador
+
+// Rota: Criar um usuário (POST /users)
+router.post('/users', async (req, res) => {
+    console.log("Request POST recebido");
+    const { nome, email, senha, tipo } = req.body;
+    try {
+        const resultado = await usuarioController.criarUsuario(nome, email, senha, tipo);
+        if (!resultado.sucesso) {
+            return res.status(400).json({ errors: resultado.erros });
+        }
+        res.status(201).json(resultado.usuario); // Retorna o usuário criado
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao criar usuário', details: error.message });
+    }
+});
+
+// Rota: Listar todos os usuários (GET /users)
+router.get('/users', async (req, res) => {
+    try {
+        const resultado = await usuarioController.listarUsuarios();
+        res.status(200).json(resultado.usuarios); // Retorna a lista de usuários
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar usuários', details: error.message });
+    }
+});
+
+// Rota: Buscar usuário por ID (GET /users/:id)
+router.get('/users/:id', async (req, res) => {
+    try {
+        const resultado = await usuarioController.listarUsuarioPorId(req.params.id);
+        if (!resultado.sucesso) {
+            return res.status(404).json({ errors: resultado.erros });
+        }
+        res.status(200).json(resultado.usuario); // Retorna o usuário encontrado
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar usuário', details: error.message });
+    }
+});
+
+// Rota: Atualizar usuário por ID (PUT /users/:id)
+router.put('/users/:id', async (req, res) => {
+    const { nome, email, senha, tipo } = req.body;
+    try {
+        const resultado = await usuarioController.atualizarUsuario(req.params.id, nome, email, senha, tipo);
+        if (!resultado.sucesso) {
+            return res.status(400).json({ errors: resultado.erros });
+        }
+        res.status(200).json(resultado.usuarioAtualizado); // Retorna o usuário atualizado
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao atualizar usuário', details: error.message });
+    }
+});
+
+// Rota: Deletar usuário por ID (DELETE /users/:id)
+router.delete('/users/:id', async (req, res) => {
+    try {
+        const resultado = await usuarioController.deletarUsuario(req.params.id);
+        if (!resultado.sucesso) {
+            return res.status(404).json({ errors: resultado.erros });
+        }
+        res.status(200).json({ mensagem: resultado.mensagem }); // Retorna a mensagem de sucesso
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao deletar usuário', details: error.message });
+    }
+});
+
+module.exports = router;
