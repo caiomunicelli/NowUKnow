@@ -1,3 +1,6 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
 name: Build and deploy Node.js app to Azure Web App - nowuknow-dev
 
 on:
@@ -50,18 +53,13 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_084AD036B2A048E8ADA784A001435198 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_8BF4BBCF6E5847A580A1FBB63E1CF647 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9986BF60F4B443CF9D80C2643287BEC7 }}
-
-      - name: Clean up existing files on Azure Web App
-        run: |
-          az webapp delete --name nowuknow-dev --resource-group pbl
-          az webapp create --name nowuknow-dev --resource-group pbl --plan ASP-PBL-af4c
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2BE814E8E6BA4027B436EFD0AC77510C }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_53AD8C9C0C4D4771991C74B989ABFB4D }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_936F5A8939CF4D6E844ABFFCEF7D8654 }}
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
@@ -70,3 +68,4 @@ jobs:
           app-name: 'nowuknow-dev'
           slot-name: 'Production'
           package: .
+          
