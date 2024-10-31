@@ -4,6 +4,7 @@ const port = process.env.PORT || 8080;
 const path = require('path');
 const clientPath = path.join(__dirname, '../client/')
 
+app.use(express.json());
 
 // Rota principal
 app.get('/', (req, res) => {
