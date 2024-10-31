@@ -1,22 +1,20 @@
 const sql = require('mssql');
 const DatabaseConnection = require('../db/databaseConnection.js');
-const bcrypt = require('bcryptjs');
-const Usuario = require('../models/usuario.js')
 
 class UserRepository {
     constructor() {
         this.dbConnection = new DatabaseConnection();
     }
 
-    async createUser(usuario) {
+    async createUser(nome, email, senha, tipo) {
         console.log("Criando usuário")
         const pool = await this.dbConnection.connect();
-        const hashedPassword = await bcrypt.hash(usuario.senha, 10);
+        const hashedPassword = senha;
         const result = await pool.request()
-            .input('nome', sql.VarChar,  usuario.nome)
-            .input('email', sql.VarChar, usuario.email)
+            .input('nome', sql.VarChar, nome)
+            .input('email', sql.VarChar, email)
             .input('senha', sql.VarChar, hashedPassword)
-            .input('tipo', sql.VarChar,  usuario.tipo)
+            .input('tipo', sql.VarChar, tipo)
             .query(`INSERT INTO dbo.Usuarios (nome, email, senha, tipo) OUTPUT INSERTED.* VALUES (@nome, @email, @senha, @tipo)`);
         console.log("Usuário criado")
         return result.recordset[0]; // Retorna o usuário criado
@@ -38,24 +36,15 @@ class UserRepository {
         return result.recordset[0]; // Retorna o usuário encontrado ou undefined
     }
 
-    async getUserByEmail(email) {
+    async updateUser(id, nome, email, senha, tipo) {
         const pool = await this.dbConnection.connect();
-        const result = await pool.request()
-            .input('email', sql.VarChar, email)
-            .query('SELECT * FROM dbo.Usuarios WHERE Email = @email');
-        
-        return result.recordset[0]; // Retorna o usuário encontrado ou undefined
-    }
-
-    async updateUser(usuario) {
-        const pool = await this.dbConnection.connect();
-        const hashedPassword = await bcrypt.hash(usuario.senha, 10);
+        const hashedPassword = senha ? senha : undefined;
         const result = await pool.request()
             .input('id', sql.Int, id)
-            .input('nome', sql.VarChar,  usuario.nome)
-            .input('email', sql.VarChar, usuario.email)
+            .input('nome', sql.VarChar, nome)
+            .input('email', sql.VarChar, email)
             .input('senha', sql.VarChar, hashedPassword)
-            .input('tipo', sql.VarChar,  usuario.tipo)
+            .input('tipo', sql.VarChar, tipo)
             .query(`UPDATE dbo.Usuarios SET nome = @nome, email = @email, senha = COALESCE(@senha, senha), tipo = @tipo WHERE Id = @id`);
         
         return result.rowsAffected[0] > 0; // Retorna true se a atualização foi bem-sucedida
