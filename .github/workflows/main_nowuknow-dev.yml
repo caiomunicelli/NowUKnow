@@ -60,8 +60,8 @@ jobs:
 
       - name: Clean up existing files on Azure Web App
         run: |
-          az webapp delete --name nowuknow-dev --resource-group <YourResourceGroup>
-          az webapp create --name nowuknow-dev --resource-group <YourResourceGroup> --plan <YourAppServicePlan>
+          az webapp delete --name nowuknow-dev --resource-group pbl
+          az webapp create --name nowuknow-dev --resource-group pbl --plan ASP-PBL-af4c
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
