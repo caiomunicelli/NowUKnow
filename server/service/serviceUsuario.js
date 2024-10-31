@@ -59,7 +59,7 @@ class UserRepository {
             .input('tipo', sql.VarChar,  usuario.tipo)
             .query(`UPDATE dbo.Usuarios SET nome = @nome, email = @email, senha = COALESCE(@senha, senha), tipo = @tipo WHERE Id = @id`);
         
-        return result.rowsAffected[0] > 0; // Retorna true se a atualização foi bem-sucedida
+        return result.rowsAffected[0] > 0 ? "Usuário alterado com sucesso." : "Nenhum usuário alterado."; // Retorna true se a atualização foi bem-sucedida
     }
 
     async deleteUser(id) {
