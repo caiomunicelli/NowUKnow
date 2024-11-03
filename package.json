@@ -4,7 +4,9 @@
   "description": "NowUKnow",
   "main": "server/server.js",
   "scripts": {
-    "start": "node server/server.js"
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "node server/server.js",
+    "client": "react-scripts start"
   },
   "nyc": {
     "reporter": [
@@ -44,6 +46,7 @@
   "homepage": "https://github.com/caiomunicelli/NowUKnow#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "concurrently": "^9.0.1",
     "express": "^4.21.1",
     "mssql": "^11.0.1"
   },
