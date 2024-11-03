@@ -2,8 +2,6 @@ const sql = require('mssql');
 const DatabaseConnection = require('../db/databaseConnection.js');
 const bcrypt = require('bcryptjs');
 const Usuario = require('../models/usuario.js')
-const jwt = require('jsonwebtoken');
-const SECRET = process.env.SECRET_KEY;
 class UserRepository {
     constructor() {
         this.dbConnection = new DatabaseConnection();
