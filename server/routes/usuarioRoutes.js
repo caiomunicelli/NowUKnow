@@ -29,12 +29,13 @@ router.post('/login', async (req, res) => {
         if (!resultado.sucesso)
             return res.status(400).json({ errors: resultado.erros });
         else{
-            if(resultado.usuario.senha === hashedPassword){
+            console.log()
+            if(resultado.usuario.senha == hashedPassword){
                 const token = jwt.sign({usuarioId:resultado.usuario.id}, SECRET, {expiresIn: EXPIRES})
                 res.status(201).json({auth:true, token});
             }
             else{
-                return res.status(401).json({errors: 'Credenciais inválidas'});
+                return res.status(401).json({errors: 'Credenciais inválidas' + resultado.usuario.senha + '  ' +  hashedPassword});
             }
         }
     } catch (error) {
