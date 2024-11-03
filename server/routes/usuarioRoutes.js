@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const UsuarioController = require('../controllers/usuarioController.js');
-
+const verifyJWT = require('../service/jwtService.js');
 const usuarioController = new UsuarioController(); // Instancia do controlador
-
+const jwt = require('jsonwebtoken');
+const { hash } = require('bcryptjs');
+const SECRET = process.env.SECRET_KEY;
+const EXPIRES = 30000;
 // Rota: Criar um usuário (POST /)
 router.post('/', async (req, res) => {
     const { nome, email, senha, tipo } = req.body;
@@ -17,7 +20,35 @@ router.post('/', async (req, res) => {
         res.status(500).json({ error: 'Erro ao criar usuário', details: error.message });
     }
 });
+// Rota:Realiza login (POST /)
+router.post('/login', async (req, res) => {
+    const { email, senha } = req.body;
+    try {
+        const hashedPassword = await bcrypt.hash(senha, 10);
+        const resultado = await usuarioController.listarUsuarioPorEmail(email);
+        if (!resultado.sucesso)
+            return res.status(400).json({ errors: resultado.erros });
+        else{
+            if(resultado.usuario.senha === hashedPassword){
+                const token = jwt.sign({usuarioId:resultado.usuario.id}, SECRET, {expiresIn: EXPIRES})
+                res.status(201).json({auth:true, token});
+            }
+            else{
+                return res.status(401).json({errors: 'Credenciais inválidas'});
+            }
+        }
+    } catch (error) {
+        res.status(500).json({ errors: 'Credenciais inválidas', details: error.message });
+    }
+});
+router.post('/logout', async (req, res) => {
+    try {
+        res.status(201).json({logout:true});
+    } catch (error) {
+        res.status(500).json({ errors: 'Credenciais inválidas', details: error.message });
 
+    }
+});
 // Rota: Listar todos os usuários (GET /)
 router.get('/', async (req, res) => {
     try {
@@ -29,7 +60,7 @@ router.get('/', async (req, res) => {
 });
 
 // Rota: Buscar usuário por ID (GET //:id)
-router.get('/:id', async (req, res) => {
+router.get('/:id', verifyJWT, async (req, res) => {
     try {
         const resultado = await usuarioController.listarUsuarioPorId(req.params.id);
         if (!resultado.sucesso) {
@@ -42,7 +73,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Rota: Atualizar usuário por ID (PUT //:id)
-router.put('/:id', async (req, res) => {
+router.put('/:id', verifyJWT, async (req, res) => {
     const { nome, email, senha, tipo } = req.body;
     try {
         const resultado = await usuarioController.atualizarUsuario(req.params.id, nome, email, senha, tipo);
@@ -56,7 +87,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Rota: Deletar usuário por ID (DELETE //:id)
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyJWT, async (req, res) => {
     try {
         const resultado = await usuarioController.deletarUsuario(req.params.id);
         if (!resultado.sucesso) {
