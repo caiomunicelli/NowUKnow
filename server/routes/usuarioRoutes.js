@@ -4,7 +4,7 @@ const UsuarioController = require('../controllers/usuarioController.js');
 const verifyJWT = require('../service/jwtService.js');
 const usuarioController = new UsuarioController(); // Instancia do controlador
 const jwt = require('jsonwebtoken');
-const { hash } = require('bcryptjs');
+const { compare } = require('bcryptjs');
 const SECRET = process.env.SECRET_KEY;
 const EXPIRES = 30000;
 // Rota: Criar um usuário (POST /)
@@ -24,18 +24,18 @@ router.post('/', async (req, res) => {
 router.post('/login', async (req, res) => {
     const { email, senha } = req.body;
     try {
-        const hashedPassword = await hash(senha, 10);
         const resultado = await usuarioController.listarUsuarioPorEmail(email);
         if (!resultado.sucesso)
             return res.status(400).json({ errors: resultado.erros });
         else{
             console.log()
-            if(resultado.usuario.senha == hashedPassword){
+            const isPasswordMatch = await compare(senha, resultado.usuario.senha);
+            if(isPasswordMatch){
                 const token = jwt.sign({usuarioId:resultado.usuario.id}, SECRET, {expiresIn: EXPIRES})
                 res.status(201).json({auth:true, token});
             }
             else{
-                return res.status(401).json({errors: 'Credenciais inválidas' + resultado.usuario.senha + '  ' +  hashedPassword});
+                return res.status(401).json({errors: 'Credenciais inválidas'});
             }
         }
     } catch (error) {
