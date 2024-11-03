@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
 router.post('/login', async (req, res) => {
     const { email, senha } = req.body;
     try {
-        const hashedPassword = await bcrypt.hash(senha, 10);
+        const hashedPassword = await hash(senha, 10);
         const resultado = await usuarioController.listarUsuarioPorEmail(email);
         if (!resultado.sucesso)
             return res.status(400).json({ errors: resultado.erros });
