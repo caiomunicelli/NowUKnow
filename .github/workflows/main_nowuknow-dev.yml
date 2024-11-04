@@ -68,4 +68,5 @@ jobs:
           app-name: 'nowuknow-dev'
           slot-name: 'Production'
           package: .
+          enable-logging: true
           
