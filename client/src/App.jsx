@@ -20,7 +20,13 @@ function App() {
             <Route path="/" element={<Home />} />{" "}
             <Route path="/login" element={<Login />} />{" "}
             <Route path="/signup" element={<Signup />} />{" "}
-            <Route path="*" element={<Navigate to="/" />} />{" "}
+            <Route
+              render={({ location }) => {
+                if (!location.pathname.startsWith("/api/")) {
+                  return <Redirect to="/" />;
+                }
+              }}
+            />
           </Routes>
         </main>
         <Footer />
