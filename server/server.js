@@ -12,9 +12,8 @@ app.get('/', (req, res) => {
 });
 
 const usuarioRoutes = require('./routes/usuarioRoutes.js')
-app.use('/usuario', usuarioRoutes);
-const conteudoRoutes = require('./routes/conteudoRoutes.js')
-app.use('/conteudo', conteudoRoutes);
+app.use('/users', usuarioRoutes);
+
 
 // Inicia o servidor
 app.listen(port, () => {
