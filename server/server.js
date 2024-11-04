@@ -12,17 +12,17 @@ app.use(express.json());
 const usuarioRoutes = require("./routes/usuarioRoutes.js");
 app.use("/api/users", usuarioRoutes);
 
-//Rota de Discussoes
-const discussoesRoutes = require("./routes/discussaoRoutes.js");
-app.use("/api/discussoes", discussoesRoutes);
+// //Rota de Discussoes
+// const discussoesRoutes = require("./routes/discussaoRoutes.js");
+// app.use("/api/discussoes", discussoesRoutes);
 
-//Rota de Respostas
-const respostaRoutes = require("./routes/respostaRoutes.js");
-app.use("/api/respostas", respostaRoutes);
+// //Rota de Respostas
+// const respostaRoutes = require("./routes/respostaRoutes.js");
+// app.use("/api/respostas", respostaRoutes);
 
-//Rota de Avaliacoes
-const avaliacaoRoutes = require("./routes/avaliacaoRoutes.js");
-app.use("/api/avaliacoes", avaliacaoRoutes);
+// //Rota de Avaliacoes
+// const avaliacaoRoutes = require("./routes/avaliacaoRoutes.js");
+// app.use("/api/avaliacoes", avaliacaoRoutes);
 
 app.use(express.static(clientPath));
 
