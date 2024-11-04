@@ -4,7 +4,8 @@
   "description": "NowUKnow",
   "main": "server/server.js",
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "npm run build && node server/server.js",
+    "build": "cd client && npm install && npm run build",
     "server": "node server/server.js",
     "client": "npm run dev --prefix client"
   },
@@ -47,6 +48,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "concurrently": "^9.0.1",
+    "cors": "^2.8.5",
     "express": "^4.21.1",
     "mssql": "^11.0.1"
   },
