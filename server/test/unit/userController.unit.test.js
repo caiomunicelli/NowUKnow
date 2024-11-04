@@ -2,14 +2,16 @@ const assert = require('assert');
 const sinon = require('sinon');
 const sql = require('mssql');
 const DatabaseConnection = require('../../db/databaseConnection.js');
-const UserRepository = require('../../controllers/userController.js');
+const UsuarioController = require('../../controllers/usuarioController.js');
+const UserRepository = require('../../service/serviceUsuario');
+
 
 describe('UserController - Unit Tests', () => {
-    let userRepository;
+    let usuarioController;
     let dbStub;
 
     beforeEach(() => {
-        userRepository = new UserRepository();
+        usuarioController = new UsuarioController();
         dbStub = sinon.stub(DatabaseConnection.prototype, 'connect');
     });
 
@@ -24,10 +26,11 @@ describe('UserController - Unit Tests', () => {
         };
         dbStub.resolves({ request: () => mockRequest });
 
-        const result = await userRepository.createUser('Lorenzo Calca', 'lorenzo@example.com', 'new@Password', 'admin');
+        const result = await usuarioController.criarUsuario('Lorenzo Calca', 'lorenzo@example.com', 'new@Password123', 'estudante');
 
         assert.strictEqual(mockRequest.query.calledOnce, true); //Verifica quantidade de chamadas
-        assert.deepStrictEqual(result, { id: 1, nome: 'Lorenzo Calca', email: 'lorenzo@example.com' }); //Verifica se o usuário foi criado
+        console.log(result);
+        assert.deepStrictEqual(result, {sucesso:true, usuario: { id: 1,  nome: 'Lorenzo Calca', email: 'lorenzo@example.com' }}); //Verifica se o usuário foi criado
     });
 
     it('Recupera todos os usuários', async () => {
@@ -36,10 +39,10 @@ describe('UserController - Unit Tests', () => {
         };
         dbStub.resolves({ request: () => mockRequest });
 
-        const result = await userRepository.getAllUsers();
+        const result = await usuarioController.listarUsuarios();
 
         assert.strictEqual(mockRequest.query.calledOnce, true); //Verifica quantidade de chamadas
-        assert.strictEqual(result.length, 2); //Verifica quantidade de registros
+        assert.strictEqual(result.usuario.length, 2); //Verifica quantidade de registros
     });
 
     it('Recupera um usuário pelo ID', async () => {
@@ -49,23 +52,24 @@ describe('UserController - Unit Tests', () => {
         };
         dbStub.resolves({ request: () => mockRequest });
 
-        const result = await userRepository.getUserById(1);
+        const result = await usuarioController.listarUsuarioPorId(1);
 
         assert.strictEqual(mockRequest.query.calledOnce, true); //Verifica quantidade de chamadas
-        assert.deepStrictEqual(result, { id: 1, nome: 'Caio Calca' }); //Verifica se o usuário foi recuperado
+        assert.deepStrictEqual(result, {sucesso:true, usuario:{ id: 1, nome: 'Caio Calca' }}); //Verifica se o usuário foi recuperado
     });
 
     it('Atualiza um usuário existente', async () => {
         const mockRequest = {
             input: sinon.stub().returnsThis(),
-            query: sinon.stub().resolves({ rowsAffected: [1] })
+            query: sinon.stub().resolves({rowsAffected:[1]})
         };
+        sinon.stub(UserRepository.prototype, 'getUserById').resolves({ id: 1, nome: 'LG Souza' });
         dbStub.resolves({ request: () => mockRequest });
 
-        const result = await userRepository.updateUser(1, 'Arthur Doe', 'arthur@example.com', 'new@Password', 'admin');
+        const result = await usuarioController.atualizarUsuario(1, 'Arthur Doe', 'arthur@example.com', 'new@Password123', 'admin');
 
         assert.strictEqual(mockRequest.query.calledOnce, true); //Verifica quantidade de chamadas
-        assert.strictEqual(result, true); //Verifica se o usuário foi atualizado
+        assert.deepStrictEqual(result, {  sucesso: true,  usuario: true }); //Verifica se o usuário foi atualizado
     });
 
     it('Deleta um usuário pelo ID', async () => {
@@ -75,9 +79,9 @@ describe('UserController - Unit Tests', () => {
         };
         dbStub.resolves({ request: () => mockRequest });
 
-        const result = await userRepository.deleteUser(1);
+        const result = await usuarioController.deletarUsuario(1);
 
         assert.strictEqual(mockRequest.query.calledOnce, true); //Verifica quantidade de chamadas
-        assert.strictEqual(result, true); //Verifica se o usuário foi deletado
+        assert.deepStrictEqual(result, { mensagem: 'Usuário deletado com sucesso.',  sucesso: true}); //Verifica se o usuário foi deletado
     });
 });

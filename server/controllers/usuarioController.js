@@ -63,7 +63,7 @@ class UsuarioController {
     }
 
     async criarUsuario(nome, email, senha, tipo) {
-        const usuario = new Usuario(nome, email, senha, tipo);
+        const usuario = new Usuario(0,nome, email, senha, tipo);
         const validacao = this.validarDados(usuario);
 
         if (!validacao.isValid) {
@@ -78,6 +78,14 @@ class UsuarioController {
         return { sucesso: true, usuarios };
     }
 
+    async listarUsuarioPorEmail(email) {
+        const usuario = await userRepository.getUserByEmail(email);
+        if (!usuario) {
+            return { sucesso: false, erros: [{ campo: 'id', mensagem: "Usuário não encontrado." }] };
+        }
+        return { sucesso: true, usuario };
+    }
+
     async listarUsuarioPorId(id) {
         const usuario = await userRepository.getUserById(id);
         if (!usuario) {
@@ -85,14 +93,14 @@ class UsuarioController {
         }
         return { sucesso: true, usuario };
     }
-
+    
     async atualizarUsuario(id, nome, email, senha, tipo) {
         const usuarioExistente = await userRepository.getUserById(id);
         if (!usuarioExistente) {
             return { sucesso: false, erros: [{ campo: 'id', mensagem: "Usuário não encontrado." }] };
         }
 
-        const usuarioAtualizado = { nome, email, senha, tipo };
+        const usuarioAtualizado =  new Usuario(id,nome, email, senha, tipo);
         const validacao = this.validarDados(usuarioAtualizado);
 
         if (!validacao.isValid) {
@@ -100,7 +108,7 @@ class UsuarioController {
         }
 
         const resultadoAtualizacao = await userRepository.updateUser(usuarioAtualizado);
-        return { sucesso: true, usuarioAtualizado: resultadoAtualizacao };
+        return { sucesso: true, usuario: resultadoAtualizacao };
     }
 
     async deletarUsuario(id) {
