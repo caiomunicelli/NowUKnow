@@ -6,7 +6,7 @@
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "node server/server.js",
-    "client": "react-scripts start"
+    "client": "npm run dev --prefix client"
   },
   "nyc": {
     "reporter": [

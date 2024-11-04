@@ -1,0 +1,10 @@
+.nowuknow-navbar {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.nowuknow-search {
+    display: flex;
+    flex-grow: 1;
+    padding: 0 20px;
+}
