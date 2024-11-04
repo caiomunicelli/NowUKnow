@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const DiscussaoController = require('../controllers/discussaoController.js');
+const verifyJWT = require('../service/jwtService.js');
 
 const discussaoController = new DiscussaoController(); // Instancia do controlador
 
 // Rota: Criar uma discussão (POST /)
-router.post('/', async (req, res) => {
+router.post('/', verifyJWT, async (req, res) => {
     console.log("Request POST recebido");
     const { usuarioId, conteudoId, pergunta } = req.body;
     try {
@@ -43,7 +44,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Rota: Atualizar discussão por ID (PUT /:id)
-router.put('/:id', async (req, res) => {
+router.put('/:id', verifyJWT, async (req, res) => {
     const { usuarioId, conteudoId, pergunta } = req.body;
     try {
         const resultado = await discussaoController.atualizarDiscussao(req.params.id, usuarioId, conteudoId, pergunta);
@@ -57,7 +58,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Rota: Deletar discussão por ID (DELETE /:id)
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyJWT, async (req, res) => {
     try {
         const resultado = await discussaoController.deletarDiscussao(req.params.id);
         if (!resultado.sucesso) {

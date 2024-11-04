@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const AvaliacaoController = require('../controllers/avaliacaoController.js');
-
+const verifyJWT = require('../service/jwtService.js');
 const avaliacaoController = new AvaliacaoController(); // Instância do controlador
 
 // Rota: Criar uma avaliação (POST /)
-router.post('/', async (req, res) => {
+router.post('/', verifyJWT, async (req, res) => {
     console.log("Request POST recebido");
     const { usuario_id, conteudo_id, nota, comentario } = req.body;
     try {
@@ -43,7 +43,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Rota: Atualizar avaliação por ID (PUT /:id)
-router.put('/:id', async (req, res) => {
+router.put('/:id', verifyJWT, async (req, res) => {
     const { usuario_id, conteudo_id, nota, comentario } = req.body;
     try {
         const resultado = await avaliacaoController.atualizarAvaliacao(req.params.id, usuario_id, conteudo_id, nota, comentario);

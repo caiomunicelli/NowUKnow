@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const RespostaController = require('../controllers/respostaController.js');
+const verifyJWT = require('../service/jwtService.js');
 
 const respostaController = new RespostaController(); // Instância do controlador
 
 // Rota: Criar uma resposta (POST /)
-router.post('/', async (req, res) => {
+router.post('/', verifyJWT, async (req, res) => {
     console.log("Request POST recebido");
     const { usuario_id, discussao_id, resposta } = req.body;
     try {
@@ -43,7 +44,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Rota: Atualizar resposta por ID (PUT /:id)
-router.put('/:id', async (req, res) => {
+router.put('/:id',verifyJWT, async (req, res) => {
     const { usuario_id, discussao_id, resposta } = req.body;
     try {
         const resultado = await respostaController.atualizarResposta(req.params.id, usuario_id, discussao_id, resposta);
@@ -57,7 +58,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Rota: Deletar resposta por ID (DELETE /:id)
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyJWT, async (req, res) => {
     try {
         const resultado = await respostaController.deletarResposta(req.params.id);
         if (!resultado.sucesso) {
