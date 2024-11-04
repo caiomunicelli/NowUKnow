@@ -4,11 +4,8 @@
   "description": "NowUKnow",
   "main": "server/server.js",
   "scripts": {
-    "start": "npm run build && node server/server.js",
-    "build": "cd client && npm install && npm run build",
-    "server": "node server/server.js",
-    "client": "npm run dev --prefix client"
-  },
+    "start": "node server/server.js"
+    },
   "nyc": {
     "reporter": [
       "text",
