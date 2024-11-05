@@ -1,6 +1,8 @@
 // components/index.js
+export { AuthProvider, useAuth, AuthContext } from "./context/AuthProvider";
+export { default as PrivateRoute } from "./context/PrivateRoute";
 export { default as Navbar } from "./Navbar";
 export { default as Footer } from "./Footer";
-export { default as Home } from "./Home";
-export { default as Login } from "./Login";
-export { default as Signup } from "./Signup";
+export { default as Home } from "./pages/Home";
+export { default as Login } from "./pages/Login";
+export { default as Signup } from "./pages/Signup";

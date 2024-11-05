@@ -1,6 +1,14 @@
-import { useState } from "react";
+import React from "react";
 import "./App.css";
-import { Navbar, Footer, Home, Login, Signup } from "./components";
+import {
+  Navbar,
+  Footer,
+  Home,
+  Login,
+  Signup,
+  AuthProvider,
+  PrivateRoute,
+} from "./components";
 import {
   BrowserRouter as Router,
   Route,
@@ -10,28 +18,24 @@ import {
 
 function App() {
   return (
-    <Router>
-      <div className="nowuknow-app">
-        <header className="nowuknow-header">
-          <Navbar />
-        </header>
-        <main className="nowuknow-main">
-          <Routes>
-            <Route path="/" element={<Home />} />{" "}
-            <Route path="/login" element={<Login />} />{" "}
-            <Route path="/signup" element={<Signup />} />{" "}
-            <Route
-              render={({ location }) => {
-                if (!location.pathname.startsWith("/api/")) {
-                  return <Redirect to="/" />;
-                }
-              }}
-            />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="nowuknow-app">
+          <header className="nowuknow-header">
+            <Navbar />
+          </header>
+          <main className="nowuknow-main">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

@@ -1,9 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const port = process.env.PORT || 8080;
 const path = require("path");
 const clientPath = path.join(__dirname, "../client/dist");
+const port = process.env.PORT || 8080;
 
 app.use(cors());
 app.use(express.json());

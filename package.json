@@ -4,8 +4,10 @@
   "description": "NowUKnow",
   "main": "server/server.js",
   "scripts": {
-    "start": "node server/server.js"
-    },
+    "start": "node server/server.js",
+    "build-front": "cd client && npm install && npm run build",
+    "test-connection": "node server/testconnection.js"
+  },
   "nyc": {
     "reporter": [
       "text",
@@ -46,8 +48,10 @@
     "bcryptjs": "^2.4.3",
     "concurrently": "^9.0.1",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.21.1",
-    "mssql": "^11.0.1"
+    "mssql": "^11.0.1",
+    "mysql2": "^3.11.4"
   },
   "devDependencies": {
     "mocha": "^10.8.2",
