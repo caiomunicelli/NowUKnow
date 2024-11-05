@@ -47,7 +47,7 @@ router.get('/:id', async (req, res) => {
 router.put('/:id',verifyJWT, async (req, res) => {
     const { discussao_id, resposta } = req.body;
     try {
-        const resultado = await respostaController.atualizarResposta(req.params.id, usuarioId, discussao_id, resposta);
+        const resultado = await respostaController.atualizarResposta(req.params.id, req.usuarioId, discussao_id, resposta);
         if (!resultado.sucesso) {
             return res.status(400).json({ errors: resultado.erros });
         }
