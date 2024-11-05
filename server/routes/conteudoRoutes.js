@@ -6,9 +6,9 @@ const conteudoController = new ConteudoController(); // Instância do controlado
 
 // Rota: Criar um conteúdo (POST /)
 router.post('/', verifyJWT, async (req, res) => {
-    const { titulo, descricao, tipo_conteudo, autor_id, nivel_dificuldade, duracao, categoria } = req.body;
+    const { titulo, descricao, tipo_conteudo, nivel_dificuldade, duracao, categoria } = req.body;
     try {
-        const resultado = await conteudoController.criarConteudo(titulo, descricao, tipo_conteudo, autor_id, nivel_dificuldade, duracao, categoria);
+        const resultado = await conteudoController.criarConteudo(titulo, descricao, tipo_conteudo, req.usuarioId, nivel_dificuldade, duracao, categoria);
         if (!resultado.sucesso) {
             return res.status(400).json({ errors: resultado.erros });
         }
@@ -43,9 +43,9 @@ router.get('/:id', async (req, res) => {
 
 // Rota: Atualizar conteúdo por ID (PUT /:id)
 router.put('/:id', verifyJWT, async (req, res) => {
-    const { titulo, descricao, tipo_conteudo, autor_id, nivel_dificuldade, duracao, categoria } = req.body;
+    const { titulo, descricao, tipo_conteudo, nivel_dificuldade, duracao, categoria } = req.body;
     try {
-        const resultado = await conteudoController.atualizarConteudo(req.params.id, titulo, descricao, tipo_conteudo, autor_id, nivel_dificuldade, duracao, categoria);
+        const resultado = await conteudoController.atualizarConteudo(req.params.id, titulo, descricao, tipo_conteudo, req.usuarioId, nivel_dificuldade, duracao, categoria);
         if (!resultado.sucesso) {
             return res.status(400).json({ errors: resultado.erros });
         }

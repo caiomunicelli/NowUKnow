@@ -5,7 +5,7 @@ const verifyJWT = require('../service/jwtService.js');
 const usuarioController = new UsuarioController(); // Instancia do controlador
 const jwt = require('jsonwebtoken');
 const { compare } = require('bcryptjs');
-const SECRET = process.env.SECRET_KEY;
+const SECRET = process.env.SECRET_KEY || "zubas123";
 const EXPIRES = 30000;
 // Rota: Criar um usuário (POST /)
 router.post('/', async (req, res) => {
@@ -51,7 +51,7 @@ router.post('/logout', async (req, res) => {
     }
 });
 // Rota: Listar todos os usuários (GET /)
-router.get('/', async (req, res) => {
+router.get('/all', async (req, res) => {
     try {
         const resultado = await usuarioController.listarUsuarios();
         res.status(200).json(resultado.usuarios); // Retorna a lista de usuários
@@ -61,9 +61,9 @@ router.get('/', async (req, res) => {
 });
 
 // Rota: Buscar usuário por ID (GET //:id)
-router.get('/:id', verifyJWT, async (req, res) => {
+router.get('/', verifyJWT, async (req, res) => {
     try {
-        const resultado = await usuarioController.listarUsuarioPorId(req.params.id);
+        const resultado = await usuarioController.listarUsuarioPorId(req.usuarioId);
         if (!resultado.sucesso) {
             return res.status(404).json({ errors: resultado.erros });
         }
@@ -74,10 +74,10 @@ router.get('/:id', verifyJWT, async (req, res) => {
 });
 
 // Rota: Atualizar usuário por ID (PUT //:id)
-router.put('/:id', verifyJWT, async (req, res) => {
+router.put('/', verifyJWT, async (req, res) => {
     const { nome, email, senha, tipo } = req.body;
     try {
-        const resultado = await usuarioController.atualizarUsuario(req.params.id, nome, email, senha, tipo);
+        const resultado = await usuarioController.atualizarUsuario(req.usuarioId, nome, email, senha, tipo);
         if (!resultado.sucesso) {
             return res.status(400).json({ errors: resultado.erros });
         }
@@ -88,9 +88,9 @@ router.put('/:id', verifyJWT, async (req, res) => {
 });
 
 // Rota: Deletar usuário por ID (DELETE //:id)
-router.delete('/:id', verifyJWT, async (req, res) => {
+router.delete('/', verifyJWT, async (req, res) => {
     try {
-        const resultado = await usuarioController.deletarUsuario(req.params.id);
+        const resultado = await usuarioController.deletarUsuario(req.usuarioId);
         if (!resultado.sucesso) {
             return res.status(404).json({ errors: resultado.erros });
         }

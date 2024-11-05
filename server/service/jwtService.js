@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const SECRET = process.env.SECRET_KEY;
+const SECRET = process.env.SECRET_KEY || "zubas123";
 
 function verifyJWT(req, res, next) {
     const token = req.headers['x-access-token'];
@@ -7,7 +7,7 @@ function verifyJWT(req, res, next) {
         if (error) {
             return res.status(401).send('Unauthorized');
         }
-        req.usuarioId = decoded.UsuarioId;
+        req.usuarioId = decoded.usuarioId;
         next();
     });
 }
