@@ -8,9 +8,9 @@ const respostaController = new RespostaController(); // Instância do controlado
 // Rota: Criar uma resposta (POST /)
 router.post('/', verifyJWT, async (req, res) => {
     console.log("Request POST recebido");
-    const { usuario_id, discussao_id, resposta } = req.body;
+    const { discussao_id, resposta } = req.body;
     try {
-        const resultado = await respostaController.criarResposta(usuario_id, discussao_id, resposta);
+        const resultado = await respostaController.criarResposta(req.usuarioId, discussao_id, resposta);
         if (!resultado.sucesso) {
             return res.status(400).json({ errors: resultado.erros });
         }
@@ -45,9 +45,9 @@ router.get('/:id', async (req, res) => {
 
 // Rota: Atualizar resposta por ID (PUT /:id)
 router.put('/:id',verifyJWT, async (req, res) => {
-    const { usuario_id, discussao_id, resposta } = req.body;
+    const { discussao_id, resposta } = req.body;
     try {
-        const resultado = await respostaController.atualizarResposta(req.params.id, usuario_id, discussao_id, resposta);
+        const resultado = await respostaController.atualizarResposta(req.params.id, usuarioId, discussao_id, resposta);
         if (!resultado.sucesso) {
             return res.status(400).json({ errors: resultado.erros });
         }

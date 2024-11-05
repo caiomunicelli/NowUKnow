@@ -14,7 +14,7 @@ app.use("/api/v1/usuarios", usuarioRoutes);
 
 //Rota de Usuario
 const conteudoRoutes = require("./routes/conteudoRoutes.js");
-app.use("/api/v1/conteudos", usuarioRoutes);
+app.use("/api/v1/conteudos", conteudoRoutes);
 
 //Rota de Discussoes
 const discussoesRoutes = require("./routes/discussaoRoutes.js");

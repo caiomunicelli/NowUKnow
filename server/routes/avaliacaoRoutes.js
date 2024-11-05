@@ -7,9 +7,9 @@ const avaliacaoController = new AvaliacaoController(); // Instância do controla
 // Rota: Criar uma avaliação (POST /)
 router.post('/', verifyJWT, async (req, res) => {
     console.log("Request POST recebido");
-    const { usuario_id, conteudo_id, nota, comentario } = req.body;
+    const { conteudo_id, nota, comentario } = req.body;
     try {
-        const resultado = await avaliacaoController.criarAvaliacao(usuario_id, conteudo_id, nota, comentario);
+        const resultado = await avaliacaoController.criarAvaliacao(req.usuarioId, conteudo_id, nota, comentario);
         if (!resultado.sucesso) {
             return res.status(400).json({ errors: resultado.erros });
         }
@@ -44,9 +44,9 @@ router.get('/:id', async (req, res) => {
 
 // Rota: Atualizar avaliação por ID (PUT /:id)
 router.put('/:id', verifyJWT, async (req, res) => {
-    const { usuario_id, conteudo_id, nota, comentario } = req.body;
+    const { conteudo_id, nota, comentario } = req.body;
     try {
-        const resultado = await avaliacaoController.atualizarAvaliacao(req.params.id, usuario_id, conteudo_id, nota, comentario);
+        const resultado = await avaliacaoController.atualizarAvaliacao(req.params.id, req.usuarioId, conteudo_id, nota, comentario);
         if (!resultado.sucesso) {
             return res.status(400).json({ errors: resultado.erros });
         }

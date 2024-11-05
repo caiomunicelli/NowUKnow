@@ -8,9 +8,9 @@ const discussaoController = new DiscussaoController(); // Instancia do controlad
 // Rota: Criar uma discussão (POST /)
 router.post('/', verifyJWT, async (req, res) => {
     console.log("Request POST recebido");
-    const { usuarioId, conteudoId, pergunta } = req.body;
+    const { conteudoId, pergunta } = req.body;
     try {
-        const resultado = await discussaoController.criarDiscussao(usuarioId, conteudoId, pergunta);
+        const resultado = await discussaoController.criarDiscussao(req.usuarioId, conteudoId, pergunta);
         if (!resultado.sucesso) {
             return res.status(400).json({ errors: resultado.erros });
         }
@@ -45,9 +45,9 @@ router.get('/:id', async (req, res) => {
 
 // Rota: Atualizar discussão por ID (PUT /:id)
 router.put('/:id', verifyJWT, async (req, res) => {
-    const { usuarioId, conteudoId, pergunta } = req.body;
+    const { conteudoId, pergunta } = req.body;
     try {
-        const resultado = await discussaoController.atualizarDiscussao(req.params.id, usuarioId, conteudoId, pergunta);
+        const resultado = await discussaoController.atualizarDiscussao(req.params.id, req.usuarioId, conteudoId, pergunta);
         if (!resultado.sucesso) {
             return res.status(400).json({ errors: resultado.erros });
         }
