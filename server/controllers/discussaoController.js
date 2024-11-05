@@ -1,4 +1,4 @@
-const DiscussaoRepository = require('../service/serviceDiscussao.js');
+const DiscussaoRepository = require('../service/discussaoService.js');
 const Discussao = require('../models/discussao.js');
 
 const discussaoRepository = new DiscussaoRepository();

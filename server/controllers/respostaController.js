@@ -1,4 +1,4 @@
-const RespostaRepository = require('../service/serviceResposta.js');
+const RespostaRepository = require('../service/respostaService.js');
 const Resposta = require('../models/resposta.js');
 
 const respostaRepository = new RespostaRepository();

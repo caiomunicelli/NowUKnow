@@ -3,22 +3,23 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Para redirecionamento após o cadastro
 
 function Signup() {
-  const [name, setName] = useState("");
+  const [nome, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [senha, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const userData = {
-      name: name,
+      nome: nome,
       email: email,
-      password: password,
+      senha: senha,
+      tipo: "estudante"
     };
 
     try {
-      const response = await fetch("/api/users", {
+      const response = await fetch("/api/v1/usuarios", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,14 +43,14 @@ function Signup() {
       <h2>Cadastrar</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label htmlFor="name" className="form-label">
+          <label htmlFor="nome" className="form-label">
             Nome
           </label>
           <input
             type="text"
             className="form-control"
-            id="name"
-            value={name}
+            id="nome"
+            value={nome}
             onChange={(e) => setName(e.target.value)}
             required
           />
@@ -68,14 +69,14 @@ function Signup() {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="password" className="form-label">
+          <label htmlFor="senha" className="form-label">
             Senha
           </label>
           <input
             type="password"
             className="form-control"
-            id="password"
-            value={password}
+            id="senha"
+            value={senha}
             onChange={(e) => setPassword(e.target.value)}
             required
           />

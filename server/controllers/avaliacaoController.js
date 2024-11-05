@@ -1,4 +1,4 @@
-const AvaliacaoRepository = require('../service/serviceAvaliacao.js');
+const AvaliacaoRepository = require('../service/avaliacaoService.js');
 const Avaliacao = require('../models/avaliacao.js');
 
 const regex_nota = /^[1-5]$/;
