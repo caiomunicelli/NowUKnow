@@ -3,24 +3,58 @@ import React from "react";
 import { Link } from "react-router-dom"; // Importando Link para redirecionar
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [senha, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const userData = {
+      email: email,
+      senha: senha,
+    };
+
+    try {
+      const response = await fetch("/api/v1/usuarios/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (response.ok) {
+        console.log("Login efeituado com sucesso!");
+        navigate("/");
+      } else {
+        console.error("Email ou senha incorretos.");
+      }
+    } catch (error) {
+      console.error("Erro na requisição:", error);
+    }
+  };
+
   return (
     <div className="container">
       <h2>Login</h2>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
             Email
           </label>
-          <input type="email" className="form-control" id="email" required />
+          <input type="email" className="form-control" id="email" required value={email} onChange={(e) => setEmail(e.target.value)}/>
         </div>
         <div className="mb-3">
-          <label htmlFor="password" className="form-label">
+          <label htmlFor="senha" className="form-label">
             Senha
           </label>
           <input
             type="password"
             className="form-control"
-            id="password"
+            id="senha"
+            value={senha}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
