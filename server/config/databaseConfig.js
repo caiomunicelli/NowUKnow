@@ -1,23 +1,21 @@
-DB_USER="nowuknow"
-DB_PASSWORD="zuba@123"
-DB_SERVER="nowuknow.database.windows.net"
-DB_NAME="nowuknow"
-SECRET_KEY="zubas123"
-
 // DatabaseConfig.js
 class DatabaseConfig {
-    constructor() {
-        this.config = {
-            user: process.env.DB_USER || DB_USER ,
-            password: process.env.DB_PASSWORD || DB_PASSWORD,
-            server: process.env.DB_SERVER || DB_SERVER,
-            database: process.env.DB_NAME || DB_NAME,
-        };
-    }
+  constructor() {
+    this.config = {
+      host: process.env.DB_SERVER,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      port: process.env.PORT,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+    };
+  }
 
-    getConfig() {
-        return this.config;
-    }
+  getConfig() {
+    return this.config;
+  }
 }
 
 module.exports = DatabaseConfig;

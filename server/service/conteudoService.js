@@ -1,75 +1,84 @@
-const sql = require('mssql');
-const DatabaseConnection = require('../db/databaseConnection.js');
+const mysql = require("mysql2/promise");
+const DatabaseConnection = require("../db/databaseConnection.js");
 
 class ConteudoRepository {
-    constructor() {
-        this.dbConnection = new DatabaseConnection();
-    }
+  constructor() {
+    this.dbConnection = new DatabaseConnection();
+  }
 
-    async createConteudo(conteudo) {
-        const pool = await this.dbConnection.connect();
-        const result = await pool.request()
-            .input('titulo', sql.VarChar, conteudo.titulo)
-            .input('descricao', sql.Text, conteudo.descricao)
-            .input('tipo_conteudo', sql.VarChar, conteudo.tipo_conteudo)
-            .input('autor_id', sql.Int, conteudo.autor_id)
-            .input('nivel_dificuldade', sql.VarChar, conteudo.nivel_dificuldade)
-            .input('duracao', sql.Int, conteudo.duracao)
-            .input('categoria', sql.VarChar, conteudo.categoria)
-            .query(`INSERT INTO dbo.Conteudos (titulo, descricao, tipo_conteudo, autor_id, nivel_dificuldade, duracao, categoria) OUTPUT INSERTED.* 
-                    VALUES (@titulo, @descricao, @tipo_conteudo, @autor_id, @nivel_dificuldade, @duracao, @categoria)`);
-        
-        return result.recordset[0]; // Retorna o conteúdo criado
-    }
+  async createConteudo(conteudo) {
+    const connection = await this.dbConnection.connect();
+    const [result] = await connection.execute(
+      `INSERT INTO Conteudos (titulo, descricao, tipo_conteudo, autor_id, nivel_dificuldade, duracao, categoria) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [
+        conteudo.titulo,
+        conteudo.descricao,
+        conteudo.tipo_conteudo,
+        conteudo.autor_id,
+        conteudo.nivel_dificuldade,
+        conteudo.duracao,
+        conteudo.categoria,
+      ]
+    );
 
-    async getAllConteudos() {
-        const pool = await this.dbConnection.connect();
-        const result = await pool.request().query('SELECT * FROM dbo.Conteudos');
-        
-        return result.recordset; // Retorna todos os conteúdos
-    }
+    // Retorna o conteúdo criado com o ID gerado
+    return {
+      id: result.insertId,
+      ...conteudo,
+    };
+  }
 
-    async getConteudoById(id) {
-        const pool = await this.dbConnection.connect();
-        const result = await pool.request()
-            .input('id', sql.Int, id)
-            .query('SELECT * FROM dbo.Conteudos WHERE Id = @id');
-        
-        return result.recordset[0]; // Retorna o conteúdo encontrado ou undefined
-    }
+  async getAllConteudos() {
+    const connection = await this.dbConnection.connect();
+    const [rows] = await connection.execute("SELECT * FROM Conteudos");
 
-    async updateConteudo(conteudo) {
-        const pool = await this.dbConnection.connect();
-        const result = await pool.request()
-            .input('id', sql.Int, conteudo.id)
-            .input('titulo', sql.VarChar, conteudo.titulo)
-            .input('descricao', sql.Text, conteudo.descricao)
-            .input('tipo_conteudo', sql.VarChar, conteudo.tipo_conteudo)
-            .input('autor_id', sql.Int, conteudo.autor_id)
-            .input('nivel_dificuldade', sql.VarChar, conteudo.nivel_dificuldade)
-            .input('duracao', sql.Int, conteudo.duracao)
-            .input('categoria', sql.VarChar, conteudo.categoria)
-            .query(`UPDATE dbo.Conteudos 
-                    SET titulo = @titulo, descricao = @descricao, tipo_conteudo = @tipo_conteudo, 
-                        autor_id = @autor_id, nivel_dificuldade = @nivel_dificuldade, duracao = @duracao, 
-                        categoria = @categoria 
-                    WHERE Id = @id`);
-        
-        return result.rowsAffected[0] > 0 ? "Conteúdo atualizado com sucesso." : "Nenhum conteúdo foi alterado.";
-    }
+    return rows; // Retorna todos os conteúdos
+  }
 
-    async deleteConteudo(id) {
-        const pool = await this.dbConnection.connect();
-        const result = await pool.request()
-            .input('id', sql.Int, id)
-            .query('DELETE FROM dbo.Conteudos WHERE Id = @id');
-        
-        return result.rowsAffected[0] > 0; // Retorna true se o conteúdo foi deletado
-    }
+  async getConteudoById(id) {
+    const connection = await this.dbConnection.connect();
+    const [rows] = await connection.execute(
+      "SELECT * FROM Conteudos WHERE id = ?",
+      [id]
+    );
 
-    async getConteudosComAutor() {
-        const pool = await this.dbConnection.connect();
-        const result = await pool.request().query(`
+    return rows[0]; // Retorna o conteúdo encontrado ou undefined
+  }
+
+  async updateConteudo(conteudo) {
+    const connection = await this.dbConnection.connect();
+    const [result] = await connection.execute(
+      `UPDATE Conteudos SET titulo = ?, descricao = ?, tipo_conteudo = ?, autor_id = ?, nivel_dificuldade = ?, duracao = ?, categoria = ? WHERE id = ?`,
+      [
+        conteudo.titulo,
+        conteudo.descricao,
+        conteudo.tipo_conteudo,
+        conteudo.autor_id,
+        conteudo.nivel_dificuldade,
+        conteudo.duracao,
+        conteudo.categoria,
+        conteudo.id,
+      ]
+    );
+
+    return result.affectedRows > 0
+      ? "Conteúdo atualizado com sucesso."
+      : "Nenhum conteúdo foi alterado.";
+  }
+
+  async deleteConteudo(id) {
+    const connection = await this.dbConnection.connect();
+    const [result] = await connection.execute(
+      "DELETE FROM Conteudos WHERE id = ?",
+      [id]
+    );
+
+    return result.affectedRows > 0; // Retorna true se o conteúdo foi deletado
+  }
+
+  async getConteudosComAutor() {
+    const connection = await this.dbConnection.connect();
+    const [rows] = await connection.execute(`
             SELECT 
                 c.id AS conteudo_id,
                 c.titulo,
@@ -82,12 +91,12 @@ class ConteudoRepository {
                 u.id AS autor_id,
                 u.nome AS autor_nome,
                 u.email AS autor_email
-            FROM dbo.Conteudos c
-            INNER JOIN dbo.Usuarios u ON c.autor_id = u.id
+            FROM Conteudos c
+            INNER JOIN Usuarios u ON c.autor_id = u.id
         `);
-        
-        return result.recordset; // Retorna a lista de conteúdos com informações do autor
-    }
+
+    return rows; // Retorna a lista de conteúdos com informações do autor
+  }
 }
 
 module.exports = ConteudoRepository;

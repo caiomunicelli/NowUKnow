@@ -1,60 +1,73 @@
-const sql = require('mssql');
-const DatabaseConnection = require('../db/databaseConnection.js');
-const Resposta = require('../models/resposta.js');
+const mysql = require("mysql2/promise");
+const DatabaseConnection = require("../db/databaseConnection.js");
+const Resposta = require("../models/resposta.js");
 
 class RespostaRepository {
-    constructor() {
-        this.dbConnection = new DatabaseConnection();
-    }
+  constructor() {
+    this.dbConnection = new DatabaseConnection();
+  }
 
-    async createResposta(resposta) {
-        console.log("Criando resposta");
-        const pool = await this.dbConnection.connect();
-        const result = await pool.request()
-            .input('usuario_id', sql.Int, resposta.usuario_id)
-            .input('discussao_id', sql.Int, resposta.discussao_id)
-            .input('resposta', sql.Text, resposta.resposta)
-            .query('INSERT INTO dbo.Respostas (usuario_id, discussao_id, resposta) OUTPUT INSERTED.* VALUES (@usuario_id, @discussao_id, @resposta)');
-        console.log("Resposta criada");
-        return result.recordset[0]; // Retorna a resposta criada
-    }
+  async createResposta(resposta) {
+    console.log("Criando resposta");
+    const connection = await this.dbConnection.connect();
 
-    async getAllRespostas() {
-        const pool = await this.dbConnection.connect();
-        const result = await pool.request().query('SELECT * FROM dbo.Respostas');
-        
-        return result.recordset; // Retorna todas as respostas
-    }
+    const [result] = await connection.execute(
+      `INSERT INTO Respostas (usuario_id, discussao_id, resposta) VALUES (?, ?, ?)`,
+      [resposta.usuario_id, resposta.discussao_id, resposta.resposta]
+    );
 
-    async getRespostaById(id) {
-        const pool = await this.dbConnection.connect();
-        const result = await pool.request()
-            .input('id', sql.Int, id)
-            .query('SELECT * FROM dbo.Respostas WHERE Id = @id');
-        
-        return result.recordset[0]; // Retorna a resposta encontrada ou undefined
-    }
+    console.log("Resposta criada");
+    const newResposta = {
+      id: result.insertId,
+      usuario_id: resposta.usuario_id,
+      discussao_id: resposta.discussao_id,
+      resposta: resposta.resposta,
+    };
 
-    async updateResposta(resposta) {
-        const pool = await this.dbConnection.connect();
-        const result = await pool.request()
-            .input('id', sql.Int, resposta.id)
-            .input('usuario_id', sql.Int, resposta.usuario_id)
-            .input('discussao_id', sql.Int, resposta.discussao_id)
-            .input('resposta', sql.Text, resposta.resposta)
-            .query('UPDATE dbo.Respostas SET usuario_id = @usuario_id, discussao_id = @discussao_id, resposta = @resposta WHERE Id = @id');
-        
-        return result.rowsAffected[0] > 0; // Retorna true se a atualização foi bem-sucedida
-    }
+    return newResposta; // Retorna a resposta criada
+  }
 
-    async deleteResposta(id) {
-        const pool = await this.dbConnection.connect();
-        const result = await pool.request()
-            .input('id', sql.Int, id)
-            .query('DELETE FROM dbo.Respostas WHERE Id = @id');
-        
-        return result.rowsAffected[0] > 0; // Retorna true se a resposta foi deletada
-    }
+  async getAllRespostas() {
+    const connection = await this.dbConnection.connect();
+    const [rows] = await connection.execute("SELECT * FROM Respostas");
+
+    return rows; // Retorna todas as respostas
+  }
+
+  async getRespostaById(id) {
+    const connection = await this.dbConnection.connect();
+    const [rows] = await connection.execute(
+      "SELECT * FROM Respostas WHERE id = ?",
+      [id]
+    );
+
+    return rows[0]; // Retorna a resposta encontrada ou undefined
+  }
+
+  async updateResposta(resposta) {
+    const connection = await this.dbConnection.connect();
+    const [result] = await connection.execute(
+      `UPDATE Respostas SET usuario_id = ?, discussao_id = ?, resposta = ? WHERE id = ?`,
+      [
+        resposta.usuario_id,
+        resposta.discussao_id,
+        resposta.resposta,
+        resposta.id,
+      ]
+    );
+
+    return result.affectedRows > 0; // Retorna true se a atualização foi bem-sucedida
+  }
+
+  async deleteResposta(id) {
+    const connection = await this.dbConnection.connect();
+    const [result] = await connection.execute(
+      "DELETE FROM Respostas WHERE id = ?",
+      [id]
+    );
+
+    return result.affectedRows > 0; // Retorna true se a resposta foi deletada
+  }
 }
 
 module.exports = RespostaRepository;
