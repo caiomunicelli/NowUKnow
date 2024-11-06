@@ -21,9 +21,7 @@ function App() {
     <AuthProvider>
       <Router>
         <div className="nowuknow-app">
-          <header className="nowuknow-header">
-            <Navbar />
-          </header>
+          <Navbar />
           <main className="nowuknow-main">
             <Routes>
               <Route path="/" element={<Home />} />

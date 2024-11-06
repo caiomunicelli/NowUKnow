@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../components"; // Importando o useAuth
+import "./Navbar.css";
 
 function Navbar() {
   const { user, logout } = useAuth(); // Acessando o usuário e a função de logout via useAuth
-  console.log("user: ", user);
   return (
     <header>
       <nav className="navbar navbar-expand-lg bg-light">
@@ -12,6 +12,20 @@ function Navbar() {
           <Link className="navbar-brand nowuknow-brand" to="/">
             NowUKnow
           </Link>
+          <form
+            className="d-flex mx-auto nowuknow-search-form nowuknow-search"
+            role="search"
+          >
+            <input
+              className="form-control me-2"
+              type="search"
+              placeholder="Pesquisar"
+              aria-label="Search"
+            />
+            <button className="btn btn-outline-success" type="submit">
+              Buscar
+            </button>
+          </form>
           <div className="nowuknow-navbar" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">

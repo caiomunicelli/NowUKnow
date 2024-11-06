@@ -26,7 +26,7 @@ export function AuthProvider({ children }) {
         headers: { "x-access-token": token },
       });
       if (response.ok) {
-        const data = (await response.json())[0];
+        const data = await response.json();
         console.log(data); // Ajustar de acordo com a resposta da API
         setUser(data.nome);
       }
@@ -45,6 +45,7 @@ export function AuthProvider({ children }) {
       });
       if (response.ok) {
         const data = await response.json();
+        console.log("Sucesso: ", data);
         Cookies.set("authToken", data.token, { expires: 30 });
         fetchUserData(data.token); // Atualiza os dados do usuário
         return true; // Login bem-sucedido
