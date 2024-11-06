@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../../components"; // Importando o useAuth
 import { useNavigate } from "react-router-dom"; // Importando o useNavigate para navegação dinâmica
+import { Link } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -56,6 +57,9 @@ function Login() {
           Entrar
         </button>
       </form>
+      <p className="mt-3">
+        Não tem uma conta? <Link to="/signup">Cadastre-se aqui</Link>
+      </p>
     </div>
   );
 }
