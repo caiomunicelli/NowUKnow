@@ -8,6 +8,9 @@ import {
   Signup,
   AuthProvider,
   PrivateRoute,
+  CreatePost,
+  Feed,
+  Post
 } from "./components";
 import {
   BrowserRouter as Router,
@@ -28,6 +31,9 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="*" element={<Navigate to="/" />} />
+             <Route path="/createPost" element={<CreatePost />} />{" "}
+            <Route path="/feed" element={<Feed />} />{" "}
+            <Route path="/post" element={<Post />} />{" "}
             </Routes>
           </main>
           <Footer />

@@ -6,3 +6,6 @@ export { default as Footer } from "./Footer";
 export { default as Home } from "./pages/Home";
 export { default as Login } from "./pages/Login";
 export { default as Signup } from "./pages/Signup";
+export {default as CreatePost} from "./CreatePost";
+export {default as Feed} from "./Feed";
+export {default as Post} from "./Post";
