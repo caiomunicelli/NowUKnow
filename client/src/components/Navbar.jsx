@@ -1,8 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Importando o Link do react-router-dom
+import { Link } from "react-router-dom";
+import { useAuth } from "../components"; // Importando o useAuth
 import "./Navbar.css";
 
 function Navbar() {
+  const { user, logout } = useAuth(); // Acessando o usuário e a função de logout via useAuth
   return (
     <header>
       <nav className="navbar navbar-expand-lg bg-light">
@@ -32,19 +34,24 @@ function Navbar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="#">
-                  Minhas Comunidades
-                </Link>
+                {user ? (
+                  <span className="nav-link">{user}</span> // Exibindo o nome do usuário
+                ) : (
+                  <Link className="nav-link" to="/perfil">
+                    Meu Perfil
+                  </Link>
+                )}
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="#">
-                  Meu Perfil
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/login">
-                  Login
-                </Link>
+                {user ? (
+                  <Link className="nav-link" to="#" onClick={logout}>
+                    Logout
+                  </Link>
+                ) : (
+                  <Link className="nav-link" to="/login">
+                    Login
+                  </Link>
+                )}
               </li>
             </ul>
           </div>
