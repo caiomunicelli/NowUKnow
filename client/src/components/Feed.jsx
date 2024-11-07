@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import NewPostForm from './CreatePost';
-import Post from './Post'; // Componente de visualização do post
-import './Feed.css';
+import React, { useState } from "react";
+import NewPostForm from "./pages/CreatePost";
+import Post from "./Post"; // Componente de visualização do post
+import "./Feed.css";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
@@ -22,7 +22,11 @@ const Feed = () => {
       <div className="post-feed">
         {posts.length > 0 ? (
           posts.map((post, index) => (
-            <Post key={index} {...post} user={{ name: "User", avatar: "user-avatar-url.jpg" }} />
+            <Post
+              key={index}
+              {...post}
+              user={{ name: "User", avatar: "user-avatar-url.jpg" }}
+            />
           ))
         ) : (
           <p className="no-posts">Sem informações.</p>
