@@ -10,7 +10,8 @@ import {
   PrivateRoute,
   CreatePost,
   Feed,
-  Post
+  Post,
+  About
 } from "./components";
 import {
   BrowserRouter as Router,
@@ -34,6 +35,7 @@ function App() {
              <Route path="/createPost" element={<CreatePost />} />{" "}
             <Route path="/feed" element={<Feed />} />{" "}
             <Route path="/post" element={<Post />} />{" "}
+            <Route path="/about" element={<About />} />
             </Routes>
           </main>
           <Footer />
