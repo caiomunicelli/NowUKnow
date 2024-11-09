@@ -21,6 +21,10 @@ app.use("/api/v1/conteudos", conteudoRoutes);
 const discussoesRoutes = require("./routes/discussaoRoutes.js");
 app.use("/api/v1/discussoes", discussoesRoutes);
 
+//Rota de About
+const aboutRoutes = require("./routes/aboutRoutes.js");
+app.use("/api/v1/about", aboutRoutes);
+
 //Rota de Respostas
 const respostaRoutes = require("./routes/respostaRoutes.js");
 app.use("/api/v1/respostas", respostaRoutes);
