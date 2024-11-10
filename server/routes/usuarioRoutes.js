@@ -2,16 +2,18 @@ const express = require('express');
 const router = express.Router();
 const UsuarioController = require('../controllers/usuarioController.js');
 const verifyJWT = require('../service/jwtService.js');
-const usuarioController = new UsuarioController(); // Instancia do controlador
+const usuarioController = new UsuarioController();
 const jwt = require('jsonwebtoken');
 const { compare } = require('bcryptjs');
+
 const SECRET = process.env.SECRET_KEY || "zubas123";
 const EXPIRES = 30000;
+
 // Rota: Criar um usuário (POST /)
 router.post('/', async (req, res) => {
-    const { nome, email, senha, tipo } = req.body;
+    const { usuario, nome, email, senha, tipo, imagem } = req.body;
     try {
-        const resultado = await usuarioController.criarUsuario(nome, email, senha, tipo);
+        const resultado = await usuarioController.criarUsuario(usuario, nome, email, senha, tipo, imagem);
         if (!resultado.sucesso) {
             return res.status(400).json({ errors: resultado.erros });
         }
@@ -20,81 +22,78 @@ router.post('/', async (req, res) => {
         res.status(500).json({ error: 'Erro ao criar usuário', details: error.message });
     }
 });
-// Rota:Realiza login (POST /)
+
+// Rota: Realizar login (POST /login)
 router.post('/login', async (req, res) => {
     const { email, senha } = req.body;
     try {
         const resultado = await usuarioController.listarUsuarioPorEmail(email);
-        if (!resultado.sucesso)
+        if (!resultado.sucesso) {
             return res.status(400).json({ errors: resultado.erros });
-        else{
-            console.log()
-            const isPasswordMatch = await compare(senha, resultado.usuario.senha);
-            if(isPasswordMatch){
-                const token = jwt.sign({usuarioId:resultado.usuario.id}, SECRET, {expiresIn: EXPIRES})
-                res.status(201).json({auth:true, token});
-            }
-            else{
-                return res.status(401).json({errors: 'Credenciais inválidas'});
-            }
+        }
+        
+        const isPasswordMatch = await compare(senha, resultado.usuario.senha);
+        if (isPasswordMatch) {
+            const token = jwt.sign({ usuarioId: resultado.usuario.id }, SECRET, { expiresIn: EXPIRES });
+            res.status(200).json({ auth: true, token });
+        } else {
+            return res.status(401).json({ errors: 'Credenciais inválidas' });
         }
     } catch (error) {
-        res.status(500).json({ errors: 'Credenciais inválidas', details: error.message });
+        res.status(500).json({ errors: 'Erro ao fazer login', details: error.message });
     }
 });
-router.post('/logout', async (req, res) => {
-    try {
-        res.status(201).json({logout:true});
-    } catch (error) {
-        res.status(500).json({ errors: 'Credenciais inválidas', details: error.message });
 
-    }
+// Rota: Logout (POST /logout)
+router.post('/logout', (req, res) => {
+    res.status(200).json({ logout: true });
 });
-// Rota: Listar todos os usuários (GET /)
+
+// Rota: Listar todos os usuários (GET /all)
 router.get('/all', async (req, res) => {
     try {
         const resultado = await usuarioController.listarUsuarios();
-        res.status(200).json(resultado.usuarios); // Retorna a lista de usuários
+        res.status(200).json(resultado.usuarios);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao buscar usuários', details: error.message });
     }
 });
 
-// Rota: Buscar usuário por ID (GET //:id)
+// Rota: Buscar usuário por ID (GET /)
 router.get('/', verifyJWT, async (req, res) => {
     try {
         const resultado = await usuarioController.listarUsuarioPorId(req.usuarioId);
         if (!resultado.sucesso) {
             return res.status(404).json({ errors: resultado.erros });
         }
-        res.status(200).json(resultado.usuario); // Retorna o usuário encontrado
+        res.status(200).json(resultado.usuario);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao buscar usuário', details: error.message });
     }
 });
 
-// Rota: Atualizar usuário por ID (PUT //:id)
+// Rota: Atualizar usuário por ID (PUT /)
 router.put('/', verifyJWT, async (req, res) => {
-    const { nome, email, senha, tipo } = req.body;
+    const { usuario, nome, email, senha, tipo, imagem } = req.body;
     try {
-        const resultado = await usuarioController.atualizarUsuario(req.usuarioId, nome, email, senha, tipo);
+        const resultado = await usuarioController.atualizarUsuario(req.usuarioId, usuario, nome, email, senha, tipo, imagem);
         if (!resultado.sucesso) {
             return res.status(400).json({ errors: resultado.erros });
         }
-        res.status(200).json(resultado.usuario); // Retorna o usuário atualizado
+        res.status(200).json(resultado.usuario);
     } catch (error) {
         res.status(500).json({ error: 'Erro ao atualizar usuário', details: error.message });
     }
 });
 
-// Rota: Deletar usuário por ID (DELETE //:id)
+// Rota: Deletar usuário por ID (DELETE /)
 router.delete('/', verifyJWT, async (req, res) => {
     try {
         const resultado = await usuarioController.deletarUsuario(req.usuarioId);
         if (!resultado.sucesso) {
             return res.status(404).json({ errors: resultado.erros });
         }
-        res.status(200).json({ mensagem: resultado.mensagem }); // Retorna a mensagem de sucesso
+        res.status(200).json({ mensagem: resultado.mensagem });
     } catch (error) {
         res.status(500).json({ error: 'Erro ao deletar usuário', details: error.message });
     }

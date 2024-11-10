@@ -3,16 +3,16 @@ const router = express.Router();
 const DiscussaoController = require('../controllers/discussaoController.js');
 const verifyJWT = require('../service/jwtService.js');
 
-const discussaoController = new DiscussaoController(); // Instancia do controlador
+const discussaoController = new DiscussaoController();
 
 // Rota: Criar uma discussão (POST /)
 router.post('/', verifyJWT, async (req, res) => {
-    console.log("Request POST recebido");
-    const { conteudoId, pergunta } = req.body;
+    const { postagemId, tipoDiscussao, texto } = req.body;
+
     try {
-        const resultado = await discussaoController.criarDiscussao(req.usuarioId, conteudoId, pergunta);
+        const resultado = await discussaoController.criarDiscussao(postagemId, tipoDiscussao, texto);
         if (!resultado.sucesso) {
-            return res.status(400).json({ errors: resultado.erros });
+            return res.status(400).json({ erros: resultado.erros });
         }
         res.status(201).json(resultado.discussao); // Retorna a discussão criada
     } catch (error) {
@@ -24,7 +24,7 @@ router.post('/', verifyJWT, async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const resultado = await discussaoController.listarDiscussoes();
-        res.status(200).json(resultado.discussao); // Retorna a lista de discussões
+        res.status(200).json(resultado.discussoes); // Retorna a lista de discussões
     } catch (error) {
         res.status(500).json({ error: 'Erro ao buscar discussões', details: error.message });
     }
@@ -32,10 +32,11 @@ router.get('/', async (req, res) => {
 
 // Rota: Buscar discussão por ID (GET /:id)
 router.get('/:id', async (req, res) => {
+    const { id } = req.params;
     try {
-        const resultado = await discussaoController.listarDiscussaoPorId(req.params.id);
+        const resultado = await discussaoController.listarDiscussaoPorId(id);
         if (!resultado.sucesso) {
-            return res.status(404).json({ errors: resultado.erros });
+            return res.status(404).json({ erros: resultado.erros });
         }
         res.status(200).json(resultado.discussao); // Retorna a discussão encontrada
     } catch (error) {
@@ -43,28 +44,31 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Rota: Atualizar discussão por ID (PUT /:id)
+// Rota: Atualizar discussão (PUT /:id)
 router.put('/:id', verifyJWT, async (req, res) => {
-    const { conteudoId, pergunta } = req.body;
+    const { id } = req.params;
+    const { postagemId, tipoDiscussao, texto } = req.body;
+
     try {
-        const resultado = await discussaoController.atualizarDiscussao(req.params.id, req.usuarioId, conteudoId, pergunta);
+        const resultado = await discussaoController.atualizarDiscussao(id, postagemId, tipoDiscussao, texto);
         if (!resultado.sucesso) {
-            return res.status(400).json({ errors: resultado.erros });
+            return res.status(400).json({ erros: resultado.erros });
         }
-        res.status(200).json(resultado.discussaoAtualizada); // Retorna a discussão atualizada
+        res.status(200).json(resultado.discussao); // Retorna a discussão atualizada
     } catch (error) {
         res.status(500).json({ error: 'Erro ao atualizar discussão', details: error.message });
     }
 });
 
-// Rota: Deletar discussão por ID (DELETE /:id)
+// Rota: Deletar discussão (DELETE /:id)
 router.delete('/:id', verifyJWT, async (req, res) => {
+    const { id } = req.params;
     try {
-        const resultado = await discussaoController.deletarDiscussao(req.params.id);
+        const resultado = await discussaoController.deletarDiscussao(id);
         if (!resultado.sucesso) {
-            return res.status(404).json({ errors: resultado.erros });
+            return res.status(404).json({ erros: resultado.erros });
         }
-        res.status(200).json({ mensagem: resultado.mensagem }); // Retorna a mensagem de sucesso
+        res.status(200).json({ mensagem: resultado.mensagem });
     } catch (error) {
         res.status(500).json({ error: 'Erro ao deletar discussão', details: error.message });
     }

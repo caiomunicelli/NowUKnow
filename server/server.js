@@ -26,12 +26,24 @@ const aboutRoutes = require("./routes/aboutRoutes.js");
 app.use("/api/v1/about", aboutRoutes);
 
 //Rota de Respostas
-const respostaRoutes = require("./routes/respostaRoutes.js");
-app.use("/api/v1/respostas", respostaRoutes);
+const comentariosRoutes = require("./routes/comentarioRoutes.js");
+app.use("/api/v1/comentarios", comentariosRoutes);
 
 //Rota de Avaliacoes
 const avaliacaoRoutes = require("./routes/avaliacaoRoutes.js");
 app.use("/api/v1/avaliacoes", avaliacaoRoutes);
+
+//Rota de Categorias
+const categoriaRoutes = require("./routes/categoriaRoutes.js");
+app.use("/api/v1/categorias", categoriaRoutes);
+
+//Rota de Certificacoes
+const certificacoesRoutes = require("./routes/certificacaoRoutes.js");
+app.use("/api/v1/certificacoes", certificacoesRoutes);
+
+//Rota de Postagens
+const PostagensRoutes = require("./routes/postagemRoutes.js");
+app.use("/api/v1/postagens", PostagensRoutes);
 
 app.use(express.static(clientPath));
 
@@ -42,6 +54,6 @@ app.get("*", (req, res) => {
 // Inicia o servidor
 app.listen(port, () => {
   console.log(
-    `Servidor rodando em https://nowuknow-dev.azurewebsites.net:${port}`
+    `Servidor rodando https://nowuknow-dev.azurewebsites.net:${port}`
   );
 });

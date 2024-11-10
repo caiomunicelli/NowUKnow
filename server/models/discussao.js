@@ -1,8 +1,9 @@
 class Discussao {
-    constructor(usuarioId, conteudoId, pergunta) {
-        this.usuarioId = usuarioId;
-        this.conteudoId = conteudoId;
-        this.pergunta = pergunta;
+    constructor(id, postagemId, tipoDiscussao, texto) {
+        this.id = id;
+        this.postagemId = postagemId;
+        this.tipoDiscussao = tipoDiscussao;
+        this.texto = texto;
     }
 }
 
