@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAuth } from "../../components"; // Importando o useAuth
+import { useAuthContext } from "../../contexts/AuthContext"; // Atualizando a importação do useAuth
 import { useNavigate } from "react-router-dom"; // Importando o useNavigate para navegação dinâmica
 import { Link } from "react-router-dom";
 
@@ -7,13 +7,16 @@ function Login() {
   const [email, setEmail] = useState("");
   const [senha, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { login } = useAuth(); // Acessando a função de login via useAuth
   const navigate = useNavigate(); // Criando a função de navegação
+
+  const { login, error: authError } = useAuthContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const isLoggedIn = await login(email, senha); // Chamando a função de login
+    // Envia as credenciais como um objeto
+    const credentials = { email, senha };
+    const isLoggedIn = await login(credentials); // Chamando a função de login
     if (isLoggedIn) {
       // Redireciona para a página principal após login bem-sucedido
       navigate("/"); // Navegação para a página principal
