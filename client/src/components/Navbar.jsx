@@ -39,15 +39,17 @@ function Navbar() {
             className="d-flex mx-auto nowuknow-search-form nowuknow-search"
             role="search"
           >
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Pesquisar"
-              aria-label="Search"
-            />
-            <button className="btn btn-outline-success" type="submit">
-              Buscar
-            </button>
+            <div>
+              <input
+                className="form-control me-2"
+                type="search"
+                placeholder="Busque algum conteúdo, categoria ou autor"
+                aria-label="Search"
+              />
+              <button className="btn btn-outline-success" type="submit">
+                <i className="bi bi-search"></i> Buscar
+              </button>
+            </div>
           </form>
           <div className="nowuknow-navbar" id="navbarNav">
             <ul className="navbar-nav">

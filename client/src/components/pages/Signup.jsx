@@ -1,89 +1,79 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Para redirecionamento após o cadastro
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import ErrorMessage from "../ErrorMessage";
+import { gerenciarErros } from "../../utils/validacoesUsuario";
 import { signup } from "../../services/usuarioService";
-import ErrorMessage from "../ErrorMessage"; // Importando o componente de erro
 
 function Signup() {
   const [nome, setName] = useState("");
+  const [usuario, setUsuario] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setPassword] = useState("");
+  const [confirmSenha, setConfirmSenha] = useState(""); // Novo campo de confirmação de senha
+  const [foto, setFoto] = useState(null);
+  const [campoAlterado, setCampoAlterado] = useState("");
   const [errors, setErrors] = useState({
     nome: "",
+    usuario: "",
     email: "",
     senha: "",
+    confirmSenha: "", // Adiciona erro de confirmação de senha
+    foto: "",
   });
+
   const navigate = useNavigate();
 
-  const validateName = (name) => {
-    if (name.trim() === "") {
-      return "Nome é obrigatório.";
+  useEffect(() => {
+    if (campoAlterado) {
+      console.log(campoAlterado);
+      const newErrors = gerenciarErros(
+        nome,
+        usuario,
+        email,
+        senha,
+        confirmSenha,
+        foto,
+        campoAlterado, // Passando o campo alterado para validação
+        errors
+      );
+      setErrors(newErrors);
     }
-    return "";
-  };
-
-  const validateEmail = (email) => {
-    if (email.trim() === "") {
-      return "Email é obrigatório.";
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      return "Por favor, insira um email válido.";
-    }
-    return "";
-  };
-
-  const validatePassword = (password) => {
-    if (password.trim() === "") {
-      return "Senha é obrigatória.";
-    } else if (password.length < 6) {
-      return "A senha deve ter pelo menos 6 caracteres.";
-    }
-    return "";
-  };
+  }, [campoAlterado, nome, usuario, email, senha, confirmSenha, foto, errors]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
-
-    // Atualiza o estado dos campos com o valor atual
+    // Atualiza o valor do campo
     if (id === "nome") setName(value);
+    if (id === "usuario") setUsuario(value);
     if (id === "email") setEmail(value);
     if (id === "senha") setPassword(value);
+    if (id === "confirmSenha") setConfirmSenha(value);
 
-    // Valida o campo atualizado
-    const newErrors = { ...errors };
+    setCampoAlterado(id);
+  };
 
-    if (id === "nome") newErrors.nome = validateName(value);
-    if (id === "email") newErrors.email = validateEmail(value);
-    if (id === "senha") newErrors.senha = validatePassword(value);
-
-    setErrors(newErrors); // Atualiza o estado de erros
+  const handleFotoChange = (e) => {
+    const file = e.target.files[0];
+    setFoto(file);
+    setCampoAlterado("foto");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Valida o formulário inteiro antes de submeter
-    const newErrors = {
-      nome: validateName(nome),
-      email: validateEmail(email),
-      senha: validatePassword(senha),
-    };
 
-    setErrors(newErrors);
+    setCampoAlterado("cadastro");
+    // Verifica se algum campo possui erro
+    if (Object.values(errors).some((error) => error !== "")) {
+      return;
+    }
 
-    if (Object.values(newErrors).some((error) => error !== "")) return; // Se algum campo estiver inválido, não envia o formulário
+    const novoUsuario = { nome, usuario, email, senha, foto };
+    const response = await signup(novoUsuario);
 
-    try {
-      const tipo = "basico";
-      const novoUsuario = { nome, email, senha, tipo };
-      console.log(novoUsuario);
-      console.log(JSON.stringify(novoUsuario));
-      const response = await signup(novoUsuario);
-      if (response) {
-        console.log("Usuário cadastrado com sucesso!");
-        navigate("/login");
-      } else {
-        console.error("Erro ao cadastrar usuário.");
-      }
-    } catch (error) {
-      console.error("Erro na requisição:", error);
+    if (response) {
+      navigate("/login");
+    } else {
+      console.error("Erro ao cadastrar usuário.");
     }
   };
 
@@ -100,11 +90,26 @@ function Signup() {
             className="form-control"
             id="nome"
             value={nome}
-            onChange={handleChange} // Validação no onChange
+            onChange={handleChange}
             required
+            autoComplete="off"
           />
-          <ErrorMessage message={errors.nome} />{" "}
-          {/* Exibindo a mensagem de erro */}
+          <ErrorMessage message={errors.nome} />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="usuario" className="form-label">
+            Nome de Usuário
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="usuario"
+            value={usuario}
+            onChange={handleChange}
+            required
+            autoComplete="off"
+          />
+          <ErrorMessage message={errors.usuario} />
         </div>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
@@ -115,11 +120,11 @@ function Signup() {
             className="form-control"
             id="email"
             value={email}
-            onChange={handleChange} // Validação no onChange
+            onChange={handleChange}
             required
+            autoComplete="off"
           />
-          <ErrorMessage message={errors.email} />{" "}
-          {/* Exibindo a mensagem de erro */}
+          <ErrorMessage message={errors.email} />
         </div>
         <div className="mb-3">
           <label htmlFor="senha" className="form-label">
@@ -130,11 +135,39 @@ function Signup() {
             className="form-control"
             id="senha"
             value={senha}
-            onChange={handleChange} // Validação no onChange
+            onChange={handleChange}
             required
+            autoComplete="new-password"
           />
-          <ErrorMessage message={errors.senha} />{" "}
-          {/* Exibindo a mensagem de erro */}
+          <ErrorMessage message={errors.senha} />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="confirmSenha" className="form-label">
+            Confirmar Senha
+          </label>
+          <input
+            type="password"
+            className="form-control"
+            id="confirmSenha"
+            value={confirmSenha}
+            onChange={handleChange}
+            required
+            autoComplete="new-password"
+          />
+          <ErrorMessage message={errors.confirmSenha} />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="foto" className="form-label">
+            Foto de Perfil
+          </label>
+          <input
+            type="file"
+            className="form-control"
+            id="foto"
+            onChange={handleFotoChange}
+            accept="image/png, image/jpeg, image/jpg"
+          />
+          <ErrorMessage message={errors.foto} />
         </div>
         <button type="submit" className="btn btn-primary">
           Cadastrar

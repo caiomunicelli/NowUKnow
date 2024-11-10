@@ -18,6 +18,7 @@ export const loginUsuario = async (credenciais) => {
 
 export const signupUsuario = async (usuario) => {
   try {
+    console.log(JSON.stringify(usuario));
     const response = await fetch("/api/v1/usuarios", {
       method: "POST",
       headers: {
