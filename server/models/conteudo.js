@@ -1,14 +1,10 @@
 class Conteudo {
-    constructor(id, titulo, descricao, tipo_conteudo, autor_id, data_upload, nivel_dificuldade, duracao, categoria) {
+    constructor(id, postagem_id, tipo_conteudo, url, descricao) {
         this.id = id;
-        this.titulo = titulo;
-        this.descricao = descricao;
+        this.postagem_id = postagem_id;
         this.tipo_conteudo = tipo_conteudo;
-        this.autor_id = autor_id;
-        this.data_upload = data_upload;
-        this.nivel_dificuldade = nivel_dificuldade;
-        this.duracao = duracao;
-        this.categoria = categoria;
+        this.url = url;
+        this.descricao = descricao || null; // Descrição é opcional
     }
 }
 

@@ -7,7 +7,7 @@ const regex_maiusculo = /[A-Z]/;
 const regex_minusculo = /[a-z]/;
 const regex_email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const userRepository = new UserRepository()
+const userRepository = new UserRepository();
 
 class UsuarioController {
     validarNome(nome) {
@@ -62,15 +62,16 @@ class UsuarioController {
         return { isValid: errors.length === 0, errors };
     }
 
-    async criarUsuario(nome, email, senha, tipo) {
-        const usuario = new Usuario(0,nome, email, senha, tipo);
-        const validacao = this.validarDados(usuario);
+    async criarUsuario(usuario, nome, email, senha, tipo, imagem = null) {
+        const novoUsuario = new Usuario(0, usuario, nome, email, senha, imagem, tipo);
+        const validacao = this.validarDados(novoUsuario);
 
         if (!validacao.isValid) {
             return { sucesso: false, erros: validacao.errors };
         }
-        const novoUsuario = await userRepository.createUser(usuario);
-        return { sucesso: true, usuario: novoUsuario };
+
+        const usuarioCriado = await userRepository.createUser(novoUsuario);
+        return { sucesso: true, usuario: usuarioCriado };
     }
     
     async listarUsuarios() {
@@ -81,7 +82,7 @@ class UsuarioController {
     async listarUsuarioPorEmail(email) {
         const usuario = await userRepository.getUserByEmail(email);
         if (!usuario) {
-            return { sucesso: false, erros: [{ campo: 'id', mensagem: "Usuário não encontrado." }] };
+            return { sucesso: false, erros: [{ campo: 'email', mensagem: "Usuário não encontrado." }] };
         }
         return { sucesso: true, usuario };
     }
@@ -94,13 +95,13 @@ class UsuarioController {
         return { sucesso: true, usuario };
     }
     
-    async atualizarUsuario(id, nome, email, senha, tipo) {
+    async atualizarUsuario(id, usuario, nome, email, senha, tipo, imagem = null) {
         const usuarioExistente = await userRepository.getUserById(id);
         if (!usuarioExistente) {
             return { sucesso: false, erros: [{ campo: 'id', mensagem: "Usuário não encontrado." }] };
         }
 
-        const usuarioAtualizado =  new Usuario(id,nome, email, senha, tipo);
+        const usuarioAtualizado = new Usuario(id, usuario, nome, email, senha, imagem, tipo);
         const validacao = this.validarDados(usuarioAtualizado);
 
         if (!validacao.isValid) {

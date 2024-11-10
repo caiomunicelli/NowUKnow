@@ -9,15 +9,12 @@ class ConteudoRepository {
   async createConteudo(conteudo) {
     const connection = await this.dbConnection.connect();
     const [result] = await connection.execute(
-      `INSERT INTO Conteudos (titulo, descricao, tipo_conteudo, autor_id, nivel_dificuldade, duracao, categoria) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO Conteudos (postagem_id, tipo_conteudo, url, descricao) VALUES (?, ?, ?, ?)`,
       [
-        conteudo.titulo,
-        conteudo.descricao,
+        conteudo.postagem_id,
         conteudo.tipo_conteudo,
-        conteudo.autor_id,
-        conteudo.nivel_dificuldade,
-        conteudo.duracao,
-        conteudo.categoria,
+        conteudo.url,
+        conteudo.descricao || null, // Descrição é opcional
       ]
     );
 
@@ -48,15 +45,12 @@ class ConteudoRepository {
   async updateConteudo(conteudo) {
     const connection = await this.dbConnection.connect();
     const [result] = await connection.execute(
-      `UPDATE Conteudos SET titulo = ?, descricao = ?, tipo_conteudo = ?, autor_id = ?, nivel_dificuldade = ?, duracao = ?, categoria = ? WHERE id = ?`,
+      `UPDATE Conteudos SET postagem_id = ?, tipo_conteudo = ?, url = ?, descricao = ? WHERE id = ?`,
       [
-        conteudo.titulo,
-        conteudo.descricao,
+        conteudo.postagem_id,
         conteudo.tipo_conteudo,
-        conteudo.autor_id,
-        conteudo.nivel_dificuldade,
-        conteudo.duracao,
-        conteudo.categoria,
+        conteudo.url,
+        conteudo.descricao || null, // Descrição é opcional
         conteudo.id,
       ]
     );
@@ -81,21 +75,16 @@ class ConteudoRepository {
     const [rows] = await connection.execute(`
             SELECT 
                 c.id AS conteudo_id,
-                c.titulo,
-                c.descricao,
                 c.tipo_conteudo,
-                c.nivel_dificuldade,
-                c.duracao,
-                c.categoria,
-                c.data_upload,
-                u.id AS autor_id,
-                u.nome AS autor_nome,
-                u.email AS autor_email
+                c.url,
+                c.descricao,
+                p.id AS postagem_id,
+                p.titulo AS postagem_titulo
             FROM Conteudos c
-            INNER JOIN Usuarios u ON c.autor_id = u.id
+            INNER JOIN Postagens p ON c.postagem_id = p.id
         `);
 
-    return rows; // Retorna a lista de conteúdos com informações do autor
+    return rows; // Retorna a lista de conteúdos com informações da postagem
   }
 }
 
