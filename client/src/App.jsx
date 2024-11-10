@@ -6,12 +6,11 @@ import {
   Home,
   Login,
   Signup,
-  AuthProvider,
-  PrivateRoute,
   CreatePost,
   Feed,
   Post,
-  About
+  About,
+  PrivateRoute, // Importando o PrivateRoute
 } from "./components";
 import {
   BrowserRouter as Router,
@@ -19,6 +18,7 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
   return (
@@ -32,10 +32,33 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="*" element={<Navigate to="/" />} />
-             <Route path="/createPost" element={<CreatePost />} />{" "}
-            <Route path="/feed" element={<Feed />} />{" "}
-            <Route path="/post" element={<Post />} />{" "}
-            <Route path="/about" element={<About />} />
+
+              {/* Rota privada, acessível apenas se o usuário estiver autenticado */}
+              <Route
+                path="/createPost"
+                element={
+                  <PrivateRoute>
+                    <CreatePost />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/feed"
+                element={
+                  <PrivateRoute>
+                    <Feed />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/post"
+                element={
+                  <PrivateRoute>
+                    <Post />
+                  </PrivateRoute>
+                }
+              />
+              <Route path="/about" element={<About />} />
             </Routes>
           </main>
           <Footer />
