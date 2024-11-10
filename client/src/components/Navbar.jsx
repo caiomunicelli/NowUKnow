@@ -52,6 +52,16 @@ function Navbar() {
           <div className="nowuknow-navbar" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">
+                {isAuthenticated ? (
+                  // Se o usuário estiver autenticado, exibe o nome
+                  <Link className="nav-link" to="/createPost">
+                    Criar Postagem
+                  </Link>
+                ) : (
+                  <></>
+                )}
+              </li>
+              <li className="nav-item">
                 <Link className="nav-link active" to="/">
                   Home
                 </Link>

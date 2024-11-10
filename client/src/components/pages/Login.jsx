@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAuth } from "../../hooks/useAuth"; // Atualizando a importação do useAuth
+import { useAuthContext } from "../../contexts/AuthContext"; // Atualizando a importação do useAuth
 import { useNavigate } from "react-router-dom"; // Importando o useNavigate para navegação dinâmica
 import { Link } from "react-router-dom";
 
@@ -7,8 +7,9 @@ function Login() {
   const [email, setEmail] = useState("");
   const [senha, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { login } = useAuth(); // Acessando a função de login via useAuth
   const navigate = useNavigate(); // Criando a função de navegação
+
+  const { login, error: authError } = useAuthContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

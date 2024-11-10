@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import "./CreatePost.css";
-import { useAuth } from "../../hooks/useAuth"; // Importando o useAuth para acessar o token
+import { useAuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom"; // Importando o useNavigate para navegação dinâmica
 
 const CreatePost = () => {
-  const { isAuthenticated, error, logout } = useAuth(); // Usando o useAuth para obter o estado de autenticação
+  const { isAuthenticated, error, logout } = useAuthContext();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tipoConteudo, setTipoConteudo] = useState("");
