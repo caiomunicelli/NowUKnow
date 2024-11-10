@@ -1,5 +1,3 @@
-// src/utils/validacoesUsuario.js
-
 const regex_num = /\d+/;
 const regex_caracteres_especiais = /[!@#$%^&*(),.?":{}|<>+\-+=\\\/\[\]`~;]/;
 const regex_maiusculo = /[A-Z]/;
@@ -31,7 +29,7 @@ export function validarNome(nome) {
       message: "O campo nome deve incluir o sobrenome.",
     };
   }
-  return { isValid: true };
+  return { isValid: true, message: "" };
 }
 
 export function validarSenha(senha) {
@@ -54,7 +52,7 @@ export function validarSenha(senha) {
         "A senha deve incluir ao menos 8 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.",
     };
   }
-  return { isValid: true };
+  return { isValid: true, message: "" };
 }
 
 export function validarConfirmSenha(confirmSenha, senha) {
@@ -64,7 +62,7 @@ export function validarConfirmSenha(confirmSenha, senha) {
       message: "As senhas não coincidem.",
     };
   } else {
-    return { isValid: true };
+    return { isValid: true, message: "" };
   }
 }
 
@@ -78,7 +76,7 @@ export function validarEmail(email) {
   if (!regex_email.test(email)) {
     return { isValid: false, message: "Você deve inserir um email válido." };
   }
-  return { isValid: true };
+  return { isValid: true, message: "" };
 }
 
 export function validarUsuario(usuario) {
@@ -99,12 +97,12 @@ export function validarUsuario(usuario) {
       message: "O nome de usuário deve conter pelo menos 6 carácteres.",
     };
   }
-  return { isValid: true };
+  return { isValid: true, message: "" };
 }
 
 export function validarFoto(foto) {
   if (!foto) {
-    return { isValid: true }; // Foto não é obrigatória, então retorna válida se estiver ausente
+    return { isValid: true, message: "" }; // Foto não é obrigatória, então retorna válida se estiver ausente
   }
   if (!extensoes_aceitas.includes(foto.type)) {
     return {
@@ -113,7 +111,7 @@ export function validarFoto(foto) {
         "Formato de imagem inválido. Apenas PNG, JPG, GIF e WEBP são permitidos.",
     };
   }
-  return { isValid: true };
+  return { isValid: true, message: "" };
 }
 
 export const gerenciarErros = (
@@ -126,9 +124,6 @@ export const gerenciarErros = (
   campoAlterado,
   errosAtuais
 ) => {
-  console.log("Campo atual: ", campoAlterado);
-  console.log("Erros:\n", errosAtuais);
-  // Atualiza o erro para o campo alterado, mantendo os outros erros intactos
   const errors = { ...errosAtuais };
 
   switch (campoAlterado) {
@@ -162,6 +157,5 @@ export const gerenciarErros = (
     default:
       break;
   }
-  console.log("Erros agora:\n", errors);
   return errors;
 };

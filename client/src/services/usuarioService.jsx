@@ -20,11 +20,12 @@ export const fetchUsuarioLogado = async () => {
 
 export const signup = async (usuario) => {
   try {
+    console.log(usuario);
     const response = await signupUsuario(usuario); // Chama a API de cadastro do usuário
-    if (!response) throw new Error("Erro ao cadastrar usuário");
+    if (!response) throw new Error("Erro ao cadastrar usuário no service");
     return response;
   } catch (error) {
-    console.error("Erro ao cadastrar usuário:", error);
+    console.error("Erro ao cadastrar usuário no service:", error);
     throw error;
   }
 };

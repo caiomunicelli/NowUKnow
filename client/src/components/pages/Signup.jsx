@@ -38,7 +38,7 @@ function Signup() {
       );
       setErrors(newErrors);
     }
-  }, [campoAlterado, nome, usuario, email, senha, confirmSenha, foto, errors]);
+  }, [campoAlterado, nome, usuario, email, senha, confirmSenha, foto]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -67,7 +67,15 @@ function Signup() {
       return;
     }
 
-    const novoUsuario = { nome, usuario, email, senha, foto };
+    const novoUsuario = new FormData();
+    novoUsuario.append("nome", nome);
+    novoUsuario.append("usuario", usuario);
+    novoUsuario.append("email", email);
+    novoUsuario.append("senha", senha);
+    novoUsuario.append("tipo", "tipo_usuario"); // Inclua o campo tipo se necessário
+    if (foto) {
+      novoUsuario.append("foto", foto); // Adiciona o arquivo da imagem
+    }
     const response = await signup(novoUsuario);
 
     if (response) {
