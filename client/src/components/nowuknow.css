@@ -1,0 +1,91 @@
+@import url('fonts.css');
+
+:root {
+  /* Cores principais */
+  --nouwknow-font-family: "Poppins", sans-serif;
+  --nowuknow-background-dark: oklch(0.07 0.12 211);    /* Rich Black - Cor de fundo principal */
+  --nowuknow-text-primary: oklch(0.85 0.06 75);         /* Platinum - Cor de texto claro */
+  
+  /* Tonalidades mais escuras do fundo */
+  --nowuknow-background-darker: oklch(0.05 0.14 219);   /* Oxford Blue - Fundo mais escuro */
+  --nowuknow-text-darker: oklch(0.29 0.11 212);         /* Yinmn Blue - Texto secundário escuro */
+  
+  /* Tonalidades mais claras do fundo */
+  --nowuknow-background-lighter: oklch(0.51 0.08 214);  /* Silver Lake Blue - Fundo claro */
+  --nowuknow-text-lighter: oklch(0.89 0.02 75);         /* Platinum - Texto bem claro */
+  
+  /* Cores de Destaque */
+  --nowuknow-highlight-dark: oklch(0.29 0.15 212);      /* Yinmn Blue - Destaques escuros */
+  --nowuknow-highlight-light: oklch(0.65 0.15 214);     /* Silver Lake Blue - Destaques claros */
+
+  /* Cores Genéricas de Suporte (para qualquer tipo de status ou alerta) */
+  --nowuknow-support-primary: oklch(0.29 0.12 212);     /* Cor de suporte principal (Yinmn Blue) */
+  --nowuknow-support-secondary: oklch(0.51 0.08 214);   /* Cor de alerta ou secundária (Silver Lake Blue) */
+
+  /* Cores Neutras */
+  --nowuknow-background-light: oklch(0.89 0.02 75);     /* Platinum - Fundo muito claro */
+  --nowuknow-text-secondary: oklch(0.29 0.11 212);      /* Yinmn Blue - Texto secundário */
+  
+  /* Gradientes */
+  --nowuknow-gradient-top: linear-gradient(0deg, #0d1b2aff, #1b263bff, #415a77ff, #778da9ff, #e0e1ddff);
+  --nowuknow-gradient-right: linear-gradient(90deg, #0d1b2aff, #1b263bff, #415a77ff, #778da9ff, #e0e1ddff);
+  --nowuknow-gradient-bottom: linear-gradient(180deg, #0d1b2aff, #1b263bff, #415a77ff, #778da9ff, #e0e1ddff);
+  --nowuknow-gradient-left: linear-gradient(270deg, #0d1b2aff, #1b263bff, #415a77ff, #778da9ff, #e0e1ddff);
+  --nowuknow-gradient-top-right: linear-gradient(45deg, #0d1b2aff, #1b263bff, #415a77ff, #778da9ff, #e0e1ddff);
+  --nowuknow-gradient-bottom-right: linear-gradient(135deg, #0d1b2aff, #1b263bff, #415a77ff, #778da9ff, #e0e1ddff);
+  --nowuknow-gradient-top-left: linear-gradient(225deg, #0d1b2aff, #1b263bff, #415a77ff, #778da9ff, #e0e1ddff);
+  --nowuknow-gradient-bottom-left: linear-gradient(315deg, #0d1b2aff, #1b263bff, #415a77ff, #778da9ff, #e0e1ddff);
+  --nowuknow-gradient-radial: radial-gradient(#0d1b2aff, #1b263bff, #415a77ff, #778da9ff, #e0e1ddff);
+}
+
+body {
+  font-family: var(--nouwknow-font-family);
+}
+
+.nowuknow-app {
+  font-family: var(--nouwknow-font-family);
+  display: flex;
+  flex-direction: column; /* Organizando os elementos em coluna */
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
+.nowuknow-header {
+  background-color: var(--nowuknow-background-dark);
+  color: var(--nowuknow-text-primary);
+}
+
+.nowuknow-main {
+  background-color: var(--nowuknow-background-dark);  /* Fundo escuro usando Rich Black */
+  color: var(--nowuknow-text-primary);  /* Texto claro usando Platinum */
+  flex: 1; /* Fazendo o main ocupar o espaço restante entre o header e o footer */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px; /* Espaçamento interno */
+}
+
+.nowuknow-main h2 {
+  color: var(--nowuknow-text-secondary);  /* Texto secundário em Yinmn Blue */
+}
+
+.nowuknow-main h3 {
+  color: var(--nowuknow-highlight-light);  /* Cor de destaque clara (Silver Lake Blue) */
+}
+
+.nowuknow-support1 {
+  color: var(--nowuknow-support-primary);  /* Cor de suporte principal (Yinmn Blue) */
+}
+
+.nowuknow-support2 {
+  color: var(--nowuknow-support-secondary); /* Cor de alerta ou secundária (Silver Lake Blue) */
+}
+
+.nowuknow-button1 {
+  background-color: var(--nowuknow-highlight-dark);  /* Cor de fundo do botão (Yinmn Blue) */
+}
+
+.nowuknow-button2 {
+  background-color: var(--nowuknow-highlight-light);  /* Cor de fundo do botão (Silver Lake Blue) */
+}
