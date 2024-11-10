@@ -29,8 +29,8 @@ function Navbar() {
   }, [isAuthenticated]);
 
   return (
-    <header>
-      <nav className="navbar navbar-expand-lg bg-light">
+    <header className="nowuknow-header">
+      <nav className="navbar navbar-expand-lg">
         <div className="container-fluid">
           <Link className="navbar-brand nowuknow-brand" to="/">
             NowUKnow
