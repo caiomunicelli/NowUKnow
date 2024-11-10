@@ -16,24 +16,25 @@ export const loginUsuario = async (credenciais) => {
   }
 };
 
-export const signupUsuario = async (usuario) => {
+export const signupUsuario = async (novoUsuario) => {
   try {
-    console.log(JSON.stringify(usuario));
+    console.log("Novo Usuario: ", novoUsuario);
     const response = await fetch("/api/v1/usuarios", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(usuario),
+      body: novoUsuario,
     });
+
     if (response.ok) {
       const data = await response.json();
       console.log("Sucesso: ", data);
-      return true; // Login bem-sucedido
+      return true; // Cadastro bem-sucedido
+    } else {
+      console.error("Erro na resposta:", response.statusText);
+      return false;
     }
   } catch (error) {
-    console.error("Erro no login:", error);
-    return false; // Falha no login
+    console.error("Erro no cadastro:", error);
+    return false; // Falha no cadastro
   }
 };
 
