@@ -20,11 +20,18 @@ class PostagemRepository {
         postagem.certificacaoId,
       ]
     );
-
-    return {
-      id: result.insertId,
-      ...postagem,
-    };
+    
+    const newPostagem = new Postagem(
+      result.insertId,
+      postagem.titulo,
+      postagem.tipoPostagem,
+      postagem.autorId,
+      postagem.categoriaId,
+      postagem.certificacaoId,
+      new Date()
+    );
+    console.log('result -> ' + result.insertId);
+    return newPostagem;
   }
 
   // Obter todas as postagens
