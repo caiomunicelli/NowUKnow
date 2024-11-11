@@ -5,11 +5,11 @@ const Post = ({ title, username, date, text }) => {
   const formattedDate = new Date(date).toLocaleDateString("pt-BR");
 
   return (
-    <div className="post">
-      <h3 className="post-title">{title}</h3>
-      <p className="post-user">Por: {username}</p>
-      <p className="post-date">Publicado em: {formattedDate}</p>
-      {text && <p className="post-text">{text}</p>}
+    <div className="nowuknow-post-container">
+      <h3 className="nowuknow-post-title">{title}</h3>
+      <p className="nowuknow-post-user">Por: {username}</p>
+      <p className="nowuknow-post-date">Publicado em: {formattedDate}</p>
+      {text && <p className="nowuknow-post-text">{text}</p>}
     </div>
   );
 };
