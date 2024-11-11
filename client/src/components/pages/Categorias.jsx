@@ -24,7 +24,7 @@ const CategoriasPage = () => {
   };
 
   return (
-    <div className="nowuknow-categorias-container">
+    <div className="nowuknow-box-container">
       <h1>Categorias de Aprendizado</h1>
       <div className="nowuknow-categorias-lista">
         {categorias.map((categoria) => (

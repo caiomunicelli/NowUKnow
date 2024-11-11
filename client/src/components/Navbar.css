@@ -1,19 +1,53 @@
+.nowuknow-header {
+    color: var(--nowuknow-text-primary);
+    padding: 2px 10px;
+    height: 60px;
+    display: flex;
+    justify-content: space-around;
+    position: fixed;
+    top: 0;
+    align-items: center;
+    background-color: var(--nowuknow-bg-dark);
+    width: 100%;
+    z-index: 1;
+    box-shadow: rgb(0 0 0 / 30%) 0px 1px 4px 0px;
+}
+
 .nowuknow-navbar {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
+    flex: 1;
 }
 
 .nowuknow-navbar-middle {
     display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.nowuknow-navbar-left {
+    display: flex;
+    justify-content: flex-start;
+    min-width: 300px;
+    align-items: center;
     flex-grow: 1
-    
+}
+
+.nowuknow-navbar-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-grow: 1
 }
 
 .nowuknow-brand{
     color: var(--nowuknow-text-highlight);
     text-decoration: none;
     font-size: 16pt;
+    padding-left: 0.5em;
 }
 
 .nowuknow-search {
@@ -24,12 +58,19 @@
     align-items: center;
 }
 
+.nowuknow-search-form {
+    display: flex;
+    align-items: center;
+    width: 600px;
+    min-width: 300px;
+}
+
 .nowuknow-search input {
     border-radius: 25px;
     width: 100%;
     border: 1px solid var(--nowuknow-bg-accent);
-    background-color: var(--nowuknow-bg-dark);
-    color: var(--nowuknow-text-primary);
+    background-color: var(--nowuknow-bg-light);
+    color: var(--nowuknow-text-muted);
     padding: .375rem .75rem;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
@@ -41,17 +82,22 @@
     color: var(--nowuknow-text-secondary);
 }
 
-
 .nowuknow-search-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    align-content: center;
     width: 2em;
     height: 2em;
     border-radius: 50%;
     background-color: var(--nowuknow-bg-dark);
-    border: 1px solid var(--nowuknow-bg-accent);
+    border: 2px solid var(--nowuknow-bg-accent);
+}
+
+.nowuknow-navbar-nav {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .nowuknow-nav-item {
@@ -71,4 +117,20 @@
 
 .nowuknow-nav-link:hover {
     color: var(--nowuknow-text-secondary)
+}
+
+.nowuknow-menu-btn {
+    background: none;
+    border: none;
+    color: var(--nowuknow-bg-light);
+    font-size: 1.5rem;
+    cursor: pointer;
+    max-width: 60px;
+}
+
+.nowuknow-perfil-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
 }

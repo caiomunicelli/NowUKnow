@@ -97,9 +97,9 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="container">
+    <div className="nowuknow-box-container">
       <h2>Criar uma Nova Postagem</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="nowuknow-form-container">
         {error && <div className="alert alert-danger">{error}</div>}
 
         <div className="mb-3">
@@ -229,7 +229,7 @@ const CreatePost = () => {
           </select>
         </div>
 
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="nowuknow-btn">
           Postar
         </button>
       </form>

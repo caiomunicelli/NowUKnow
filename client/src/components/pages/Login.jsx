@@ -26,9 +26,9 @@ function Login() {
   };
 
   return (
-    <div className="container">
+    <div className="nowuknow-box-container">
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="nowuknow-form-container">
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
             Email
@@ -56,7 +56,7 @@ function Login() {
           />
         </div>
         {error && <p className="text-danger">{error}</p>}
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="nowuknow-btn">
           Entrar
         </button>
       </form>

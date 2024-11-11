@@ -4,7 +4,13 @@
     align-items: center;
     color: var(--nowuknow-text-primary);
     padding: 10px 0;
-    border-top: 1px solid var(--nowuknow-bg-accent);
+    height: 60px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    background-color: var(--nowuknow-bg-dark);
+    box-shadow: rgb(0 0 0 / 30%) 0px -1px 4px 0px;
 }
 
 .nowuknow-footer p {

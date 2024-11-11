@@ -20,3 +20,15 @@
   font-size: 1em;
   color: #333;
 }
+
+.nowuknow-post-container {
+    background-color: var(--nowuknow-bg-light);
+    padding: 20px 40px;
+    border-radius: 20px;
+    box-shadow: #00000059 0 1px 4px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    color: var(--nowuknow-text-muted);
+    border-bottom: var(--nowuknow-bg-accent) solid 2px;
+}
