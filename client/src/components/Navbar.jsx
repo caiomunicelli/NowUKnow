@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useAuthContext } from "../contexts/AuthContext"; // Usando o contexto para acessar o estado de autenticação
-import { fetchUsuarioLogado } from "../services/usuarioService"; // Importando o serviço de usuário
+import { Link, useLocation } from "react-router-dom"; // Importando useLocation
+import { useAuthContext } from "../contexts/AuthContext";
+import { fetchUsuarioLogado } from "../services/usuarioService";
 import "./Navbar.css";
 
 function Navbar() {
-  const { isAuthenticated, logout } = useAuthContext(); // Acessando a função de login e logout via useAuth
-  const [usuarioNome, setUsuarioNome] = useState(null); // Estado para armazenar o nome do usuário
-  const [erro, setErro] = useState(null); // Para lidar com erros na busca dos dados
+  const { isAuthenticated, logout } = useAuthContext();
+  const [usuarioNome, setUsuarioNome] = useState(null);
+  const [erro, setErro] = useState(null);
+
+  const location = useLocation(); // Obtendo a localização atual
 
   useEffect(() => {
-    console.log("Autenticado: ", isAuthenticated);
     const fetchUsuario = async () => {
       try {
-        const dadosUsuario = await fetchUsuarioLogado(); // Chama o serviço para obter o usuário
-        setUsuarioNome(dadosUsuario.nome); // Define o nome do usuário no estado
+        const dadosUsuario = await fetchUsuarioLogado();
+        setUsuarioNome(dadosUsuario.nome);
       } catch (erro) {
         setErro("Não foi possível carregar os dados do usuário.");
         console.error(erro);
@@ -22,74 +23,111 @@ function Navbar() {
     };
 
     if (isAuthenticated) {
-      fetchUsuario(); // Só busca os dados se o usuário estiver autenticado
+      fetchUsuario();
     } else {
-      setUsuarioNome(null); // Se não estiver autenticado, reseta o nome do usuário
+      setUsuarioNome(null);
     }
   }, [isAuthenticated]);
 
+  // Função para determinar se o link está ativo
+  const isActive = (path) => location.pathname === path;
+
   return (
-    <header>
-      <nav className="navbar navbar-expand-lg bg-light">
+    <header className="nowuknow-header">
+      <nav className="navbar navbar-expand-lg">
         <div className="container-fluid">
-          <Link className="navbar-brand nowuknow-brand" to="/">
+          <Link className="nowuknow-brand" to="/">
             NowUKnow
           </Link>
-          <form
-            className="d-flex mx-auto nowuknow-search-form nowuknow-search"
-            role="search"
-          >
-            <div>
+          <div className="nowuknow-navbar-middle">
+            <form
+              className="d-flex mx-auto nowuknow-search-form nowuknow-search"
+              role="search"
+            >
               <input
-                className="form-control me-2"
                 type="search"
                 placeholder="Busque algum conteúdo, categoria ou autor"
                 aria-label="Search"
               />
-              <button className="btn btn-outline-success" type="submit">
-                <i className="bi bi-search"></i> Buscar
+              <button className="nowuknow-search-btn" type="submit">
+                <i className="bi bi-search"></i>
               </button>
-            </div>
-          </form>
+            </form>
+          </div>
           <div className="nowuknow-navbar" id="navbarNav">
             <ul className="navbar-nav">
-              <li className="nav-item">
+              <li className="nowuknow-nav-item">
                 {isAuthenticated ? (
-                  // Se o usuário estiver autenticado, exibe o nome
-                  <Link className="nav-link" to="/createPost">
+                  <Link
+                    className={`nowuknow-nav-link ${
+                      isActive("/createPost") ? "nowuknow-active" : ""
+                    }`}
+                    to="/createPost"
+                  >
                     Criar Postagem
                   </Link>
-                ) : (
-                  <></>
-                )}
+                ) : null}
               </li>
-              <li className="nav-item">
-                <Link className="nav-link active" to="/">
+              <li className="nowuknow-nav-item">
+                <Link
+                  className={`nowuknow-nav-link ${
+                    isActive("/") ? "nowuknow-active" : ""
+                  }`}
+                  to="/"
+                >
                   Home
                 </Link>
               </li>
-              <li className="nav-item">
-                {isAuthenticated ? (
-                  // Se o usuário estiver autenticado, exibe o nome
-                  <span className="nav-link">{usuarioNome}</span>
-                ) : (
-                  <></>
-                )}
+              <li className="nowuknow-nav-item">
+                <Link
+                  className={`nowuknow-nav-link ${
+                    isActive("/categorias") ? "nowuknow-active" : ""
+                  }`}
+                  to="/categorias"
+                >
+                  Categorias
+                </Link>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link active" to="/about">
+              <li className="nowuknow-nav-item">
+                <Link
+                  className={`nowuknow-nav-link ${
+                    isActive("/about") ? "nowuknow-active" : ""
+                  }`}
+                  to="/about"
+                >
                   Sobre
                 </Link>
               </li>
-              <li className="nav-item">
+              <li className="nowuknow-nav-item">
                 {isAuthenticated ? (
-                  // Se o usuário estiver autenticado, exibe o botão de logout
-                  <Link className="nav-link" to="#" onClick={logout}>
+                  <Link
+                    className={`nowuknow-nav-link ${
+                      isActive("/perfil") ? "nowuknow-active" : ""
+                    }`}
+                    to="/perfil"
+                  >
+                    {usuarioNome}
+                  </Link>
+                ) : null}
+              </li>
+              <li className="nowuknow-nav-item">
+                {isAuthenticated ? (
+                  <Link
+                    className={`nowuknow-nav-link ${
+                      isActive("/login") ? "nowuknow-active" : ""
+                    }`}
+                    to="#"
+                    onClick={logout}
+                  >
                     Logout
                   </Link>
                 ) : (
-                  // Se o usuário não estiver autenticado, exibe o botão de login
-                  <Link className="nav-link" to="/login">
+                  <Link
+                    className={`nowuknow-nav-link ${
+                      isActive("/login") ? "nowuknow-active" : ""
+                    }`}
+                    to="/login"
+                  >
                     Login
                   </Link>
                 )}

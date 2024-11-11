@@ -1,146 +1,237 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./CreatePost.css";
 import { useAuthContext } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom"; // Importando o useNavigate para navegação dinâmica
+import { useNavigate } from "react-router-dom";
+import { fetchCategorias } from "../../services/categoriaService";
+import { fetchCertificacoes } from "../../services/certificacaoService";
+import { publicaPostagem } from "../../services/postagemService";
+import { publicaDiscussao } from "../../services/discussaoService";
 
 const CreatePost = () => {
-  const { isAuthenticated, error, logout } = useAuthContext();
+  const { error } = useAuthContext();
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [tipoConteudo, setTipoConteudo] = useState("");
-  const [nivelDificuldade, setNivelDificuldade] = useState("");
-  const [categoria, setCategoria] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const navigate = useNavigate(); // Criando a função de navegação
+  const [categoriaId, setCategoriaId] = useState("");
+  const [certificacaoId, setCertificacaoId] = useState("");
+  const [categorias, setCategorias] = useState([]);
+  const [certificacoes, setCertificacoes] = useState([]);
+  const [tipoDiscussao, setTipoDiscussao] = useState("");
+  const [texto, setTexto] = useState("");
+  const [tipoConteudoDetalhado, setTipoConteudoDetalhado] = useState("");
+  const [url, setUrl] = useState("");
+  const [descricao, setDescricao] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getCategorias = async () => {
+      try {
+        const data = await fetchCategorias();
+        setCategorias(data);
+      } catch (error) {
+        console.error("Erro ao carregar categorias:", error);
+      }
+    };
+
+    const getCertificacoes = async () => {
+      try {
+        const data = await fetchCertificacoes();
+        setCertificacoes(data);
+      } catch (error) {
+        console.error("Erro ao carregar certificações:", error);
+      }
+    };
+
+    getCategorias();
+    getCertificacoes();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Obtendo o token de autenticação através do hook useAuth
-    const token = localStorage.getItem("authToken"); // Ou use o método adequado para obter o token de seu estado global
-
-    // Verifica se todos os campos obrigatórios estão preenchidos
-    if (
-      !title ||
-      !description ||
-      !tipoConteudo ||
-      !nivelDificuldade ||
-      !categoria ||
-      !imageUrl
-    ) {
+    if (!title || !tipoConteudo || !categoriaId || !certificacaoId) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
-
-    // Monta o objeto postData
     const postData = {
       titulo: title,
-      descricao: description,
-      tipo_conteudo: tipoConteudo,
-      nivel_dificuldade: nivelDificuldade,
-      categoria: categoria,
-      imagem_url: imageUrl,
+      tipoPostagem: tipoConteudo,
+      autorId: 1, // Ajuste conforme necessário
+      categoriaId: parseInt(categoriaId),
+      certificacaoId: parseInt(certificacaoId),
     };
 
     try {
-      // Realiza a requisição POST
-      const response = await fetch("/api/v1/conteudos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": token, // Usando o token obtido do hook useAuth
-        },
-        body: JSON.stringify(postData),
-      });
+      const response = await publicaPostagem(postData);
+      if (response) {
+        const postagemId = response.id;
+        if (tipoConteudo === "discussao") {
+          const postDataDiscussao = {
+            postagemId: postagemId,
+            tipoDiscussao: tipoDiscussao,
+            texto: texto,
+          };
+          const responseDiscussao = publicaDiscussao(postDataDiscussao);
+          if (!responseDiscussao) {
+            console.log("Erro desconhecido ao criar discussão");
+          }
+        } else if (tipoConteudo === "conteudo") {
+          await createConteudo({
+            postagemId,
+            tipoConteudo: tipoConteudoDetalhado,
+            url,
+            descricao,
+          });
+        }
 
-      if (response.ok) {
-        // Se a resposta for OK, navega para a página de feed ou home
-        navigate("/feed");
+        navigate("/");
       } else {
-        const errorData = await response.json().catch(() => response.text());
-        alert(
-          "Erro ao cadastrar conteúdo: " + (errorData || "Erro desconhecido.")
-        );
+        alert("Erro ao cadastrar postagem: Erro desconhecido.");
       }
     } catch (error) {
       alert("Erro na requisição: " + error.message);
     }
 
-    // Após o envio, limpa os campos do formulário
     setTitle("");
-    setDescription("");
     setTipoConteudo("");
-    setNivelDificuldade("");
-    setCategoria("");
-    setImageUrl("");
+    setCategoriaId("");
+    setCertificacaoId("");
   };
 
   return (
-    <div className="new-post-form">
-      <h2>Criar um Novo Post</h2>
+    <div className="container">
+      <h2>Criar uma Nova Postagem</h2>
       <form onSubmit={handleSubmit}>
-        {error && <div className="alert alert-danger">{error}</div>}{" "}
-        {/* Exibe erros acima do formulário */}
-        <div className="form-group">
+        {error && <div className="alert alert-danger">{error}</div>}
+
+        <div className="mb-3">
           <label>Título:</label>
           <input
             type="text"
+            className="nowuknow-input"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Preencha o título"
             required
           />
         </div>
-        <div className="form-group">
-          <label>Descrição:</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Preencha a descrição"
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Tipo de conteúdo:</label>
-          <input
-            type="text"
+
+        <div className="mb-3">
+          <label>Tipo de Conteúdo:</label>
+          <select
+            className="nowuknow-input"
             value={tipoConteudo}
             onChange={(e) => setTipoConteudo(e.target.value)}
-            placeholder="Preencha o tipo de conteúdo"
             required
-          />
+          >
+            <option value="">Selecione o tipo de conteúdo</option>
+            <option value="discussao">Discussão</option>
+            <option value="conteudo">Conteúdo</option>
+          </select>
         </div>
-        <div className="form-group">
-          <label>Nível de dificuldade:</label>
-          <input
-            type="text"
-            value={nivelDificuldade}
-            onChange={(e) => setNivelDificuldade(e.target.value)}
-            placeholder="Preencha o nível de dificuldade"
-            required
-          />
-        </div>
-        <div className="form-group">
+
+        {tipoConteudo === "discussao" && (
+          <>
+            <div className="mb-3">
+              <label>Tipo de Discussão:</label>
+              <select
+                className="nowuknow-input"
+                value={tipoDiscussao}
+                onChange={(e) => setTipoDiscussao(e.target.value)}
+                required
+              >
+                <option value="">Selecione o tipo de discussão</option>
+                <option value="duvida">Dúvida</option>
+                <option value="tutorial">Tutorial</option>
+              </select>
+            </div>
+            <div className="mb-3">
+              <label>Texto:</label>
+              <textarea
+                className="nowuknow-input"
+                value={texto}
+                onChange={(e) => setTexto(e.target.value)}
+                placeholder="Escreva o texto da discussão"
+                required
+              />
+            </div>
+          </>
+        )}
+
+        {tipoConteudo === "conteudo" && (
+          <>
+            <div className="mb-3">
+              <label>Tipo de Conteúdo:</label>
+              <select
+                className="nowuknow-input"
+                value={tipoConteudoDetalhado}
+                onChange={(e) => setTipoConteudoDetalhado(e.target.value)}
+                required
+              >
+                <option value="">Selecione o tipo de conteúdo</option>
+                <option value="video">Vídeo</option>
+                <option value="material_de_aprendizado">
+                  Material de Aprendizado
+                </option>
+              </select>
+            </div>
+            <div className="mb-3">
+              <label>URL:</label>
+              <input
+                type="url"
+                className="nowuknow-input"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="Informe o URL"
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label>Descrição (opcional):</label>
+              <textarea
+                className="nowuknow-input"
+                value={descricao}
+                onChange={(e) => setDescricao(e.target.value)}
+                placeholder="Descrição do conteúdo"
+              />
+            </div>
+          </>
+        )}
+
+        <div className="mb-3">
           <label>Categoria:</label>
-          <input
-            type="text"
-            value={categoria}
-            onChange={(e) => setCategoria(e.target.value)}
-            placeholder="Preencha a categoria"
+          <select
+            className="nowuknow-input"
+            value={categoriaId}
+            onChange={(e) => setCategoriaId(e.target.value)}
             required
-          />
+          >
+            <option value="">Selecione uma categoria</option>
+            {categorias.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.nome}
+              </option>
+            ))}
+          </select>
         </div>
-        <div className="form-group">
-          <label>URL da Imagem:</label>
-          <input
-            type="url"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            placeholder="Preencha a URL da imagem"
-            required
-          />
+
+        <div className="mb-3">
+          <label>Certificação:</label>
+          <select
+            className="nowuknow-input"
+            value={certificacaoId}
+            onChange={(e) => setCertificacaoId(e.target.value)}
+          >
+            <option value="">Selecione uma certificação</option>
+            {certificacoes.map((cert) => (
+              <option key={cert.id} value={cert.id}>
+                {cert.nome}
+              </option>
+            ))}
+          </select>
         </div>
-        <button type="submit">Postar</button>
+
+        <button type="submit" className="btn btn-primary">
+          Postar
+        </button>
       </form>
     </div>
   );

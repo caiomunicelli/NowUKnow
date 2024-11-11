@@ -35,7 +35,7 @@ function Login() {
           </label>
           <input
             type="email"
-            className="form-control"
+            className="nowuknow-input"
             id="email"
             required
             value={email}
@@ -48,7 +48,7 @@ function Login() {
           </label>
           <input
             type="password"
-            className="form-control"
+            className="nowuknow-input"
             id="senha"
             required
             value={senha}

@@ -9,8 +9,10 @@ import {
   CreatePost,
   Feed,
   Post,
+  Perfil,
   About,
-  PrivateRoute, // Importando o PrivateRoute
+  PrivateRoute,
+  Categorias,
 } from "./components";
 import {
   BrowserRouter as Router,
@@ -29,6 +31,7 @@ function App() {
           <main className="nowuknow-main">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/categorias" element={<Categorias />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="*" element={<Navigate to="/" />} />
@@ -45,16 +48,20 @@ function App() {
               <Route
                 path="/feed"
                 element={
-                  <PrivateRoute>
                     <Feed />
-                  </PrivateRoute>
                 }
               />
               <Route
                 path="/post"
                 element={
-                  <PrivateRoute>
                     <Post />
+                }
+              />
+              <Route
+                path="/perfil"
+                element={
+                  <PrivateRoute>
+                    <Perfil />
                   </PrivateRoute>
                 }
               />
