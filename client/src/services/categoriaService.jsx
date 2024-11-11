@@ -5,7 +5,7 @@ import {
   createCategoria,
   updateCategoria,
   deleteCategoria,
-} from "../apis/categoriaApi";
+} from "../api/categoriaApi";
 
 export const fetchCategorias = async () => {
   try {

@@ -2,7 +2,7 @@
 
 export const getCategorias = async () => {
   try {
-    const response = await fetch("/api/categorias/all", {
+    const response = await fetch("/api/v1/categorias/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

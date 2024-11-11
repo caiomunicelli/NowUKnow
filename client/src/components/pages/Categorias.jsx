@@ -1,6 +1,5 @@
-// Exemplo de como utilizar o serviço na página
 import React, { useEffect, useState } from "react";
-import { fetchCategorias } from "../services/categoriaService";
+import { fetchCategorias } from "../../services/categoriaService";
 
 const CategoriasPage = () => {
   const [categorias, setCategorias] = useState([]);
@@ -18,14 +17,30 @@ const CategoriasPage = () => {
     loadCategorias();
   }, []);
 
+  const handleViewContent = (categoriaId) => {
+    // Lógica para exibir conteúdos e certificações relacionados a essa categoria
+    console.log(`Visualizando conteúdos para categoria com ID: ${categoriaId}`);
+  };
+
   return (
-    <div>
+    <div className="nowuknow-lista-categorias">
       <h1>Categorias</h1>
-      <ul>
+      <div className="categorias-list">
         {categorias.map((categoria) => (
-          <li key={categoria.id}>{categoria.nome}</li>
+          <div key={categoria.id} className="nowuknow-categoria">
+            <img
+              src={categoria.imagem}
+              alt={categoria.nome}
+              className="categoria-imagem"
+            />
+            <h2>{categoria.nome}</h2>
+            <p>{categoria.descricao}</p>
+            <button onClick={() => handleViewContent(categoria.id)}>
+              Ver conteúdos e certificações
+            </button>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

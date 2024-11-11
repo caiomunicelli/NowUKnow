@@ -79,6 +79,16 @@ function Navbar() {
                 </Link>
               </li>
               <li className="nowuknow-nav-item">
+                <Link
+                  className={`nowuknow-nav-link ${
+                    isActive("/categorias") ? "nowuknow-active" : ""
+                  }`}
+                  to="/categorias"
+                >
+                  Categorias
+                </Link>
+              </li>
+              <li className="nowuknow-nav-item">
                 {isAuthenticated ? (
                   <span className="nowuknow-nav-link">{usuarioNome}</span>
                 ) : null}

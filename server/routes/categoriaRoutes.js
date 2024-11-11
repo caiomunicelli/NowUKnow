@@ -25,7 +25,7 @@ router.post("/", verifyJWT, async (req, res) => {
 });
 
 // Rota: Listar todas as categorias (GET /)
-router.get("/all", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const resultado = await categoriaController.listarCategorias();
     res.status(200).json(resultado.categorias); // Retorna a lista de categorias

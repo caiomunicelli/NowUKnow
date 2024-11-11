@@ -1,3 +1,6 @@
+const DatabaseConnection = require("../db/databaseConnection.js");
+const Postagem = require("../models/postagem.js");
+
 class PostagemRepository {
   constructor() {
     this.dbConnection = new DatabaseConnection();

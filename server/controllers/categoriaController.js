@@ -1,3 +1,8 @@
+const CategoriaRepository = require("../service/categoriaService.js");
+const Categoria = require("../models/categoria.js");
+
+const categoriaRepository = new CategoriaRepository();
+
 class CategoriaController {
   // Validar os dados da categoria
   validarDados(categoria) {
