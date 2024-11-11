@@ -9,6 +9,7 @@ import {
   CreatePost,
   Feed,
   Post,
+  Perfil,
   About,
   PrivateRoute,
   Categorias,
@@ -57,6 +58,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <Post />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/perfil"
+                element={
+                  <PrivateRoute>
+                    <Perfil />
                   </PrivateRoute>
                 }
               />

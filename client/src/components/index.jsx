@@ -10,3 +10,4 @@ export { default as About } from "./pages/About";
 export { default as Categorias } from "./pages/Categorias";
 export { default as Feed } from "./Feed";
 export { default as Post } from "./Post";
+export { default as Perfil } from "./pages/Perfil";
