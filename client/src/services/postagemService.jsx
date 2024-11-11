@@ -7,7 +7,7 @@ export const publicaPostagem = async (postagem) => {
       const token = getToken(); // Obtém o token do authService
       if (!token) throw new Error("Usuário não autenticado");
       console.log(postagem);
-      const response = await createPostagem(postagem); // Chama a API de cadastro do usuário
+      const response = await createPostagem(postagem,token); // Chama a API de cadastro do usuário
       if (!response) throw new Error("Erro ao publicar postagem no service");
       return response;
     } catch (error) {

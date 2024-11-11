@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import "./CreatePost.css";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-
+import { fetchCategorias } from "../../services/categoriaService";
+import { fetchCertificacoes } from "../../services/certificacaoService";
+import { publicaPostagem } from "../../services/postagemService";
+import { publicaDiscussao } from "../../services/discussaoService";
 const CreatePost = () => {
   const { error } = useAuthContext();
   const [title, setTitle] = useState("");
@@ -11,42 +14,42 @@ const CreatePost = () => {
   const [certificacaoId, setCertificacaoId] = useState("");
   const [categorias, setCategorias] = useState([]);
   const [certificacoes, setCertificacoes] = useState([]);
+  const [tipoDiscussao, setTipoDiscussao] = useState("");
+  const [texto, setTexto] = useState("");
+  const [tipoConteudoDetalhado, setTipoConteudoDetalhado] = useState("");
+  const [url, setUrl] = useState("");
+  const [descricao, setDescricao] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCategorias = async () => {
+    const getCategorias = async () => {
       try {
-        const response = await fetch("/api/v1/categorias");
-        const data = await response.json();
+        const data = await fetchCategorias();
         setCategorias(data);
       } catch (error) {
         console.error("Erro ao carregar categorias:", error);
       }
     };
 
-    const fetchCertificacoes = async () => {
+    const getCertificacoes = async () => {
       try {
-        const response = await fetch("/api/v1/certificacoes");
-        const data = await response.json();
+        const data = await fetchCertificacoes();
         setCertificacoes(data);
       } catch (error) {
         console.error("Erro ao carregar certificações:", error);
       }
     };
 
-    fetchCategorias();
-    fetchCertificacoes();
+    getCategorias();
+    getCertificacoes();
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("authToken");
-
     if (!title || !tipoConteudo || !categoriaId || !certificacaoId) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
-
     const postData = {
       titulo: title,
       tipoPostagem: tipoConteudo,
@@ -56,20 +59,33 @@ const CreatePost = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/api/v1/postagens", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": token,
-        },
-        body: JSON.stringify(postData),
-      });
+      const response = await publicaPostagem(postData);
+      if (response) {
+         const postagemId = response.id;
+        console.log(response);
+        if (tipoConteudo === "discussao") {
+          const postDataDiscussao = {
+            postagemId: postagemId,
+            tipoDiscussao: tipoDiscussao,
+            texto: texto, // Ajuste conforme necessário
+          };
+          const responseDiscussao = publicaDiscussao(postDataDiscussao); 
+          if (!responseDiscussao) {
+              console.log("Erro desconhecido. Ao criar discussão")
+          }
+         
+        } else if (tipoConteudo === "conteudo") {
+          await createConteudo({
+            postagemId,
+            tipoConteudo: tipoConteudoDetalhado,
+            url,
+            descricao,
+          });
+        }
 
-      if (response.ok) {
         navigate("/feed");
       } else {
-        const errorData = await response.json().catch(() => response.text());
-        alert("Erro ao cadastrar postagem: " + (errorData || "Erro desconhecido."));
+        alert("Erro ao cadastrar postagem: " + ( "Erro desconhecido."));
       }
     } catch (error) {
       alert("Erro na requisição: " + error.message);
@@ -79,6 +95,15 @@ const CreatePost = () => {
     setTipoConteudo("");
     setCategoriaId("");
     setCertificacaoId("");
+  };
+
+  const createDiscussao = async (discussaoData) => {
+      let sucesso = publicaDiscussao(discussaoData); 
+      return sucesso; 
+  };
+
+  const createConteudo = async (conteudoData) => {
+    // Implementar lógica de requisição POST para criar o conteúdo
   };
 
   return (
@@ -100,14 +125,77 @@ const CreatePost = () => {
 
         <div className="form-group">
           <label>Tipo de Conteúdo:</label>
-          <input
-            type="text"
+          <select
             value={tipoConteudo}
             onChange={(e) => setTipoConteudo(e.target.value)}
-            placeholder="Preencha o tipo de conteúdo"
             required
-          />
+          >
+            <option value="">Selecione o tipo de conteúdo</option>
+            <option value="discussao">Discussão</option>
+            <option value="conteudo">Conteúdo</option>
+          </select>
         </div>
+
+        {tipoConteudo === "discussao" && (
+          <>
+            <div className="form-group">
+              <label>Tipo de Discussão:</label>
+              <select
+                value={tipoDiscussao}
+                onChange={(e) => setTipoDiscussao(e.target.value)}
+                required
+              >
+                <option value="">Selecione o tipo de discussão</option>
+                <option value="duvida">Dúvida</option>
+                <option value="tutorial">Tutorial</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Texto:</label>
+              <textarea
+                value={texto}
+                onChange={(e) => setTexto(e.target.value)}
+                placeholder="Escreva o texto da discussão"
+                required
+              />
+            </div>
+          </>
+        )}
+
+        {tipoConteudo === "conteudo" && (
+          <>
+            <div className="form-group">
+              <label>Tipo de Conteúdo:</label>
+              <select
+                value={tipoConteudoDetalhado}
+                onChange={(e) => setTipoConteudoDetalhado(e.target.value)}
+                required
+              >
+                <option value="">Selecione o tipo de conteúdo</option>
+                <option value="video">Vídeo</option>
+                <option value="material_de_aprendizado">Material de Aprendizado</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>URL:</label>
+              <input
+                type="url"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="Informe o URL"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Descrição (opcional):</label>
+              <textarea
+                value={descricao}
+                onChange={(e) => setDescricao(e.target.value)}
+                placeholder="Descrição do conteúdo"
+              />
+            </div>
+          </>
+        )}
 
         <div className="form-group">
           <label>Categoria:</label>
@@ -119,7 +207,7 @@ const CreatePost = () => {
             <option value="">Selecione uma categoria</option>
             {categorias.map((cat) => (
               <option key={cat.id} value={cat.id}>
-                {cat.descricao}
+                {cat.nome}
               </option>
             ))}
           </select>
@@ -130,12 +218,11 @@ const CreatePost = () => {
           <select
             value={certificacaoId}
             onChange={(e) => setCertificacaoId(e.target.value)}
-            required
           >
             <option value="">Selecione uma certificação</option>
             {certificacoes.map((cert) => (
               <option key={cert.id} value={cert.id}>
-                {cert.descricao}
+                {cert.nome}
               </option>
             ))}
           </select>

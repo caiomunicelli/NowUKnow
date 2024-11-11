@@ -20,7 +20,7 @@ router.post('/', verifyJWT, async (req, res) => {
 });
 
 // Rota: Listar todas as certificações (GET /all)
-router.get('/all', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const resultado = await certificacaoController.listarCertificacoes();
         res.status(200).json(resultado.certificacoes);
