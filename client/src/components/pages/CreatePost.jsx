@@ -1,86 +1,92 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./CreatePost.css";
 import { useAuthContext } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom"; // Importando o useNavigate para navegação dinâmica
+import { useNavigate } from "react-router-dom";
 
 const CreatePost = () => {
-  const { isAuthenticated, error, logout } = useAuthContext();
+  const { error } = useAuthContext();
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [tipoConteudo, setTipoConteudo] = useState("");
-  const [nivelDificuldade, setNivelDificuldade] = useState("");
-  const [categoria, setCategoria] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const navigate = useNavigate(); // Criando a função de navegação
+  const [categoriaId, setCategoriaId] = useState("");
+  const [certificacaoId, setCertificacaoId] = useState("");
+  const [categorias, setCategorias] = useState([]);
+  const [certificacoes, setCertificacoes] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCategorias = async () => {
+      try {
+        const response = await fetch("/api/v1/categorias");
+        const data = await response.json();
+        setCategorias(data);
+      } catch (error) {
+        console.error("Erro ao carregar categorias:", error);
+      }
+    };
+
+    const fetchCertificacoes = async () => {
+      try {
+        const response = await fetch("/api/v1/certificacoes");
+        const data = await response.json();
+        setCertificacoes(data);
+      } catch (error) {
+        console.error("Erro ao carregar certificações:", error);
+      }
+    };
+
+    fetchCategorias();
+    fetchCertificacoes();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("authToken");
 
-    // Obtendo o token de autenticação através do hook useAuth
-    const token = localStorage.getItem("authToken"); // Ou use o método adequado para obter o token de seu estado global
-
-    // Verifica se todos os campos obrigatórios estão preenchidos
-    if (
-      !title ||
-      !description ||
-      !tipoConteudo ||
-      !nivelDificuldade ||
-      !categoria ||
-      !imageUrl
-    ) {
+    if (!title || !tipoConteudo || !categoriaId || !certificacaoId) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
 
-    // Monta o objeto postData
     const postData = {
       titulo: title,
-      descricao: description,
-      tipo_conteudo: tipoConteudo,
-      nivel_dificuldade: nivelDificuldade,
-      categoria: categoria,
-      imagem_url: imageUrl,
+      tipoPostagem: tipoConteudo,
+      autorId: 1, // Ajuste conforme necessário
+      categoriaId: parseInt(categoriaId),
+      certificacaoId: parseInt(certificacaoId),
     };
 
     try {
-      // Realiza a requisição POST
-      const response = await fetch("/api/v1/conteudos", {
+      const response = await fetch("http://localhost:8080/api/v1/postagens", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": token, // Usando o token obtido do hook useAuth
+          "x-access-token": token,
         },
         body: JSON.stringify(postData),
       });
 
       if (response.ok) {
-        // Se a resposta for OK, navega para a página de feed ou home
         navigate("/feed");
       } else {
         const errorData = await response.json().catch(() => response.text());
-        alert(
-          "Erro ao cadastrar conteúdo: " + (errorData || "Erro desconhecido.")
-        );
+        alert("Erro ao cadastrar postagem: " + (errorData || "Erro desconhecido."));
       }
     } catch (error) {
       alert("Erro na requisição: " + error.message);
     }
 
-    // Após o envio, limpa os campos do formulário
     setTitle("");
-    setDescription("");
     setTipoConteudo("");
-    setNivelDificuldade("");
-    setCategoria("");
-    setImageUrl("");
+    setCategoriaId("");
+    setCertificacaoId("");
   };
 
   return (
     <div className="new-post-form">
-      <h2>Criar um Novo Post</h2>
+      <h2>Criar uma Nova Postagem</h2>
       <form onSubmit={handleSubmit}>
-        {error && <div className="alert alert-danger">{error}</div>}{" "}
-        {/* Exibe erros acima do formulário */}
+        {error && <div className="alert alert-danger">{error}</div>}
+
         <div className="form-group">
           <label>Título:</label>
           <input
@@ -91,17 +97,9 @@ const CreatePost = () => {
             required
           />
         </div>
+
         <div className="form-group">
-          <label>Descrição:</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Preencha a descrição"
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Tipo de conteúdo:</label>
+          <label>Tipo de Conteúdo:</label>
           <input
             type="text"
             value={tipoConteudo}
@@ -110,36 +108,39 @@ const CreatePost = () => {
             required
           />
         </div>
-        <div className="form-group">
-          <label>Nível de dificuldade:</label>
-          <input
-            type="text"
-            value={nivelDificuldade}
-            onChange={(e) => setNivelDificuldade(e.target.value)}
-            placeholder="Preencha o nível de dificuldade"
-            required
-          />
-        </div>
+
         <div className="form-group">
           <label>Categoria:</label>
-          <input
-            type="text"
-            value={categoria}
-            onChange={(e) => setCategoria(e.target.value)}
-            placeholder="Preencha a categoria"
+          <select
+            value={categoriaId}
+            onChange={(e) => setCategoriaId(e.target.value)}
             required
-          />
+          >
+            <option value="">Selecione uma categoria</option>
+            {categorias.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.descricao}
+              </option>
+            ))}
+          </select>
         </div>
+
         <div className="form-group">
-          <label>URL da Imagem:</label>
-          <input
-            type="url"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            placeholder="Preencha a URL da imagem"
+          <label>Certificação:</label>
+          <select
+            value={certificacaoId}
+            onChange={(e) => setCertificacaoId(e.target.value)}
             required
-          />
+          >
+            <option value="">Selecione uma certificação</option>
+            {certificacoes.map((cert) => (
+              <option key={cert.id} value={cert.id}>
+                {cert.descricao}
+              </option>
+            ))}
+          </select>
         </div>
+
         <button type="submit">Postar</button>
       </form>
     </div>
