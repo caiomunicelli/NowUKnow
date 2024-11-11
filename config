@@ -1,0 +1,90 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+[remote "origin"]
+	url = https://github.com/caiomunicelli/NowUKnow.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "api_usuarios"]
+	vscode-merge-base = origin/main
+	remote = origin
+	merge = refs/heads/api_usuarios
+[branch "usuario-post"]
+	vscode-merge-base = origin/api_usuarios
+	remote = origin
+	merge = refs/heads/usuario-post
+[branch "log"]
+	vscode-merge-base = origin/usuario-post
+	remote = origin
+	merge = refs/heads/log
+[branch "oop"]
+	vscode-merge-base = origin/log
+	remote = origin
+	merge = refs/heads/oop
+[branch "usuarioRoutes"]
+	vscode-merge-base = origin/oop
+	remote = origin
+	merge = refs/heads/usuarioRoutes
+[branch "correcao-routes"]
+	vscode-merge-base = origin/main
+	remote = origin
+	merge = refs/heads/correcao-routes
+[branch "react"]
+	vscode-merge-base = origin/main
+[branch "testes-lorenzo"]
+	vscode-merge-base = origin/main
+	remote = origin
+	merge = refs/heads/testes-lorenzo
+[branch "main"]
+	remote = origin
+	merge = refs/heads/main
+	vscode-merge-base = origin/main
+	gk-merge-base = origin/main
+[branch "correcoes"]
+	vscode-merge-base = origin/main
+	gk-merge-base = origin/main
+	remote = origin
+	merge = refs/heads/correcoes
+[branch "run-tests"]
+	vscode-merge-base = origin/main
+	gk-merge-base = origin/main
+	remote = origin
+	merge = refs/heads/run-tests
+[branch "FrontEnd_React"]
+	remote = origin
+	merge = refs/heads/FrontEnd_React
+	vscode-merge-base = origin/FrontEnd_React
+	gk-merge-base = origin/FrontEnd_React
+	github-pr-owner-number = "caiomunicelli#NowUKnow#12"
+[branch "front-fixed"]
+	github-pr-base-branch = "caiomunicelli#NowUKnow#main"
+	vscode-merge-base = origin/main
+	gk-merge-base = origin/main
+	remote = origin
+	merge = refs/heads/front-fixed
+	github-pr-owner-number = "caiomunicelli#NowUKnow#23"
+[branch "login"]
+	remote = origin
+	merge = refs/heads/login
+	vscode-merge-base = origin/login
+	gk-merge-base = origin/login
+[branch "login-corrigido"]
+	github-pr-base-branch = "caiomunicelli#NowUKnow#main"
+	vscode-merge-base = origin/main
+	gk-merge-base = origin/main
+	remote = origin
+	merge = refs/heads/login-corrigido
+[branch "front-novobd"]
+	github-pr-base-branch = "caiomunicelli#NowUKnow#main"
+	vscode-merge-base = origin/main
+	remote = origin
+	merge = refs/heads/front-novobd
+	github-pr-owner-number = "caiomunicelli#NowUKnow#35"
+[branch "validacao"]
+	github-pr-base-branch = "caiomunicelli#NowUKnow#main"
+	vscode-merge-base = origin/main
+	remote = origin
+	merge = refs/heads/validacao

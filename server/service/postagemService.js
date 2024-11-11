@@ -12,13 +12,19 @@ class PostagemRepository {
 
     const [result] = await connection.execute(
       `INSERT INTO Postagens (titulo, tipo_postagem, autor_id, categoria_id, certificacao_id) VALUES (?, ?, ?, ?, ?)`,
-      [postagem.titulo, postagem.tipoPostagem, postagem.autorId, postagem.categoriaId, postagem.certificacaoId]
+      [
+        postagem.titulo,
+        postagem.tipoPostagem,
+        postagem.autorId,
+        postagem.categoriaId,
+        postagem.certificacaoId,
+      ]
     );
 
     return {
-        id: result.insertId,
-        ...postagem,
-      };
+      id: result.insertId,
+      ...postagem,
+    };
   }
 
   // Obter todas as postagens
@@ -35,7 +41,57 @@ class PostagemRepository {
       "SELECT * FROM Postagens WHERE id = ?",
       [id]
     );
-    return rows[0]; // Retorna a postagem encontrada ou undefined
+    return rows[0];
+  }
+
+  async getPostagemByTitulo(titulo) {
+    const connection = await this.dbConnection.connect();
+    const [rows] = await connection.execute(
+      "SELECT * FROM Postagens WHERE titulo LIKE ?",
+      [`%${titulo}%`]
+    );
+
+    return rows.map(
+      (row) =>
+        new Postagem(
+          row.id,
+          row.titulo,
+          row.tipo_postagem,
+          row.autor_id,
+          row.categoria_id,
+          row.certificacao_id
+        )
+    );
+  }
+
+  // Obter todas as postagens de uma categoria por categoria_id
+  async getPostagensByCategoriaId(categoriaId) {
+    const connection = await this.dbConnection.connect();
+    const [rows] = await connection.execute(
+      "SELECT * FROM Postagens WHERE categoria_id = ?",
+      [categoriaId]
+    );
+    return rows;
+  }
+
+  // Obter todas as postagens por certificacao_id
+  async getPostagensByCertificacaoId(certificacaoId) {
+    const connection = await this.dbConnection.connect();
+    const [rows] = await connection.execute(
+      "SELECT * FROM Postagens WHERE certificacao_id = ?",
+      [certificacaoId]
+    );
+    return rows;
+  }
+
+  // Obter todas as postagens por autor_id
+  async getPostagensByAutorId(autorId) {
+    const connection = await this.dbConnection.connect();
+    const [rows] = await connection.execute(
+      "SELECT * FROM Postagens WHERE autor_id = ?",
+      [autorId]
+    );
+    return rows;
   }
 
   // Atualizar uma postagem por ID
@@ -44,7 +100,13 @@ class PostagemRepository {
 
     const [result] = await connection.execute(
       `UPDATE Postagens SET titulo = ?, tipo_postagem = ?, categoria_id = ?, certificacao_id = ? WHERE id = ?`,
-      [postagem.titulo, postagem.tipoPostagem, postagem.categoriaId, postagem.certificacaoId, postagem.id]
+      [
+        postagem.titulo,
+        postagem.tipoPostagem,
+        postagem.categoriaId,
+        postagem.certificacaoId,
+        postagem.id,
+      ]
     );
 
     return result.affectedRows > 0
@@ -60,7 +122,7 @@ class PostagemRepository {
       [id]
     );
 
-    return result.affectedRows > 0; // Retorna true se a postagem foi excluída
+    return result.affectedRows > 0;
   }
 }
 
