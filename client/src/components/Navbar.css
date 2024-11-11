@@ -22,19 +22,25 @@
 
 .nowuknow-navbar-middle {
     display: flex;
-    min-width: 400px;
-    width: 600px;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
 }
 
 .nowuknow-navbar-left {
     display: flex;
     justify-content: flex-start;
     min-width: 300px;
+    align-items: center;
+    flex-grow: 1
 }
 
 .nowuknow-navbar-right {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+    flex-grow: 1
 }
 
 .nowuknow-brand{
@@ -54,7 +60,9 @@
 
 .nowuknow-search-form {
     display: flex;
-    flex-grow: 1;
+    align-items: center;
+    width: 600px;
+    min-width: 300px;
 }
 
 .nowuknow-search input {
@@ -109,4 +117,20 @@
 
 .nowuknow-nav-link:hover {
     color: var(--nowuknow-text-secondary)
+}
+
+.nowuknow-menu-btn {
+    background: none;
+    border: none;
+    color: var(--nowuknow-bg-light);
+    font-size: 1.5rem;
+    cursor: pointer;
+    max-width: 60px;
+}
+
+.nowuknow-perfil-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
 }
