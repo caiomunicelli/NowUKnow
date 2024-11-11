@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchCategorias } from "../../services/categoriaService";
+import "./Categorias.css";
 
 const CategoriasPage = () => {
   const [categorias, setCategorias] = useState([]);
@@ -23,21 +24,28 @@ const CategoriasPage = () => {
   };
 
   return (
-    <div className="nowuknow-lista-categorias">
-      <h1>Categorias</h1>
-      <div className="categorias-list">
+    <div className="nowuknow-categorias-container">
+      <h1>Categorias de Aprendizado</h1>
+      <div className="nowuknow-categorias-lista">
         {categorias.map((categoria) => (
           <div key={categoria.id} className="nowuknow-categoria">
-            <img
-              src={categoria.imagem}
-              alt={categoria.nome}
-              className="categoria-imagem"
-            />
-            <h2>{categoria.nome}</h2>
+            <div className="nowuknow-categoria-img-nome">
+              <img
+                src={categoria.imagem}
+                alt={categoria.nome}
+                className="nowuknow-categoria-imagem"
+              />
+              <h2>{categoria.nome}</h2>
+            </div>
             <p>{categoria.descricao}</p>
-            <button onClick={() => handleViewContent(categoria.id)}>
-              Ver conteúdos e certificações
-            </button>
+            <div className="nowuknow-categoria-btn-div">
+              <button
+                className="nowuknow-btn nowuknow-categoria-btn"
+                onClick={() => handleViewContent(categoria.id)}
+              >
+                Ver conteúdos e certificações
+              </button>
+            </div>
           </div>
         ))}
       </div>

@@ -89,11 +89,6 @@ function Navbar() {
                 </Link>
               </li>
               <li className="nowuknow-nav-item">
-                {isAuthenticated ? (
-                  <span className="nowuknow-nav-link">{usuarioNome}</span>
-                ) : null}
-              </li>
-              <li className="nowuknow-nav-item">
                 <Link
                   className={`nowuknow-nav-link ${
                     isActive("/about") ? "nowuknow-active" : ""
@@ -102,6 +97,18 @@ function Navbar() {
                 >
                   Sobre
                 </Link>
+              </li>
+              <li className="nowuknow-nav-item">
+                {isAuthenticated ? (
+                  <Link
+                    className={`nowuknow-nav-link ${
+                      isActive("/perfil") ? "nowuknow-active" : ""
+                    }`}
+                    to="/perfil"
+                  >
+                    {usuarioNome}
+                  </Link>
+                ) : null}
               </li>
               <li className="nowuknow-nav-item">
                 {isAuthenticated ? (
