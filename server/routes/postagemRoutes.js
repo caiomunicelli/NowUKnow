@@ -14,7 +14,7 @@ router.post("/", verifyJWT, async (req, res) => {
     const resultado = await postagemController.criarPostagem(
       titulo,
       tipoPostagem,
-      autorId,
+      req.usuarioId,
       categoriaId,
       certificacaoId
     );
@@ -33,6 +33,17 @@ router.post("/", verifyJWT, async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const resultado = await postagemController.listarPostagens();
+    res.status(200).json(resultado.postagens); // Retorna a lista de postagens
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Erro ao buscar postagens", details: error.message });
+  }
+});
+
+router.get("/allDetails", async (req, res) => {
+  try {
+    const resultado = await postagemController.listarPostagensComDetalhes();
     res.status(200).json(resultado.postagens); // Retorna a lista de postagens
   } catch (error) {
     res

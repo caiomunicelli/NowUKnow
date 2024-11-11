@@ -48,17 +48,13 @@ function App() {
               <Route
                 path="/feed"
                 element={
-                  <PrivateRoute>
                     <Feed />
-                  </PrivateRoute>
                 }
               />
               <Route
                 path="/post"
                 element={
-                  <PrivateRoute>
                     <Post />
-                  </PrivateRoute>
                 }
               />
               <Route

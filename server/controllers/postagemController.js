@@ -60,6 +60,10 @@ class PostagemController {
     const postagens = await this.postagemRepository.getAllPostagens();
     return { sucesso: true, postagens };
   }
+  async listarPostagensComDetalhes() {
+    const postagens = await this.postagemRepository.getPostagensWithAllDetails();
+    return { sucesso: true, postagens };
+  }
 
   // Buscar postagem por ID
   async listarPostagemPorId(id) {
