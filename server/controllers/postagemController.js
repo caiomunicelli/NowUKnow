@@ -1,109 +1,250 @@
-const PostagemRepository = require('../service/postagemService.js');
-const Postagem = require('../models/postagem.js');
-
-const postagensRepository = new PostagemRepository();
+const PostagemRepository = require("../service/postagemService.js");
+const Postagem = require("../models/postagem.js");
 
 class PostagemController {
-    // Validações para os dados da postagem
-    validarDados(postagem) {
-        const errors = [];
+  constructor() {
+    this.postagemRepository = new PostagemRepository();
+  }
 
-        if (!postagem.titulo || postagem.titulo.length === 0) {
-            errors.push({ campo: 'titulo', mensagem: "O título é obrigatório." });
-        }
+  // Validar os dados da postagem
+  validarDados(postagem) {
+    const errors = [];
 
-        const tiposPermitidos = ['Conteudo', 'Discussao'];
-        if (!postagem.tipoPostagem || !tiposPermitidos.includes(postagem.tipoPostagem)) {
-            errors.push({ campo: 'tipoPostagem', mensagem: "Tipo de postagem inválido." });
-        }
-
-        if (!postagem.autorId) {
-            errors.push({ campo: 'autorId', mensagem: "O ID do autor é obrigatório." });
-        }
-
-        if (!postagem.categoriaId) {
-            errors.push({ campo: 'categoriaId', mensagem: "O ID da categoria é obrigatório." });
-        }
-
-        return { isValid: errors.length === 0, errors };
+    if (!postagem.titulo || postagem.titulo.trim() === "") {
+      errors.push({ campo: "titulo", mensagem: "O título é obrigatório." });
     }
 
-    // Criar postagem
-    async criarPostagem(titulo, tipoPostagem, autorId, categoriaId, certificacaoId) {
-        const postagem = new Postagem(0, titulo, tipoPostagem, autorId, categoriaId, certificacaoId, new Date());
-        const validacao = this.validarDados(postagem);
-
-        if (!validacao.isValid) {
-            return { sucesso: false, erros: validacao.errors };
-        }
-
-        try {
-            const novaPostagem = await postagensRepository.createPostagem(postagem);
-            return { sucesso: true, postagem: novaPostagem };
-        } catch (error) {
-            throw new Error('Erro ao criar postagem: ' + error.message);
-        }
+    if (!postagem.tipoPostagem || postagem.tipoPostagem.trim() === "") {
+      errors.push({
+        campo: "tipoPostagem",
+        mensagem: "O tipo de postagem é obrigatório.",
+      });
     }
 
-    // Listar todas as postagens
-    async listarPostagens() {
-        try {
-            const postagens = await postagensRepository.getAllPostagens();
-            return { sucesso: true, postagens };
-        } catch (error) {
-            throw new Error('Erro ao buscar postagens: ' + error.message);
-        }
+    return {
+      isValid: errors.length === 0,
+      errors,
+    };
+  }
+
+  // Criar uma nova postagem
+  async criarPostagem(
+    titulo,
+    tipoPostagem,
+    autorId,
+    categoriaId,
+    certificacaoId
+  ) {
+    const postagem = new Postagem(
+      0,
+      titulo,
+      tipoPostagem,
+      autorId,
+      categoriaId,
+      certificacaoId
+    );
+    const validacao = this.validarDados(postagem);
+
+    if (!validacao.isValid) {
+      return { sucesso: false, erros: validacao.errors };
     }
 
-    // Listar postagem por ID
-    async listarPostagemPorId(id) {
-        try {
-            const postagem = await postagensRepository.getPostagemById(id);
-            if (!postagem) {
-                return { sucesso: false, erros: [{ campo: 'id', mensagem: "Postagem não encontrada." }] };
-            }
-            return { sucesso: true, postagem };
-        } catch (error) {
-            throw new Error('Erro ao buscar postagem: ' + error.message);
-        }
+    const postagemCriada = await this.postagemRepository.createPostagem(
+      postagem
+    );
+    return { sucesso: true, postagem: postagemCriada };
+  }
+
+  // Listar todas as postagens
+  async listarPostagens() {
+    const postagens = await this.postagemRepository.getAllPostagens();
+    return { sucesso: true, postagens };
+  }
+
+  // Buscar postagem por ID
+  async listarPostagemPorId(id) {
+    const postagem = await this.postagemRepository.getPostagemById(id);
+    if (!postagem) {
+      return {
+        sucesso: false,
+        erros: [{ campo: "id", mensagem: "Postagem não encontrada." }],
+      };
+    }
+    return { sucesso: true, postagem };
+  }
+
+  // Buscar postagens por título
+  async listarPostagemPorTitulo(titulo) {
+    if (!titulo || titulo.trim() === "") {
+      return {
+        sucesso: false,
+        erros: [
+          { campo: "titulo", mensagem: "O título é obrigatório para a busca." },
+        ],
+      };
     }
 
-    // Atualizar postagem
-    async atualizarPostagem(id, titulo, tipoPostagem, autorId, categoriaId, certificacaoId) {
-        const postagemExistente = await postagensRepository.getPostagemById(id);
-        if (!postagemExistente) {
-            return { sucesso: false, erros: [{ campo: 'id', mensagem: "Postagem não encontrada." }] };
-        }
-
-        const postagemAtualizada = new Postagem(id, titulo, tipoPostagem, autorId, categoriaId, certificacaoId, postagemExistente.dataPublicacao);
-        const validacao = this.validarDados(postagemAtualizada);
-
-        if (!validacao.isValid) {
-            return { sucesso: false, erros: validacao.errors };
-        }
-
-        try {
-            const resultadoAtualizacao = await postagensRepository.updatePostagem(postagemAtualizada);
-            return { sucesso: true, postagem: resultadoAtualizacao };
-        } catch (error) {
-            throw new Error('Erro ao atualizar postagem: ' + error.message);
-        }
+    const postagens = await this.postagemRepository.getPostagemByTitulo(titulo);
+    if (postagens.length === 0) {
+      return {
+        sucesso: false,
+        erros: [
+          {
+            campo: "titulo",
+            mensagem: "Nenhuma postagem encontrada com esse título.",
+          },
+        ],
+      };
     }
 
-    // Deletar postagem
-    async deletarPostagem(id) {
-        const postagemExistente = await postagensRepository.getPostagemById(id);
-        if (!postagemExistente) {
-            return { sucesso: false, erros: [{ campo: 'id', mensagem: "Postagem não encontrada." }] };
-        }
+    return { sucesso: true, postagens };
+  }
 
-        try {
-            await postagensRepository.deletePostagem(id);
-            return { sucesso: true, mensagem: "Postagem deletada com sucesso." };
-        } catch (error) {
-            throw new Error('Erro ao deletar postagem: ' + error.message);
-        }
+  // Buscar postagens por categoriaId
+  async listarPostagemPorCategoria(categoriaId) {
+    if (!categoriaId) {
+      return {
+        sucesso: false,
+        erros: [
+          {
+            campo: "categoriaId",
+            mensagem: "O ID da categoria é obrigatório para a busca.",
+          },
+        ],
+      };
     }
+
+    const postagens = await this.postagemRepository.getPostagemByCategoria(
+      categoriaId
+    );
+    if (postagens.length === 0) {
+      return {
+        sucesso: false,
+        erros: [
+          {
+            campo: "categoriaId",
+            mensagem: "Nenhuma postagem encontrada com essa categoria.",
+          },
+        ],
+      };
+    }
+
+    return { sucesso: true, postagens };
+  }
+
+  // Buscar postagens por autorId
+  async listarPostagemPorAutor(autorId) {
+    if (!autorId) {
+      return {
+        sucesso: false,
+        erros: [
+          {
+            campo: "autorId",
+            mensagem: "O ID do autor é obrigatório para a busca.",
+          },
+        ],
+      };
+    }
+
+    const postagens = await this.postagemRepository.getPostagemByAutorId(
+      autorId
+    );
+    if (postagens.length === 0) {
+      return {
+        sucesso: false,
+        erros: [
+          {
+            campo: "autorId",
+            mensagem: "Nenhuma postagem encontrada com esse autor.",
+          },
+        ],
+      };
+    }
+
+    return { sucesso: true, postagens };
+  }
+
+  // Buscar postagens por certificacaoId
+  async listarPostagemPorCertificacao(certificacaoId) {
+    if (!certificacaoId) {
+      return {
+        sucesso: false,
+        erros: [
+          {
+            campo: "certificacaoId",
+            mensagem: "O ID da certificação é obrigatório para a busca.",
+          },
+        ],
+      };
+    }
+
+    const postagens = await this.postagemRepository.getPostagemByCertificacaoId(
+      certificacaoId
+    );
+    if (postagens.length === 0) {
+      return {
+        sucesso: false,
+        erros: [
+          {
+            campo: "certificacaoId",
+            mensagem: "Nenhuma postagem encontrada com essa certificação.",
+          },
+        ],
+      };
+    }
+
+    return { sucesso: true, postagens };
+  }
+
+  // Atualizar uma postagem
+  async atualizarPostagem(
+    id,
+    titulo,
+    tipoPostagem,
+    autorId,
+    categoriaId,
+    certificacaoId
+  ) {
+    const postagemExistente = await this.postagemRepository.getPostagemById(id);
+    if (!postagemExistente) {
+      return {
+        sucesso: false,
+        erros: [{ campo: "id", mensagem: "Postagem não encontrada." }],
+      };
+    }
+
+    const postagemAtualizada = new Postagem(
+      id,
+      titulo,
+      tipoPostagem,
+      autorId,
+      categoriaId,
+      certificacaoId
+    );
+    const validacao = this.validarDados(postagemAtualizada);
+
+    if (!validacao.isValid) {
+      return { sucesso: false, erros: validacao.errors };
+    }
+
+    const resultadoAtualizacao = await this.postagemRepository.updatePostagem(
+      postagemAtualizada
+    );
+    return { sucesso: true, postagem: resultadoAtualizacao };
+  }
+
+  // Deletar uma postagem
+  async deletarPostagem(id) {
+    const postagemExistente = await this.postagemRepository.getPostagemById(id);
+    if (!postagemExistente) {
+      return {
+        sucesso: false,
+        erros: [{ campo: "id", mensagem: "Postagem não encontrada." }],
+      };
+    }
+    await this.postagemRepository.deletePostagem(id);
+    return { sucesso: true, mensagem: "Postagem deletada com sucesso." };
+  }
 }
 
 module.exports = PostagemController;

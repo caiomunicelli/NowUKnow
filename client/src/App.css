@@ -2,27 +2,3 @@ html, body {
   height: 100%;
   margin: 0;
 }
-
-body {
-  font-family: Arial, sans-serif;
-}
-
-.nowuknow-app {
-  display: flex;
-  flex-direction: column; /* Organizando os elementos em coluna */
-  min-height: 100vh;
-  min-width: 100vw;
-}
-
-.nowuknow-header {
-  background-color: hsl(0, 0%, 44%);
-}
-
-.nowuknow-main {
-  flex: 1; /* Fazendo o main ocupar o espaço restante entre o header e o footer */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px; /* Espaçamento interno */
-}
