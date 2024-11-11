@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import NewPostForm from "./pages/CreatePost";
 import Post from "./Post"; // Componente de visualização do post
 import "./Feed.css";
 
@@ -26,18 +25,8 @@ const Feed = () => {
     fetchPosts();
   }, []);
 
-  // Função para adicionar um novo post
-  const handleNewPost = (newPost) => {
-    setPosts([newPost, ...posts]); // Adiciona o novo post no início da lista
-  };
-
   return (
     <div className="feed-container">
-      {/* Formulário de criação de post */}
-      <div className="post-form-container">
-        <NewPostForm onSubmitPost={handleNewPost} />
-      </div>
-
       {/* Lista de posts */}
       <div className="post-feed">
         {loading ? (
