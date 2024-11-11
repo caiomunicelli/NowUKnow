@@ -26,9 +26,9 @@ const Feed = () => {
   }, []);
 
   return (
-    <div className="feed-container">
+    <div className="nowuknow-feed-container">
       {/* Lista de posts */}
-      <div className="post-feed">
+      <div className="nowuknow-post-feed">
         {loading ? (
           <p>Carregando posts...</p>
         ) : posts.length > 0 ? (

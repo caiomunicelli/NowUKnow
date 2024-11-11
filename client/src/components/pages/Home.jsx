@@ -1,12 +1,12 @@
 import React from "react";
 import { Feed } from "../../components";
+import "./Home.css";
+
 function Home() {
   return (
-    <div>
-      <h1>Bem vindo à NowUKnow</h1>
-      <div className="nowuknow-feed-container">
-        <Feed />
-      </div>
+    <div className="nowuknow-home-container">
+      <h1>Postagens Recentes</h1>
+      <Feed />
     </div>
   );
 }

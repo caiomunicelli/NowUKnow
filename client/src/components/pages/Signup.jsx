@@ -86,9 +86,9 @@ function Signup() {
   };
 
   return (
-    <div className="container">
+    <div className="nowuknow-box-container">
       <h2>Cadastrar</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="nowuknow-form-container">
         <div className="mb-3">
           <label htmlFor="nome" className="form-label">
             Nome
@@ -177,7 +177,7 @@ function Signup() {
           />
           <ErrorMessage message={errors.foto} />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="nowuknow-btn">
           Cadastrar
         </button>
       </form>

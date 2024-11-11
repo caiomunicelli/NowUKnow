@@ -34,106 +34,103 @@ function Navbar() {
 
   return (
     <header className="nowuknow-header">
-      <nav className="navbar navbar-expand-lg">
-        <div className="container-fluid">
+      <nav className="nowuknow-navbar">
+        <div className="nowuknow-navbar-left">
           <Link className="nowuknow-brand" to="/">
             NowUKnow
           </Link>
-          <div className="nowuknow-navbar-middle">
-            <form
-              className="d-flex mx-auto nowuknow-search-form nowuknow-search"
-              role="search"
-            >
-              <input
-                type="search"
-                placeholder="Busque algum conteúdo, categoria ou autor"
-                aria-label="Search"
-              />
-              <button className="nowuknow-search-btn" type="submit">
-                <i className="bi bi-search"></i>
-              </button>
-            </form>
-          </div>
-          <div className="nowuknow-navbar" id="navbarNav">
-            <ul className="navbar-nav">
-              <li className="nowuknow-nav-item">
-                {isAuthenticated ? (
-                  <Link
-                    className={`nowuknow-nav-link ${
-                      isActive("/createPost") ? "nowuknow-active" : ""
-                    }`}
-                    to="/createPost"
-                  >
-                    Criar Postagem
-                  </Link>
-                ) : null}
-              </li>
-              <li className="nowuknow-nav-item">
+        </div>
+        <div className="nowuknow-navbar-middle">
+          <form className="nowuknow-search-form nowuknow-search" role="search">
+            <input
+              type="search"
+              placeholder="Busque algum conteúdo, categoria ou autor"
+              aria-label="Search"
+            />
+            <button className="nowuknow-search-btn" type="submit">
+              <i className="bi bi-search"></i>
+            </button>
+          </form>
+        </div>
+        <div className="nowuknow-navbar-right" id="navbarNav">
+          <ul className="nowuknow-navbar-nav">
+            <li className="nowuknow-nav-item">
+              {isAuthenticated ? (
                 <Link
                   className={`nowuknow-nav-link ${
-                    isActive("/") ? "nowuknow-active" : ""
+                    isActive("/createPost") ? "nowuknow-active" : ""
                   }`}
-                  to="/"
+                  to="/createPost"
                 >
-                  Home
+                  Criar Postagem
                 </Link>
-              </li>
-              <li className="nowuknow-nav-item">
+              ) : null}
+            </li>
+            <li className="nowuknow-nav-item">
+              <Link
+                className={`nowuknow-nav-link ${
+                  isActive("/") ? "nowuknow-active" : ""
+                }`}
+                to="/"
+              >
+                Home
+              </Link>
+            </li>
+            <li className="nowuknow-nav-item">
+              <Link
+                className={`nowuknow-nav-link ${
+                  isActive("/categorias") ? "nowuknow-active" : ""
+                }`}
+                to="/categorias"
+              >
+                Categorias
+              </Link>
+            </li>
+            <li className="nowuknow-nav-item">
+              <Link
+                className={`nowuknow-nav-link ${
+                  isActive("/about") ? "nowuknow-active" : ""
+                }`}
+                to="/about"
+              >
+                Sobre
+              </Link>
+            </li>
+            <li className="nowuknow-nav-item">
+              {isAuthenticated ? (
                 <Link
                   className={`nowuknow-nav-link ${
-                    isActive("/categorias") ? "nowuknow-active" : ""
+                    isActive("/perfil") ? "nowuknow-active" : ""
                   }`}
-                  to="/categorias"
+                  to="/perfil"
                 >
-                  Categorias
+                  {usuarioNome}
                 </Link>
-              </li>
-              <li className="nowuknow-nav-item">
+              ) : null}
+            </li>
+            <li className="nowuknow-nav-item">
+              {isAuthenticated ? (
                 <Link
                   className={`nowuknow-nav-link ${
-                    isActive("/about") ? "nowuknow-active" : ""
+                    isActive("/login") ? "nowuknow-active" : ""
                   }`}
-                  to="/about"
+                  to="#"
+                  onClick={logout}
                 >
-                  Sobre
+                  Logout
                 </Link>
-              </li>
-              <li className="nowuknow-nav-item">
-                {isAuthenticated ? (
-                  <Link
-                    className={`nowuknow-nav-link ${
-                      isActive("/perfil") ? "nowuknow-active" : ""
-                    }`}
-                    to="/perfil"
-                  >
-                    {usuarioNome}
-                  </Link>
-                ) : null}
-              </li>
-              <li className="nowuknow-nav-item">
-                {isAuthenticated ? (
-                  <Link
-                    className={`nowuknow-nav-link ${
-                      isActive("/login") ? "nowuknow-active" : ""
-                    }`}
-                    to="#"
-                    onClick={logout}
-                  >
-                    Logout
-                  </Link>
-                ) : (
-                  <Link
-                    className={`nowuknow-nav-link ${
-                      isActive("/login") ? "nowuknow-active" : ""
-                    }`}
-                    to="/login"
-                  >
-                    Login
-                  </Link>
-                )}
-              </li>
-            </ul>
-          </div>
+              ) : (
+                <Link
+                  className={`nowuknow-nav-link ${
+                    isActive("/login") ? "nowuknow-active" : ""
+                  }`}
+                  to="/login"
+                >
+                  Login
+                </Link>
+              )}
+            </li>
+          </ul>
         </div>
       </nav>
     </header>
