@@ -36,30 +36,31 @@ function Navbar() {
     <header className="nowuknow-header">
       <nav className="navbar navbar-expand-lg">
         <div className="container-fluid">
-          <Link className="navbar-brand nowuknow-brand" to="/">
+          <Link className="nowuknow-brand" to="/">
             NowUKnow
           </Link>
-          <form
-            className="d-flex mx-auto nowuknow-search-form nowuknow-search"
-            role="search"
-          >
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Busque algum conteúdo, categoria ou autor"
-              aria-label="Search"
-            />
-            <button className="btn btn-outline-success" type="submit">
-              <i className="bi bi-search"></i> Buscar
-            </button>
-          </form>
+          <div className="nowuknow-navbar-middle">
+            <form
+              className="d-flex mx-auto nowuknow-search-form nowuknow-search"
+              role="search"
+            >
+              <input
+                type="search"
+                placeholder="Busque algum conteúdo, categoria ou autor"
+                aria-label="Search"
+              />
+              <button className="nowuknow-search-btn" type="submit">
+                <i className="bi bi-search"></i>
+              </button>
+            </form>
+          </div>
           <div className="nowuknow-navbar" id="navbarNav">
             <ul className="navbar-nav">
-              <li className="nav-item">
+              <li className="nowuknow-nav-item">
                 {isAuthenticated ? (
                   <Link
-                    className={`nav-link ${
-                      isActive("/createPost") ? "active" : ""
+                    className={`nowuknow-nav-link ${
+                      isActive("/createPost") ? "nowuknow-active" : ""
                     }`}
                     to="/createPost"
                   >
@@ -67,31 +68,37 @@ function Navbar() {
                   </Link>
                 ) : null}
               </li>
-              <li className="nav-item">
+              <li className="nowuknow-nav-item">
                 <Link
-                  className={`nav-link ${isActive("/") ? "active" : ""}`}
+                  className={`nowuknow-nav-link ${
+                    isActive("/") ? "nowuknow-active" : ""
+                  }`}
                   to="/"
                 >
                   Home
                 </Link>
               </li>
-              <li className="nav-item">
+              <li className="nowuknow-nav-item">
                 {isAuthenticated ? (
-                  <span className="nav-link">{usuarioNome}</span>
+                  <span className="nowuknow-nav-link">{usuarioNome}</span>
                 ) : null}
               </li>
-              <li className="nav-item">
+              <li className="nowuknow-nav-item">
                 <Link
-                  className={`nav-link ${isActive("/about") ? "active" : ""}`}
+                  className={`nowuknow-nav-link ${
+                    isActive("/about") ? "nowuknow-active" : ""
+                  }`}
                   to="/about"
                 >
                   Sobre
                 </Link>
               </li>
-              <li className="nav-item">
+              <li className="nowuknow-nav-item">
                 {isAuthenticated ? (
                   <Link
-                    className={`nav-link ${isActive("/login") ? "active" : ""}`}
+                    className={`nowuknow-nav-link ${
+                      isActive("/login") ? "nowuknow-active" : ""
+                    }`}
                     to="#"
                     onClick={logout}
                   >
@@ -99,7 +106,9 @@ function Navbar() {
                   </Link>
                 ) : (
                   <Link
-                    className={`nav-link ${isActive("/login") ? "active" : ""}`}
+                    className={`nowuknow-nav-link ${
+                      isActive("/login") ? "nowuknow-active" : ""
+                    }`}
                     to="/login"
                   >
                     Login

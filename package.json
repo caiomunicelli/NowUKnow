@@ -7,6 +7,7 @@
     "start": "node server/server.js",
     "build-front": "cd client && npm install && npm run build",
     "start-build": "npm run build-front && npm start",
+    "start-front": "cd client && npm run dev",
     "test-connection": "node server/testconnection.js"
   },
   "nyc": {

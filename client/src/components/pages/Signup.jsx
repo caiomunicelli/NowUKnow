@@ -95,7 +95,7 @@ function Signup() {
           </label>
           <input
             type="text"
-            className="form-control"
+            className="nowuknow-input"
             id="nome"
             value={nome}
             onChange={handleChange}
@@ -110,7 +110,7 @@ function Signup() {
           </label>
           <input
             type="text"
-            className="form-control"
+            className="nowuknow-input"
             id="usuario"
             value={usuario}
             onChange={handleChange}
@@ -125,7 +125,7 @@ function Signup() {
           </label>
           <input
             type="email"
-            className="form-control"
+            className="nowuknow-input"
             id="email"
             value={email}
             onChange={handleChange}
@@ -140,7 +140,7 @@ function Signup() {
           </label>
           <input
             type="password"
-            className="form-control"
+            className="nowuknow-input"
             id="senha"
             value={senha}
             onChange={handleChange}
@@ -155,7 +155,7 @@ function Signup() {
           </label>
           <input
             type="password"
-            className="form-control"
+            className="nowuknow-input"
             id="confirmSenha"
             value={confirmSenha}
             onChange={handleChange}
@@ -170,7 +170,7 @@ function Signup() {
           </label>
           <input
             type="file"
-            className="form-control"
+            className="nowuknow-input"
             id="foto"
             onChange={handleFotoChange}
             accept="image/png, image/jpeg, image/jpg"
