@@ -54,9 +54,7 @@ const CreatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validação básica dos campos obrigatórios
-    if (!title || !tipoConteudo || !categoriaId || !certificacaoId) {
+    if (!title || !tipoConteudo || !categoriaId) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }

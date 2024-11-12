@@ -13,6 +13,7 @@ import {
   About,
   PrivateRoute,
   Categorias,
+  Categoria
 } from "./components";
 import {
   BrowserRouter as Router,
@@ -32,6 +33,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/categorias" element={<Categorias />} />
+              <Route path="/categoria/:id" element={<Categoria />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="*" element={<Navigate to="/" />} />
