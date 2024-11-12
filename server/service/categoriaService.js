@@ -58,6 +58,7 @@ class CategoriaRepository {
       row.imagem,
       row.data_criacao
     );
+    
   }
 
   // Buscar categorias por nome

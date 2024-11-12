@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { fetchCategorias } from "../../services/categoriaService";
+import { useNavigate } from "react-router-dom";
+
 import "./Categorias.css";
+
 
 const CategoriasPage = () => {
   const [categorias, setCategorias] = useState([]);
@@ -17,10 +20,9 @@ const CategoriasPage = () => {
 
     loadCategorias();
   }, []);
-
+  const navigate = useNavigate();
   const handleViewContent = (categoriaId) => {
-    // Lógica para exibir conteúdos e certificações relacionados a essa categoria
-    console.log(`Visualizando conteúdos para categoria com ID: ${categoriaId}`);
+    navigate(`/categoria/${categoriaId}`);
   };
 
   return (
