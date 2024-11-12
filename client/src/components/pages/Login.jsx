@@ -1,33 +1,31 @@
 import React, { useState } from "react";
-import { useAuthContext } from "../../contexts/AuthContext"; // Atualizando a importação do useAuth
-import { useNavigate } from "react-router-dom"; // Importando o useNavigate para navegação dinâmica
+import { useAuthContext } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import "./Login.css"; // Certifique-se de que o arquivo CSS está atualizado
 
-function Login() {
+function Login({ onClose }) {
   const [email, setEmail] = useState("");
   const [senha, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Criando a função de navegação
+  const navigate = useNavigate();
 
-  const { login, error: authError } = useAuthContext();
+  const { login } = useAuthContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Envia as credenciais como um objeto
     const credentials = { email, senha };
-    const isLoggedIn = await login(credentials); // Chamando a função de login
+    const isLoggedIn = await login(credentials);
     if (isLoggedIn) {
-      // Redireciona para a página principal após login bem-sucedido
-      navigate("/"); // Navegação para a página principal
+      navigate("/");
+      onClose();
     } else {
       setError("Email ou senha incorretos.");
     }
   };
 
   return (
-    <div className="nowuknow-box-container">
-      <h2>Login</h2>
+    <div className="nowuknow-login-float">
       <form onSubmit={handleSubmit} className="nowuknow-form-container">
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
@@ -59,10 +57,10 @@ function Login() {
         <button type="submit" className="nowuknow-btn">
           Entrar
         </button>
+        <p className="mt-3">
+          Não tem uma conta? <Link to="/signup">Cadastre-se aqui</Link>
+        </p>
       </form>
-      <p className="mt-3">
-        Não tem uma conta? <Link to="/signup">Cadastre-se aqui</Link>
-      </p>
     </div>
   );
 }
