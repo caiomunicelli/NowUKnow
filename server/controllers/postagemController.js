@@ -65,7 +65,7 @@ class PostagemController {
     return { sucesso: true, postagens };
   }
   async listarPostagensComDetalhesPorCertificacaoId(categoriaId) {
-    const postagens = await this.postagemRepository.getPostagensWithAllDetailsByCertificacaoId(categoriaId);
+    const postagens = await this.postagemRepository.getPostagensWithAllDetailsByCategoriaId(categoriaId);
     return { sucesso: true, postagens };
   }
 

@@ -47,7 +47,7 @@ const CreatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!title || !tipoConteudo || !categoriaId || !certificacaoId) {
+    if (!title || !tipoConteudo || !categoriaId) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
