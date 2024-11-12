@@ -3,14 +3,11 @@
     justify-content: center;
     align-items: center;
     color: var(--nowuknow-text-primary);
-    padding: 10px 0;
-    height: 60px;
-    position: fixed;
-    bottom: 0;
+    height: 80px;
     width: 100%;
     text-align: center;
-    background-color: var(--nowuknow-bg-dark);
-    box-shadow: rgb(0 0 0 / 30%) 0px -1px 4px 0px;
+    padding: 20px;
+    margin-bottom: 10px;
 }
 
 .nowuknow-footer p {

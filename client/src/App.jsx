@@ -65,7 +65,6 @@ function App() {
             </div>
             <div className="nowuknow-right-container"></div>
           </main>
-          <Footer />
         </div>
       </Router>
     </AuthProvider>
