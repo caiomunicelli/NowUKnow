@@ -1,20 +1,14 @@
-// Sidebar.js
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Sidebar.css";
 
-const Sidebar = ({ isOpen, toggleSidebar }) => {
+const Sidebar = () => {
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className={`nowuknow-sidebar ${isOpen ? "open" : ""}`}>
-      <div className="nowuknow-close-btn-div">
-        <button onClick={toggleSidebar} className="nowuknow-close-btn">
-          <i className="bi bi-list"></i>
-        </button>
-      </div>
+    <div className={"nowuknow-sidebar"}>
       <ul className="nowuknow-sidebar-nav">
         <li className="nowuknow-sidebar-item">
           <Link
@@ -23,6 +17,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             }`}
             to="/"
           >
+            <i className="bi bi-house-door nowuknow-sidebar-icon"></i>{" "}
+            {/* Ícone de casa para Home */}
             Home
           </Link>
         </li>
@@ -33,6 +29,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             }`}
             to="/categorias"
           >
+            <i className="bi bi-grid nowuknow-sidebar-icon"></i>{" "}
+            {/* Ícone de grade para Categorias */}
             Categorias
           </Link>
         </li>
@@ -43,17 +41,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             }`}
             to="/about"
           >
+            <i className="bi bi-info-circle nowuknow-sidebar-icon"></i>{" "}
+            {/* Ícone de informação para Sobre */}
             Sobre
-          </Link>
-        </li>
-        <li className="nowuknow-sidebar-item">
-          <Link
-            className={`nowuknow-sidebar-link ${
-              isActive("/createPost") ? "nowuknow-active" : ""
-            }`}
-            to="/createPost"
-          >
-            Criar Postagem
           </Link>
         </li>
       </ul>

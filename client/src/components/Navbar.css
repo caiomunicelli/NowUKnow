@@ -31,16 +31,19 @@
 .nowuknow-navbar-left {
     display: flex;
     justify-content: flex-start;
-    min-width: 300px;
+    min-width: 400px;
     align-items: center;
-    flex-grow: 1
+    flex-grow: 1;
+    max-width: 400px;
 }
 
 .nowuknow-navbar-right {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    flex-grow: 1
+    flex-grow: 1;
+    max-width: 400px;
+    min-width: 400px;
 }
 
 .nowuknow-brand{
@@ -82,7 +85,7 @@
     color: var(--nowuknow-text-secondary);
 }
 
-.nowuknow-search-btn {
+.nowuknow-btn-icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -91,6 +94,11 @@
     border-radius: 50%;
     background-color: var(--nowuknow-bg-dark);
     border: 2px solid var(--nowuknow-bg-accent);
+    color: var(--nowuknow-text-primary);
+}
+
+.nowuknow-plus {
+    font-size: 1.5em
 }
 
 .nowuknow-navbar-nav {
@@ -98,15 +106,19 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
 }
 
 .nowuknow-nav-item {
     color: var(--nowuknow-text-primary)
 }
+
 .nowuknow-nav-link {
     color: var(--nowuknow-text-primary)
     display: block;
-    padding: 0.35rem;
+    padding: 0;
     font-size: 12pt;
     font-weight: 300;
     text-decoration: none;
@@ -126,6 +138,17 @@
     font-size: 1.5rem;
     cursor: pointer;
     max-width: 60px;
+}
+
+.nowuknow-create-post-btn {
+    display: flex;
+    border: 2px solid var(--nowuknow-bg-accent);
+    border-radius: 30px;
+    background-color: var(--nowuknow-bg-dark);
+    color: var(--nowuknow-text-primary);
+    align-items: center;
+    padding: 0 0.5em;
+    /* text-decoration: none; */
 }
 
 .nowuknow-perfil-icon {

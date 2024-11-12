@@ -4,7 +4,6 @@ const AutoresList = () => {
   const [autores, setAutores] = useState([]);
 
   useEffect(() => {
-    // Faz uma requisição para obter os autores
     const fetchAutores = async () => {
       try {
         const response = await fetch("/api/v1/about");
@@ -16,7 +15,7 @@ const AutoresList = () => {
     };
 
     fetchAutores();
-  }, []); // [] indica que o efeito só roda uma vez ao carregar o componente
+  }, []);
 
   return (
     <div>

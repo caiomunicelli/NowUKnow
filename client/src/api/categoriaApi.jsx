@@ -1,5 +1,3 @@
-// src/apis/categoriaApi.js
-
 export const getCategorias = async () => {
   try {
     const response = await fetch("/api/v1/categorias/", {
@@ -56,7 +54,7 @@ export const createCategoria = async (categoria) => {
 
     if (response.ok) {
       const data = await response.json();
-      return data; // Categoria criada com sucesso
+      return data;
     } else {
       console.error("Erro ao criar categoria:", response.statusText);
       return null;
@@ -79,7 +77,7 @@ export const updateCategoria = async (id, categoria) => {
 
     if (response.ok) {
       const data = await response.json();
-      return data; // Categoria atualizada com sucesso
+      return data;
     } else {
       console.error("Erro ao atualizar categoria:", response.statusText);
       return null;
@@ -100,7 +98,7 @@ export const deleteCategoria = async (id) => {
     });
 
     if (response.ok) {
-      return true; // Categoria deletada com sucesso
+      return true;
     } else {
       console.error("Erro ao deletar categoria:", response.statusText);
       return false;

@@ -1,16 +1,15 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { useAuthContext } from "../contexts/AuthContext"; // Importando o hook de autenticação
+import { useAuthContext } from "../contexts/AuthContext"; 
 
 const PrivateRoute = ({ children }) => {
-  const { isAuthenticated } = useAuthContext(); // Verificando se o usuário está autenticado
+  const { isAuthenticated } = useAuthContext(); 
 
   if (!isAuthenticated) {
-    // Se não estiver autenticado, redireciona para o login
     return <Navigate to="/login" />;
   }
 
-  return children; // Se autenticado, renderiza o componente filho
+  return children; 
 };
 
 export default PrivateRoute;

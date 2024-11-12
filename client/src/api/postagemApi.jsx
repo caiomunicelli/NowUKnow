@@ -13,6 +13,6 @@ export const createPostagem = async (postagem, token) => {
       }
     } catch (error) {
       console.error("Erro na postagens:", error);
-      return false; // Falha no login
+      return false;
     }
   };

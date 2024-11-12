@@ -62,18 +62,16 @@ const CreatePost = () => {
     const postData = {
       titulo: title,
       tipoPostagem: tipoConteudo,
-      autorId: 1, // Ajuste conforme necessário
+      autorId: 1,
       categoriaId: parseInt(categoriaId),
       certificacaoId: parseInt(certificacaoId),
     };
 
     try {
-      // Verifica o tipo de conteúdo para chamar a função correta
       const response = await publicaPostagem(postData);
       if (response) {
         const postagemId = response.id;
 
-        // Se for uma discussão, chama publicaDiscussao
         if (tipoConteudo === "discussao") {
           const postDataDiscussao = {
             postagemId: postagemId,
@@ -86,7 +84,6 @@ const CreatePost = () => {
             console.log("Erro desconhecido ao criar discussão");
           }
         }
-        // Se for um conteúdo, chama publicaConteudo passando os dados necessários
         else if (tipoConteudo === "conteudo") {
           const conteudoData = new FormData();
           conteudoData.append("postagem_id", postagemId);
@@ -104,7 +101,6 @@ const CreatePost = () => {
           }
         }
 
-        // Redireciona após sucesso
         navigate("/");
       } else {
         alert("Erro ao cadastrar postagem: Erro desconhecido.");
@@ -113,7 +109,6 @@ const CreatePost = () => {
       alert("Erro na requisição: " + error.message);
     }
 
-    // Limpa os campos do formulário
     setTitle("");
     setTipoConteudo("");
     setCategoriaId("");
