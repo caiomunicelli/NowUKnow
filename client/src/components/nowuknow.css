@@ -59,6 +59,7 @@ body {
     min-width: 100vw;
     max-height: 100vh;
     max-width: 100vw;
+    overflow-x: hidden;
 }
 
 .nowuknow-app h1 {
@@ -71,14 +72,11 @@ body {
   display: flex;
   flex-direction: row;
   margin-top: 60px;
-  margin-bottom: 60px;
-  width: 100%;
   background-color: var(--nowuknow-bg-light);
 }
 
 .nowuknow-left-container {
     display: flex;
-    flex-grow: 1;
     min-width: 250px;
 }
 
@@ -87,15 +85,12 @@ body {
     flex-grow: 1;
     box-sizing: border-box;
     overflow-y: auto;
-    width: 100%;
     padding: 40px 60px;
-    border-left: var(--nowuknow-border) solid 2px;
     justify-content: center;
 }
 
 .nowuknow-right-container {
   display: flex;
-  flex-grow: 1;
   min-width:250px;
 }
 

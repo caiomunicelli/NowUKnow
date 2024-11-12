@@ -28,7 +28,7 @@
     margin-top: 20px;
     color: var(--nowuknow-text-muted);
     border-bottom: var(--nouwknow-border-lighter) solid 1px;
-    width: 800px;
+    width: 720px;
 }
 
 .nowuknow-post {
@@ -49,5 +49,5 @@
 
 .nowuknow-post-video-player {
   border-radius: 12px;
-  width: 720px;
+  width: 100%;
 }

@@ -44,20 +44,20 @@ const FeedCategoria = () => {
   }, [id]);
 
   return (
-    <div className="nowuknow-box-container">
+    <div className="nowuknow-categoria-box-container">
       {loadingCategoria ? (
         <p>Carregando detalhes da categoria...</p>
       ) : categoria ? (
         <div className="nowuknow-categoria">
           <div className="nowuknow-categoria-img-nome">
-              <img
-                src={categoria.imagem}
-                alt={categoria.nome}
-                className="nowuknow-categoria-imagem"
-              />
-              <h2>{categoria.nome}</h2>
-            </div>
-            <p>{categoria.descricao}</p>
+            <img
+              src={categoria.imagem}
+              alt={categoria.nome}
+              className="nowuknow-categoria-imagem"
+            />
+            <h2>{categoria.nome}</h2>
+          </div>
+          <p>{categoria.descricao}</p>
         </div>
       ) : (
         <p>Categoria não encontrada.</p>
