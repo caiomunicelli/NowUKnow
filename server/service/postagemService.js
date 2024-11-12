@@ -1,9 +1,12 @@
 const DatabaseConnection = require("../db/databaseConnection.js");
 const Postagem = require("../models/postagem.js");
-
+const BucketConnection = require("../db/bucketConnection.js");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
 class PostagemRepository {
   constructor() {
     this.dbConnection = new DatabaseConnection();
+    this.bucketConnection = new BucketConnection();
   }
 
   // Criar uma nova postagem
@@ -20,7 +23,7 @@ class PostagemRepository {
         postagem.certificacaoId,
       ]
     );
-    
+
     const newPostagem = new Postagem(
       result.insertId,
       postagem.titulo,
@@ -30,7 +33,7 @@ class PostagemRepository {
       postagem.certificacaoId,
       new Date()
     );
-    console.log('result -> ' + result.insertId);
+    console.log("result -> " + result.insertId);
     return newPostagem;
   }
 
@@ -90,11 +93,37 @@ class PostagemRepository {
     );
     return rows;
   }
+  async getSignedUrlForConteudo(conteudoUrl) {
+    if (!conteudoUrl) return null; // Retorna null se o URL for nulo
 
-// Obter todos os detalhes das postagens
+    try {
+      // Conecte-se ao S3
+      const bucketConnection = await this.bucketConnection.connect();
+      const { bucketName } = this.bucketConnection.config; // Nome do bucket do S3
+      const key = conteudoUrl; // URL do conteúdo
+
+      // Configura o comando para obter o signed URL
+      const command = new GetObjectCommand({
+        Bucket: bucketName,
+        Key: key, // Nome da chave do arquivo no S3
+      });
+
+      // Gerando o signed URL que permite acessar a imagem privada
+      const signedUrl = await getSignedUrl(bucketConnection, command, {
+        expiresIn: 3600, // URL válida por 1 hora
+      });
+
+      return signedUrl;
+    } catch (error) {
+      console.error("Erro ao gerar o signed URL do conteúdo:", error);
+      return null; // Retorna null em caso de erro
+    }
+  }
+
+  // Obter todos os detalhes das postagens
   async getPostagensWithAllDetails() {
     const connection = await this.dbConnection.connect();
-    
+
     const [rows] = await connection.execute(`
       SELECT 
         p.id AS postagem_id,
@@ -142,7 +171,23 @@ class PostagemRepository {
         Discussoes d ON p.id = d.postagem_id
     `);
 
-    return rows;
+    const postagensComSignedUrls = await Promise.all(
+      rows.map(async (postagem) => {
+        // Se for um tipo de postagem com conteúdo e o URL não for nulo
+        if (postagem.conteudo_tipo && postagem.conteudo_url) {
+          const signedUrl = await this.getSignedUrlForConteudo(
+            postagem.conteudo_url
+          );
+
+          if (signedUrl) {
+            postagem.conteudo_url = signedUrl; // Atualiza o URL do conteúdo com o signed URL
+          }
+        }
+        return postagem;
+      })
+    );
+
+    return postagensComSignedUrls;
   }
 
   // Obter todas as postagens por autor_id

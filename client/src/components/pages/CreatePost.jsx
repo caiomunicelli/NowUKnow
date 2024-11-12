@@ -6,6 +6,7 @@ import { fetchCategorias } from "../../services/categoriaService";
 import { fetchCertificacoes } from "../../services/certificacaoService";
 import { publicaPostagem } from "../../services/postagemService";
 import { publicaDiscussao } from "../../services/discussaoService";
+import { publicaConteudo } from "../../services/conteudoService";
 
 const CreatePost = () => {
   const { error } = useAuthContext();
@@ -20,6 +21,7 @@ const CreatePost = () => {
   const [tipoConteudoDetalhado, setTipoConteudoDetalhado] = useState("");
   const [url, setUrl] = useState("");
   const [descricao, setDescricao] = useState("");
+  const [conteudoArquivo, setConteudoArquivo] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,12 +47,20 @@ const CreatePost = () => {
     getCertificacoes();
   }, []);
 
+  const handleArquivoChange = (e) => {
+    const file = e.target.files[0];
+    setConteudoArquivo(file);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validação básica dos campos obrigatórios
     if (!title || !tipoConteudo || !categoriaId || !certificacaoId) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
+
     const postData = {
       titulo: title,
       tipoPostagem: tipoConteudo,
@@ -60,28 +70,43 @@ const CreatePost = () => {
     };
 
     try {
+      // Verifica o tipo de conteúdo para chamar a função correta
       const response = await publicaPostagem(postData);
       if (response) {
         const postagemId = response.id;
+
+        // Se for uma discussão, chama publicaDiscussao
         if (tipoConteudo === "discussao") {
           const postDataDiscussao = {
             postagemId: postagemId,
             tipoDiscussao: tipoDiscussao,
             texto: texto,
           };
-          const responseDiscussao = publicaDiscussao(postDataDiscussao);
+          const responseDiscussao = await publicaDiscussao(postDataDiscussao);
+
           if (!responseDiscussao) {
             console.log("Erro desconhecido ao criar discussão");
           }
-        } else if (tipoConteudo === "conteudo") {
-          await createConteudo({
-            postagemId,
-            tipoConteudo: tipoConteudoDetalhado,
-            url,
-            descricao,
-          });
+        }
+        // Se for um conteúdo, chama publicaConteudo passando os dados necessários
+        else if (tipoConteudo === "conteudo") {
+          const conteudoData = new FormData();
+          conteudoData.append("postagem_id", postagemId);
+          conteudoData.append("tipo_conteudo", tipoConteudoDetalhado);
+          if (conteudoArquivo) {
+            conteudoData.append("arquivo", conteudoArquivo);
+          }
+
+          conteudoData.append("descricao", descricao);
+
+          const responseConteudo = await publicaConteudo(conteudoData);
+
+          if (!responseConteudo) {
+            console.log("Erro desconhecido ao criar conteúdo");
+          }
         }
 
+        // Redireciona após sucesso
         navigate("/");
       } else {
         alert("Erro ao cadastrar postagem: Erro desconhecido.");
@@ -90,10 +115,15 @@ const CreatePost = () => {
       alert("Erro na requisição: " + error.message);
     }
 
+    // Limpa os campos do formulário
     setTitle("");
     setTipoConteudo("");
     setCategoriaId("");
     setCertificacaoId("");
+    setTipoConteudoDetalhado("");
+    setUrl("");
+    setDescricao("");
+    setConteudoArquivo(null);
   };
 
   return (
@@ -102,6 +132,7 @@ const CreatePost = () => {
       <form onSubmit={handleSubmit} className="nowuknow-form-container">
         {error && <div className="alert alert-danger">{error}</div>}
 
+        {/* Campos existentes */}
         <div className="mb-3">
           <label>Título:</label>
           <input
@@ -156,10 +187,11 @@ const CreatePost = () => {
           </>
         )}
 
+        {/* Campos novos para upload de conteúdo */}
         {tipoConteudo === "conteudo" && (
           <>
             <div className="mb-3">
-              <label>Tipo de Conteúdo:</label>
+              <label>Tipo de Conteúdo Detalhado:</label>
               <select
                 className="nowuknow-input"
                 value={tipoConteudoDetalhado}
@@ -167,22 +199,11 @@ const CreatePost = () => {
                 required
               >
                 <option value="">Selecione o tipo de conteúdo</option>
-                <option value="video">Vídeo</option>
-                <option value="material_de_aprendizado">
+                <option value="Video">Vídeo</option>
+                <option value="Material_de_Aprendizado">
                   Material de Aprendizado
                 </option>
               </select>
-            </div>
-            <div className="mb-3">
-              <label>URL:</label>
-              <input
-                type="url"
-                className="nowuknow-input"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder="Informe o URL"
-                required
-              />
             </div>
             <div className="mb-3">
               <label>Descrição (opcional):</label>
@@ -193,9 +214,19 @@ const CreatePost = () => {
                 placeholder="Descrição do conteúdo"
               />
             </div>
+            <div className="mb-3">
+              <label>Upload de Arquivo:</label>
+              <input
+                type="file"
+                className="nowuknow-input"
+                onChange={handleArquivoChange}
+                accept="video/*, application/pdf, application/vnd.ms-powerpoint, application/msword"
+              />
+            </div>
           </>
         )}
 
+        {/* Campos de categoria e certificação */}
         <div className="mb-3">
           <label>Categoria:</label>
           <select

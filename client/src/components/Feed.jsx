@@ -39,6 +39,9 @@ const Feed = () => {
               username={post.usuario_nome}
               date={post.postagem_data_publicacao}
               text={post.discussao_texto}
+              postType={post.postagem_tipo}
+              contentType={post.conteudo_tipo}
+              contentUrl={post.conteudo_url}
             />
           ))
         ) : (
