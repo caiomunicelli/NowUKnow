@@ -4,13 +4,12 @@ import Feed from "../Feed";
 import "./Categorias.css";
 
 const FeedCategoria = () => {
-  const { id } = useParams(); // Captura o id da categoria da URL
+  const { id } = useParams();
   const [posts, setPosts] = useState([]);
-  const [categoria, setCategoria] = useState(null); // Estado para armazenar os dados da categoria
+  const [categoria, setCategoria] = useState(null);
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [loadingCategoria, setLoadingCategoria] = useState(false);
 
-  // Função para buscar posts filtrados por categoria
   const fetchPostsByCategoria = async () => {
     setLoadingPosts(true);
     try {
@@ -24,7 +23,6 @@ const FeedCategoria = () => {
     }
   };
 
-  // Função para buscar detalhes da categoria
   const fetchCategoriaDetails = async () => {
     setLoadingCategoria(true);
     try {
@@ -38,7 +36,6 @@ const FeedCategoria = () => {
     }
   };
 
-  // Fetch inicial (carregado apenas uma vez)
   useEffect(() => {
     if (id) {
       fetchPostsByCategoria();
@@ -48,7 +45,6 @@ const FeedCategoria = () => {
 
   return (
     <div className="nowuknow-box-container">
-      {/* Seção de detalhes da categoria */}
       {loadingCategoria ? (
         <p>Carregando detalhes da categoria...</p>
       ) : categoria ? (
@@ -67,11 +63,10 @@ const FeedCategoria = () => {
         <p>Categoria não encontrada.</p>
       )}
 
-      {/* Lista de posts da categoria */}
       {loadingPosts ? (
         <p>Carregando posts...</p>
       ) : posts.length > 0 ? (
-        <Feed posts={posts} /> // Passa os posts filtrados para o componente Feed
+        <Feed posts={posts} />
       ) : (
         <p className="no-posts">Sem postagens para essa categoria.</p>
       )}

@@ -6,6 +6,7 @@
   --nowuknow-bg-dark: hsla(211, 53%, 11%, 1);  /* Rich Black */
   --nowuknow-bg-light: hsla(75, 6%, 87%, 1); /* Platinum */
   --nowuknow-bg-accent: hsla(212, 29%, 36%, 1); /* Yinmn Blue (Accent) */
+  --nowuknow-bg-medium: hsla(211, 0.88%, 80.29%, 1);
   
   /* Textos */
   --nowuknow-text-primary: hsla(75, 6%, 87%, 1);
@@ -17,6 +18,7 @@
   /* Bordas */
   --nowuknow-border: hsla(212, 29%, 36%, 1);  /* Yinmn Blue */
   --nowuknow-border-light: hsla(214, 23%, 56%, 1);  /* Silver Lake Blue */
+  --nouwknow-border-lighter: hsla(212, 6.47%, 80.79%, 1);
   --nowuknow-border-dark: hsla(211, 53%, 11%, 1);  /* Rich Black */
   
   /* Links */
@@ -67,14 +69,34 @@ body {
   color: var(--nowuknow-text-primary-dark);
   flex: 1;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 60px 20px;
-  margin-top: 60px; /* Altura do header */
-  margin-bottom: 60px; /* Altura do footer */
-  overflow-y: auto; /* Habilita o scroll vertical */
+  flex-direction: row;
+  margin-top: 60px;
+  margin-bottom: 60px;
   width: 100%;
-  box-sizing: border-box;
+  background-color: var(--nowuknow-bg-light);
+}
+
+.nowuknow-left-container {
+    display: flex;
+    flex-grow: 1;
+    min-width: 250px;
+}
+
+.nowuknow-middle-container {
+    display: flex;
+    flex-grow: 1;
+    box-sizing: border-box;
+    overflow-y: auto;
+    width: 100%;
+    padding: 40px 60px;
+    border-left: var(--nowuknow-border) solid 2px;
+    justify-content: center;
+}
+
+.nowuknow-right-container {
+  display: flex;
+  flex-grow: 1;
+  min-width:250px;
 }
 
 .nowuknow-input {

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Post from "./Post"; // Componente de visualização do post
+import Post from "./Post";
 import "./Feed.css";
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Função para buscar posts
   const fetchPosts = async () => {
     setLoading(true);
     try {
@@ -20,14 +19,12 @@ const Feed = () => {
     }
   };
 
-  // Fetch inicial (carregado apenas uma vez)
   useEffect(() => {
     fetchPosts();
   }, []);
 
   return (
     <div className="nowuknow-feed-container">
-      {/* Lista de posts */}
       <div className="nowuknow-post-feed">
         {loading ? (
           <p>Carregando posts...</p>

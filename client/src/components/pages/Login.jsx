@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import "./Login.css"; // Certifique-se de que o arquivo CSS está atualizado
+import "./Login.css";
 
 function Login({ onClose }) {
   const [email, setEmail] = useState("");

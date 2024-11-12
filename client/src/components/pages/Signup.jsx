@@ -62,7 +62,6 @@ function Signup() {
     e.preventDefault();
 
     setCampoAlterado("cadastro");
-    // Verifica se algum campo possui erro
     if (Object.values(errors).some((error) => error !== "")) {
       return;
     }
@@ -72,9 +71,9 @@ function Signup() {
     novoUsuario.append("usuario", usuario);
     novoUsuario.append("email", email);
     novoUsuario.append("senha", senha);
-    novoUsuario.append("tipo", "tipo_usuario"); // Inclua o campo tipo se necessário
+    novoUsuario.append("tipo", "tipo_usuario");
     if (foto) {
-      novoUsuario.append("foto", foto); // Adiciona o arquivo da imagem
+      novoUsuario.append("foto", foto);
     }
     const response = await signup(novoUsuario);
 

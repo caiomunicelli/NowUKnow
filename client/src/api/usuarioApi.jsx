@@ -12,7 +12,7 @@ export const loginUsuario = async (credenciais) => {
     }
   } catch (error) {
     console.error("Erro no login:", error);
-    return false; // Falha no login
+    return false;
   }
 };
 
@@ -27,14 +27,14 @@ export const signupUsuario = async (novoUsuario) => {
     if (response.ok) {
       const data = await response.json();
       console.log("Sucesso: ", data);
-      return true; // Cadastro bem-sucedido
+      return true;
     } else {
       console.error("Erro na resposta:", response.statusText);
       return false;
     }
   } catch (error) {
     console.error("Erro no cadastro:", error);
-    return false; // Falha no cadastro
+    return false;
   }
 };
 
@@ -51,11 +51,11 @@ export const updateUsuario = async (token, updatedUsuario) => {
     if (response.ok) {
       const data = await response.json();
       console.log("Sucesso: ", data);
-      return true; // Login bem-sucedido
+      return true;
     }
   } catch (error) {
     console.error("Erro no login:", error);
-    return false; // Falha no login
+    return false; 
   }
 };
 
@@ -70,10 +70,10 @@ export const getUsuarioAtual = async (token) => {
     if (response.ok) {
       const data = await response.json();
       console.log("Sucesso: ", data);
-      return data; // Login bem-sucedido
+      return data;
     }
   } catch (error) {
     console.error("Erro no login:", error);
-    return null; // Falha no login
+    return null;
   }
 };

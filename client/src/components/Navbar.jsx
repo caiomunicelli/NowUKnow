@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
 import { fetchUsuarioLogado } from "../services/usuarioService";
 import Sidebar from "./Sidebar";
-import { Login } from "./"; // Importando o componente Login flutuante
+import { Login } from "./";
 import "./Navbar.css";
 
 function Navbar() {
@@ -11,7 +11,7 @@ function Navbar() {
   const [usuario, setUsuario] = useState(null);
   const [erro, setErro] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isLoginMenuOpen, setIsLoginMenuOpen] = useState(false); // Controle do menu de login
+  const [isLoginMenuOpen, setIsLoginMenuOpen] = useState(false);
   const location = useLocation();
 
   const toggleSidebar = () => {
@@ -46,9 +46,6 @@ function Navbar() {
     <header className="nowuknow-header">
       <nav className="nowuknow-navbar">
         <div className="nowuknow-navbar-left">
-          <button onClick={toggleSidebar} className="nowuknow-menu-btn">
-            <i className="bi bi-list"></i>
-          </button>
           <Link className="nowuknow-brand" to="/">
             NowUKnow
           </Link>
@@ -60,13 +57,22 @@ function Navbar() {
               placeholder="Busque algum conteúdo, categoria ou autor"
               aria-label="Search"
             />
-            <button className="nowuknow-search-btn" type="submit">
+            <button className="nowuknow-btn-icon" type="submit">
               <i className="bi bi-search"></i>
             </button>
           </form>
         </div>
         <div className="nowuknow-navbar-right">
           <ul className="nowuknow-navbar-nav">
+            {isAuthenticated && (
+              <Link
+                to="/createPost"
+                className="nowuknow-nav-link nowuknow-create-post-btn"
+              >
+                <i className="bi bi-plus nowuknow-plus"></i>{" "}
+                <span>Criar Postagem</span>
+              </Link>
+            )}
             {isAuthenticated && usuario && (
               <li className="nowuknow-nav-item">
                 <Link to="/perfil" className="nowuknow-nav-link">
@@ -90,13 +96,11 @@ function Navbar() {
               )}
             </li>
           </ul>
-          {/* Exibe o componente Login como menu flutuante */}
           {isLoginMenuOpen && (
             <Login onClose={() => setIsLoginMenuOpen(false)} />
           )}
         </div>
       </nav>
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
     </header>
   );
 }
