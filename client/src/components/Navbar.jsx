@@ -46,6 +46,9 @@ function Navbar() {
     <header className="nowuknow-header">
       <nav className="nowuknow-navbar">
         <div className="nowuknow-navbar-left">
+          <button onClick={toggleSidebar} className="nowuknow-menu-btn">
+            <i className="bi bi-list"></i>
+          </button>
           <Link className="nowuknow-brand" to="/">
             NowUKnow
           </Link>
@@ -100,6 +103,7 @@ function Navbar() {
             <Login onClose={() => setIsLoginMenuOpen(false)} />
           )}
         </div>
+        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       </nav>
     </header>
   );

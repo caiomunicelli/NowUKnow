@@ -31,9 +31,7 @@ function App() {
         <div className="nowuknow-app">
           <Navbar />
           <main className="nowuknow-main">
-            <div className="nowuknow-left-container">
-              <Sidebar />
-            </div>
+            <div className="nowuknow-left-container"></div>
             <div className="nowuknow-middle-container">
               <Routes>
                 <Route path="*" element={<Navigate to="/" />} />
