@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { fetchUsuarioLogado } from "../../services/usuarioService";
+import { fetchUsuarioLogado, deletar } from "../../services/usuarioService";
 import "./Perfil.css";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../contexts/AuthContext";
 
-const PerfilPage = () => {
+const Perfil = () => {
   const [usuario, setUsuario] = useState(null);
   const [erro, setErro] = useState(null);
-
+  const navigate = useNavigate();
+  const { logout } = useAuthContext();
   useEffect(() => {
     const loadUsuario = async () => {
       try {
@@ -27,6 +30,23 @@ const PerfilPage = () => {
   if (!usuario) {
     return <div>Carregando...</div>; // Exibe "Carregando..." enquanto os dados não são carregados
   }
+
+  const handleDeletarUsuario = async () => {
+    try {
+      const resposta = await deletar(); // Chama o serviço de deletar
+      if (resposta) {
+        // Caso o usuário seja deletado, você pode redirecionar ou exibir uma mensagem
+        alert("Usuário deletado com sucesso!");
+        logout();
+        navigate("/");
+      } else {
+        alert("Erro ao deletar usuário.");
+      }
+    } catch (error) {
+      setErro("Erro ao deletar o usuário.");
+      console.error(error);
+    }
+  };
 
   return (
     <div className="perfil-container">
@@ -53,8 +73,11 @@ const PerfilPage = () => {
           </p>
         </div>
       </div>
+      <button onClick={handleDeletarUsuario} className="deletar-btn">
+        Deletar Conta
+      </button>
     </div>
   );
 };
 
-export default PerfilPage;
+export default Perfil;

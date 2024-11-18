@@ -1,11 +1,11 @@
 const mysql = require("mysql2/promise");
 const DatabaseConnection = require("../providers/databaseConnection.js");
-const PostagemRepository = require("../service/postagemService.js");
-const UserRepository = require("../service/usuarioService.js");
 const S3Provider = require("../providers/s3Provider");
+// const UserRepository = require("../service/usuarioService.js");
+// const userRepository = new UserRepository();
+// const PostagemRepository = require("../service/postagemService.js");
+// const postagemRepository = new PostagemRepository();
 
-const userRepository = new UserRepository();
-const postagemRepository = new PostagemRepository();
 class ConteudoRepository {
   constructor() {
     this.dbConnection = new DatabaseConnection();
@@ -20,13 +20,14 @@ class ConteudoRepository {
     if (conteudo.arquivo) {
       try {
         await this.S3Provider.connect();
-        const postagem = await postagemRepository.getPostagemById(
-          conteudo.postagem_id
-        );
-        const autor = await userRepository.getUserById(postagem.autor_id);
+        //const postagem = await postagemRepository.getPostagemById(
+        //  conteudo.postagem_id
+        // );
+        // const autor = await userRepository.getUserById(postagem.autor_id);
         urlArquivo = await this.S3Provider.uploadFile(
           "conteudos",
-          autor.usuario,
+          //autor.usuario,
+          "video",
           conteudo.arquivo,
           `_${conteudo.postagem_id}`
         );
@@ -103,13 +104,14 @@ class ConteudoRepository {
       // Carregar o novo arquivo para o S3
       try {
         await this.S3Provider.connect();
-        const postagem = await postagemRepository.getPostagemById(
-          conteudo.postagem_id
-        );
-        const autor = await userRepository.getUserById(postagem.autor_id);
+        //const postagem = await postagemRepository.getPostagemById(
+        //   conteudo.postagem_id
+        // );
+        // const autor = await userRepository.getUserById(postagem.autor_id);
         urlArquivo = await this.S3Provider.uploadFile(
           "conteudos",
-          autor.usuario,
+          // autor.usuario,
+          "video",
           conteudo.arquivo,
           `_${conteudo.postagem_id}`
         );

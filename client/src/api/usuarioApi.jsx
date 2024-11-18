@@ -55,7 +55,7 @@ export const updateUsuario = async (token, updatedUsuario) => {
     }
   } catch (error) {
     console.error("Erro no login:", error);
-    return false; 
+    return false;
   }
 };
 
@@ -63,6 +63,25 @@ export const getUsuarioAtual = async (token) => {
   try {
     const response = await fetch("/api/v1/usuarios", {
       method: "GET",
+      headers: {
+        "x-access-token": token,
+      },
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log("Sucesso: ", data);
+      return data;
+    }
+  } catch (error) {
+    console.error("Erro no login:", error);
+    return null;
+  }
+};
+
+export const deleteUsuarioAtual = async (token) => {
+  try {
+    const response = await fetch("/api/v1/usuarios", {
+      method: "DELETE",
       headers: {
         "x-access-token": token,
       },

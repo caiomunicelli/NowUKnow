@@ -1,6 +1,10 @@
 const { S3Client } = require("@aws-sdk/client-s3");
 const S3Config = require("./config/s3Config.js");
-const { PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const {
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} = require("@aws-sdk/client-s3");
 const { Upload } = require("@aws-sdk/lib-storage");
 class S3Provider {
   constructor() {

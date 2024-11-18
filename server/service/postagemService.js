@@ -1,7 +1,7 @@
 const DatabaseConnection = require("../providers/databaseConnection.js");
 const Postagem = require("../entities/postagem.js");
-const ConteudoRepository = require("../service/conteudoRepository.js");
-const DiscussaoRepository = require("../service/discussaoRepository.js");
+const ConteudoRepository = require("./conteudoService.js");
+const DiscussaoRepository = require("./discussaoService.js");
 
 const conteudoRepository = new ConteudoRepository();
 const discussaoRepository = new DiscussaoRepository();
