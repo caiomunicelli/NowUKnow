@@ -3,13 +3,13 @@ import { Link, useLocation } from "react-router-dom";
 import "./Sidebar.css";
 import { Footer } from "./";
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, toggleSidebar }) => {
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className={"nowuknow-sidebar"}>
+    <div className={`nowuknow-sidebar ${isOpen ? "open" : ""}`}>
       <div className="nowuknow-sidebar-top">
         <ul className="nowuknow-sidebar-nav">
           <li className="nowuknow-sidebar-item">

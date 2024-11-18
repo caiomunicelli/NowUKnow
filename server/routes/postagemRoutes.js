@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const PostagemController = require("../controllers/postagemController.js");
-const verifyJWT = require("../service/jwtService.js");
+const verifyJWT = require("../middleware/jwtService.js");
 
 const postagemController = new PostagemController();
 
@@ -55,7 +55,8 @@ router.get("/allDetails", async (req, res) => {
 router.get("/allDetails/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const resultado = await postagemController.listarPostagensComDetalhesPorCertificacaoId(id);
+    const resultado =
+      await postagemController.listarPostagensComDetalhesPorCertificacaoId(id);
     res.status(200).json(resultado.postagens); // Retorna a lista de postagens
   } catch (error) {
     res

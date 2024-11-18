@@ -1,6 +1,5 @@
 const ConteudoRepository = require("../service/conteudoService.js");
-const Conteudo = require("../models/conteudo.js");
-
+const Conteudo = require("../entities/conteudo.js");
 const conteudoRepository = new ConteudoRepository();
 
 class ConteudoController {

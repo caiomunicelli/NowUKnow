@@ -1,4 +1,4 @@
-class BucketConfig {
+class S3Config {
   constructor() {
     this.config = {
       bucketName: process.env.BUCKET_NAME,
@@ -12,4 +12,4 @@ class BucketConfig {
   }
 }
 
-module.exports = BucketConfig;
+module.exports = S3Config;

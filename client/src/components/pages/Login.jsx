@@ -24,6 +24,11 @@ function Login({ onClose }) {
     }
   };
 
+  const handleGoToSignUp = () => {
+    onClose(); // Fecha o menu de login
+    navigate("/signup"); // Navega para a página de cadastro
+  };
+
   return (
     <div className="nowuknow-login-float">
       <form onSubmit={handleSubmit} className="nowuknow-form-container">
@@ -58,7 +63,10 @@ function Login({ onClose }) {
           Entrar
         </button>
         <p className="mt-3">
-          Não tem uma conta? <Link to="/signup">Cadastre-se aqui</Link>
+          Não tem uma conta?{" "}
+          <span className="link" onClick={handleGoToSignUp}>
+            Cadastre-se aqui
+          </span>
         </p>
       </form>
     </div>

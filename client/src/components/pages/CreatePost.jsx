@@ -19,9 +19,9 @@ const CreatePost = () => {
   const [tipoDiscussao, setTipoDiscussao] = useState("");
   const [texto, setTexto] = useState("");
   const [tipoConteudoDetalhado, setTipoConteudoDetalhado] = useState("");
-  const [url, setUrl] = useState("");
   const [descricao, setDescricao] = useState("");
   const [conteudoArquivo, setConteudoArquivo] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,6 +68,7 @@ const CreatePost = () => {
     };
 
     try {
+      setIsUploading(true); // Ativa o estado de upload
       const response = await publicaPostagem(postData);
       if (response) {
         const postagemId = response.id;
@@ -83,15 +84,13 @@ const CreatePost = () => {
           if (!responseDiscussao) {
             console.log("Erro desconhecido ao criar discussão");
           }
-        }
-        else if (tipoConteudo === "conteudo") {
+        } else if (tipoConteudo === "conteudo") {
           const conteudoData = new FormData();
           conteudoData.append("postagem_id", postagemId);
           conteudoData.append("tipo_conteudo", tipoConteudoDetalhado);
           if (conteudoArquivo) {
             conteudoData.append("arquivo", conteudoArquivo);
           }
-
           conteudoData.append("descricao", descricao);
 
           const responseConteudo = await publicaConteudo(conteudoData);
@@ -107,6 +106,8 @@ const CreatePost = () => {
       }
     } catch (error) {
       alert("Erro na requisição: " + error.message);
+    } finally {
+      setIsUploading(false); // Desativa o estado de upload
     }
 
     setTitle("");
@@ -114,7 +115,6 @@ const CreatePost = () => {
     setCategoriaId("");
     setCertificacaoId("");
     setTipoConteudoDetalhado("");
-    setUrl("");
     setDescricao("");
     setConteudoArquivo(null);
   };
@@ -125,7 +125,6 @@ const CreatePost = () => {
       <form onSubmit={handleSubmit} className="nowuknow-form-container">
         {error && <div className="alert alert-danger">{error}</div>}
 
-        {/* Campos existentes */}
         <div className="mb-3">
           <label>Título:</label>
           <input
@@ -180,7 +179,6 @@ const CreatePost = () => {
           </>
         )}
 
-        {/* Campos novos para upload de conteúdo */}
         {tipoConteudo === "conteudo" && (
           <>
             <div className="mb-3">
@@ -219,7 +217,6 @@ const CreatePost = () => {
           </>
         )}
 
-        {/* Campos de categoria e certificação */}
         <div className="mb-3">
           <label>Categoria:</label>
           <select
@@ -253,8 +250,15 @@ const CreatePost = () => {
           </select>
         </div>
 
-        <button type="submit" className="nowuknow-btn">
-          Postar
+        <button type="submit" className="nowuknow-btn" disabled={isUploading}>
+          {isUploading ? (
+            <>
+              <i className="bi bi-arrow-repeat spinner"></i> Upload do Arquivo
+              em Andamento
+            </>
+          ) : (
+            "Postar"
+          )}
         </button>
       </form>
     </div>

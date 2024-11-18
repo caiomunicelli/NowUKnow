@@ -1,5 +1,5 @@
-const DatabaseConnection = require("../db/databaseConnection.js");
-const Categoria = require("../models/categoria.js");
+const DatabaseConnection = require("../providers/databaseConnection.js");
+const Categoria = require("../entities/categoria.js");
 
 class CategoriaRepository {
   constructor() {
@@ -58,7 +58,6 @@ class CategoriaRepository {
       row.imagem,
       row.data_criacao
     );
-    
   }
 
   // Buscar categorias por nome

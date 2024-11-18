@@ -1,38 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const ConteudoController = require("../controllers/conteudoController.js");
-const verifyJWT = require("../service/jwtService.js");
+const verifyJWT = require("../middleware/jwtService.js");
 const conteudoController = new ConteudoController();
-const multer = require("multer");
-
-const storage = multer.memoryStorage();
-
-const upload = multer({
-  storage: storage,
-  fileFilter: (req, file, cb) => {
-    const arquivosPermitidos = [
-      "application/pdf",
-      "application/msword", // .doc
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
-      "application/vnd.ms-powerpoint", // .ppt
-      "application/vnd.openxmlformats-officedocument.presentationml.presentation", // .pptx
-      "video/mp4",
-      "video/x-msvideo", // .avi
-      "video/x-matroska", // .mkv
-      "video/quicktime", // .mov
-    ];
-    if (arquivosPermitidos.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(
-        new Error(
-          "Tipo de arquivo não permitido. Apenas PDFs, documentos Word, apresentações PowerPoint e vídeos são aceitos."
-        )
-      );
-    }
-  },
-  limits: { fileSize: 100 * 1024 * 1024 },
-});
+const upload = require("../middleware/multerConfig.js")("conteudo");
 
 // Rota: Criar um conteúdo (POST /)
 router.post("/", verifyJWT, upload.single("arquivo"), async (req, res) => {
@@ -87,19 +58,23 @@ router.get("/:id", async (req, res) => {
 });
 
 // Rota: Atualizar conteúdo por ID (PUT /:id)
-router.put("/:id", verifyJWT, async (req, res) => {
-  const { postagem_id, tipo_conteudo, url, descricao } = req.body;
+router.put("/:id", verifyJWT, upload.single("arquivo"), async (req, res) => {
+  const { postagem_id, tipo_conteudo, descricao } = req.body;
+  const arquivo = req.file; // Acessa o arquivo carregado, se houver
   try {
+    // Passa o arquivo para o controller, caso ele tenha sido enviado
     const resultado = await conteudoController.atualizarConteudo(
       req.params.id,
       postagem_id,
       tipo_conteudo,
-      url,
+      arquivo, // Arquivo será enviado como parâmetro
       descricao
     );
+
     if (!resultado.sucesso) {
       return res.status(400).json({ errors: resultado.erros });
     }
+
     res.status(200).json(resultado.conteudo); // Retorna o conteúdo atualizado
   } catch (error) {
     res

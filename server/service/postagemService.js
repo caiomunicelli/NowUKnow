@@ -1,12 +1,13 @@
-const DatabaseConnection = require("../db/databaseConnection.js");
-const Postagem = require("../models/postagem.js");
-const BucketConnection = require("../db/bucketConnection.js");
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const { PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const DatabaseConnection = require("../providers/databaseConnection.js");
+const Postagem = require("../entities/postagem.js");
+const ConteudoRepository = require("../service/conteudoRepository.js");
+const DiscussaoRepository = require("../service/discussaoRepository.js");
+
+const conteudoRepository = new ConteudoRepository();
+const discussaoRepository = new DiscussaoRepository();
 class PostagemRepository {
   constructor() {
     this.dbConnection = new DatabaseConnection();
-    this.bucketConnection = new BucketConnection();
   }
 
   // Criar uma nova postagem
@@ -93,33 +94,6 @@ class PostagemRepository {
     );
     return rows;
   }
-  async getSignedUrlForConteudo(conteudoUrl) {
-    if (!conteudoUrl) return null; // Retorna null se o URL for nulo
-
-    try {
-      // Conecte-se ao S3
-      const bucketConnection = await this.bucketConnection.connect();
-      const { bucketName } = this.bucketConnection.config; // Nome do bucket do S3
-      const key = conteudoUrl; // URL do conteúdo
-
-      // Configura o comando para obter o signed URL
-      const command = new GetObjectCommand({
-        Bucket: bucketName,
-        Key: key, // Nome da chave do arquivo no S3
-      });
-
-      // Gerando o signed URL que permite acessar a imagem privada
-      const signedUrl = await getSignedUrl(bucketConnection, command, {
-        expiresIn: 3600, // URL válida por 1 hora
-      });
-
-      return signedUrl;
-    } catch (error) {
-      console.error("Erro ao gerar o signed URL do conteúdo:", error);
-      return null; // Retorna null em caso de erro
-    }
-  }
-
   async getPostagensWithAllDetails() {
     const connection = await this.dbConnection.connect();
 
@@ -168,27 +142,72 @@ class PostagemRepository {
         Conteudos ct ON p.id = ct.postagem_id
       LEFT JOIN 
         Discussoes d ON p.id = d.postagem_id
+      ORDER BY 
+        p.data_publicacao DESC
     `);
 
-    const postagensComSignedUrls = await Promise.all(
-      rows.map(async (postagem) => {
-        // Se for um tipo de postagem com conteúdo e o URL não for nulo
-        if (postagem.conteudo_tipo && postagem.conteudo_url) {
-          const signedUrl = await this.getSignedUrlForConteudo(
-            postagem.conteudo_url
-          );
-
-          if (signedUrl) {
-            postagem.conteudo_url = signedUrl; // Atualiza o URL do conteúdo com o signed URL
-          }
-        }
-        return postagem;
-      })
-    );
-
-    return postagensComSignedUrls;
+    return rows;
   }
 
+  async getPostagensWithAllDetailsByAutorId(autorId) {
+    const connection = await this.dbConnection.connect();
+
+    const [rows] = await connection.execute(
+      `
+      SELECT 
+        p.id AS postagem_id,
+        p.titulo AS postagem_titulo,
+        p.tipo_postagem AS postagem_tipo,
+        p.data_publicacao AS postagem_data_publicacao,
+
+        u.id AS usuario_id,
+        u.usuario AS usuario_nome,
+        u.email AS usuario_email,
+        u.imagem AS usuario_imagem,
+        u.tipo AS usuario_tipo,
+        u.data_criacao AS usuario_data_criacao,
+
+        c.id AS categoria_id,
+        c.nome AS categoria_nome,
+        c.descricao AS categoria_descricao,
+        c.imagem AS categoria_imagem,
+
+        cert.id AS certificacao_id,
+        cert.nome AS certificacao_nome,
+        cert.descricao AS certificacao_descricao,
+        cert.nivel AS certificacao_nivel,
+
+        ct.id AS conteudo_id,
+        ct.tipo_conteudo AS conteudo_tipo,
+        ct.url AS conteudo_url,
+        ct.descricao AS conteudo_descricao,
+
+        d.id AS discussao_id,
+        d.tipo_discussao AS discussao_tipo,
+        d.texto AS discussao_texto
+
+      FROM 
+        Postagens p
+      LEFT JOIN 
+        Usuarios u ON p.autor_id = u.id
+      LEFT JOIN 
+        Categorias c ON p.categoria_id = c.id
+      LEFT JOIN 
+        Certificacoes cert ON p.certificacao_id = cert.id
+      LEFT JOIN 
+        Conteudos ct ON p.id = ct.postagem_id
+      LEFT JOIN 
+        Discussoes d ON p.id = d.postagem_id
+      WHERE
+        p.autor_id = ?
+      ORDER BY 
+        p.data_publicacao DESC
+    `,
+      [autorId]
+    );
+
+    return rows;
+  }
   // Obter todas as postagens por certificacao_id
   async getPostagensWithAllDetailsByCategoriaId(categoriaId) {
     const connection = await this.dbConnection.connect();
@@ -242,28 +261,11 @@ class PostagemRepository {
         WHERE
           p.categoria_id = ?
         ORDER BY 
-          p.data_publicacao DESC  -- Ordenando pela data de publicação mais recente primeiro
+          p.data_publicacao DESC
       `,
         [categoriaId]
       );
-
-      const postagensComSignedUrls = await Promise.all(
-        rows.map(async (postagem) => {
-          // Se for um tipo de postagem com conteúdo e o URL não for nulo
-          if (postagem.conteudo_tipo && postagem.conteudo_url) {
-            const signedUrl = await this.getSignedUrlForConteudo(
-              postagem.conteudo_url
-            );
-
-            if (signedUrl) {
-              postagem.conteudo_url = signedUrl; // Atualiza o URL do conteúdo com o signed URL
-            }
-          }
-          return postagem;
-        })
-      );
-
-      return postagensComSignedUrls;
+      return rows;
     } catch (error) {
       console.error("Erro ao obter detalhes das postagens:", error);
       throw error;
@@ -303,12 +305,59 @@ class PostagemRepository {
   // Excluir uma postagem por ID
   async deletePostagem(id) {
     const connection = await this.dbConnection.connect();
+
+    // Obter a postagem para verificar o tipo
+    const postagem = await this.getPostagemById(id);
+
+    // Se for conteúdo, excluir o conteúdo associado
+    if (postagem.tipo_postagem === "Conteudo") {
+      const conteudo = await conteudoRepository.getConteudoByPostagemId(id);
+      if (conteudo) {
+        await conteudoRepository.deleteConteudoByPostagemId(id);
+      }
+    }
+
+    // Se for discussão, excluir a discussão associada
+    if (postagem.tipo_postagem === "Discussao") {
+      const discussao = await discussaoRepository.getDiscussaoByPostagemId(id);
+      if (discussao) {
+        await discussaoRepository.deleteDiscussaoByPostagemId(id);
+      }
+    }
+
+    // Excluir a postagem
     const [result] = await connection.execute(
       "DELETE FROM Postagens WHERE id = ?",
       [id]
     );
 
     return result.affectedRows > 0;
+  }
+
+  async deletePostagensByAutorId(autorId) {
+    const connection = await this.dbConnection.connect();
+
+    // Obter todas as postagens do autor
+    const [postagens] = await connection.execute(
+      "SELECT * FROM Postagens WHERE autor_id = ?",
+      [autorId]
+    );
+
+    // Deletar conteúdo ou discussão de cada postagem antes de deletá-las
+    for (const postagem of postagens) {
+      if (postagem.tipo_postagem === "Conteudo") {
+        await this.conteudoRepository.deleteConteudoByPostagemId(postagem.id); // Deleta conteúdo
+      } else if (postagem.tipo_postagem === "Discussao") {
+        await this.discussaoRepository.deleteDiscussaoByPostagemId(postagem.id); // Deleta discussão
+      }
+
+      // Deleta a postagem
+      await connection.execute("DELETE FROM Postagens WHERE id = ?", [
+        postagem.id,
+      ]);
+    }
+
+    return postagens.length > 0;
   }
 }
 

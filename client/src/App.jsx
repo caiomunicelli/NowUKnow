@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import {
   Navbar,
@@ -25,23 +25,30 @@ import {
 import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
+  const [isLoginMenuOpen, setIsLoginMenuOpen] = useState(false);
+
   return (
     <AuthProvider>
       <Router>
         <div className="nowuknow-app">
-          <Navbar />
+          <Navbar
+            isLoginMenuOpen={isLoginMenuOpen}
+            setIsLoginMenuOpen={setIsLoginMenuOpen}
+          />
           <main className="nowuknow-main">
-            <div className="nowuknow-left-container">
-              <Sidebar />
-            </div>
+            <div className="nowuknow-left-container"></div>
             <div className="nowuknow-middle-container">
               <Routes>
                 <Route path="*" element={<Navigate to="/" />} />
                 <Route path="/" element={<Home />} />
                 <Route path="/categorias" element={<Categorias />} />
                 <Route path="/categoria/:id" element={<Categoria />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
+                <Route
+                  path="/signup"
+                  element={
+                    <Signup onLoginClick={() => setIsLoginMenuOpen(true)} />
+                  }
+                />
                 <Route path="/feed" element={<Feed />} />
                 <Route path="/post" element={<Post />} />
                 <Route path="/about" element={<About />} />

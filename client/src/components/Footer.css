@@ -1,16 +1,15 @@
 .nowuknow-footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: var(--nowuknow-text-primary);
-    height: 80px;
-    width: 100%;
-    text-align: center;
-    padding: 20px;
-    margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80px;
+  width: 100%;
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 10px;
 }
 
 .nowuknow-footer p {
-    margin: 0;
-    padding: 10px 0;
+  margin: 0;
+  padding: 10px 0;
 }
