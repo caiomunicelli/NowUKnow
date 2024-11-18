@@ -1,4 +1,4 @@
-const UserRepository = require("../service/usuarioService.js");
+const UserRepository = require("../repositories/usuarioRepository.js");
 const Usuario = require("../entities/usuario.js");
 
 const regex_num = /\d+/;

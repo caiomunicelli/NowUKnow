@@ -1,4 +1,4 @@
-const PostagemRepository = require("../service/postagemService.js");
+const PostagemRepository = require("../repositories/postagemRepository.js");
 const Postagem = require("../entities/postagem.js");
 
 class PostagemController {

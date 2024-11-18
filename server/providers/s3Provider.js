@@ -1,6 +1,10 @@
 const { S3Client } = require("@aws-sdk/client-s3");
 const S3Config = require("./config/s3Config.js");
-const { PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const {
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} = require("@aws-sdk/client-s3");
 const { Upload } = require("@aws-sdk/lib-storage");
 class S3Provider {
   constructor() {
@@ -27,11 +31,11 @@ class S3Provider {
     }
   }
 
-  async uploadFile(pasta, usuario, arquivo, sufixo = null) {
+  async uploadFile(pasta, nome, arquivo, sufixo = null) {
     // Conecta ao S3
     try {
       const { bucketName, region } = this.config;
-      const nomeArquivo = `${pasta}/${Date.now()}_${usuario}${sufixo || ""}`; // Nome único baseado no usuário e timestamp
+      const nomeArquivo = `${pasta}/${Date.now()}_${nome}${sufixo || ""}`; // Nome único baseado no usuário e timestamp
 
       const uploadParams = {
         Bucket: bucketName,

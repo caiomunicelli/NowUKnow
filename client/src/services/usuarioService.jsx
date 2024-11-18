@@ -1,5 +1,9 @@
 // client/src/services/userService.js
-import { signupUsuario, getUsuarioAtual } from "../api/usuarioApi";
+import {
+  signupUsuario,
+  getUsuarioAtual,
+  deleteUsuarioAtual,
+} from "../api/usuarioApi";
 import { getToken } from "./authService";
 
 export const fetchUsuarioLogado = async () => {
@@ -26,6 +30,19 @@ export const signup = async (usuario) => {
     return response;
   } catch (error) {
     console.error("Erro ao cadastrar usuário no service:", error);
+    throw error;
+  }
+};
+
+export const deletar = async () => {
+  try {
+    const token = getToken(); // Obtém o token do authService
+    if (!token) throw new Error("Usuário não autenticado");
+    const response = await deleteUsuarioAtual(token); // Chama a API de cadastro do usuário
+    if (!response) throw new Error("Erro ao deletar usuário. (usuarioService)");
+    return response;
+  } catch (error) {
+    console.error("Erro ao deletar usuário (usuarioService):", error);
     throw error;
   }
 };

@@ -1,7 +1,7 @@
-const ComentarioService = require("../service/comentarioService.js");
+const ComentarioRepository = require("../repositories/comentarioRepository.js");
 const Comentario = require("../entities/comentario.js");
 
-const comentarioService = new ComentarioService();
+const comentarioRepository = new ComentarioRepository();
 
 class ComentarioController {
   // Validar os dados de um comentário
@@ -48,7 +48,7 @@ class ComentarioController {
     }
 
     try {
-      const novoComentario = await comentarioService.createComentario(
+      const novoComentario = await comentarioRepository.createComentario(
         comentario
       );
       return { sucesso: true, comentario: novoComentario };
@@ -60,7 +60,7 @@ class ComentarioController {
   // Listar todos os comentários
   async listarComentarios() {
     try {
-      const comentarios = await comentarioService.getAllComentarios();
+      const comentarios = await comentarioRepository.getAllComentarios();
       return { sucesso: true, comentarios };
     } catch (error) {
       throw new Error("Erro ao buscar comentários: " + error.message);
@@ -70,7 +70,7 @@ class ComentarioController {
   // Listar comentário por ID
   async listarComentarioPorId(id) {
     try {
-      const comentario = await comentarioService.getComentarioById(id);
+      const comentario = await comentarioRepository.getComentarioById(id);
       if (!comentario) {
         return {
           sucesso: false,
@@ -85,7 +85,9 @@ class ComentarioController {
 
   // Atualizar comentário
   async atualizarComentario(id, texto) {
-    const comentarioExistente = await comentarioService.getComentarioById(id);
+    const comentarioExistente = await comentarioRepository.getComentarioById(
+      id
+    );
     if (!comentarioExistente) {
       return {
         sucesso: false,
@@ -107,7 +109,7 @@ class ComentarioController {
     }
 
     try {
-      const resultadoAtualizacao = await comentarioService.updateComentario(
+      const resultadoAtualizacao = await comentarioRepository.updateComentario(
         comentarioAtualizado
       );
       return { sucesso: true, comentario: resultadoAtualizacao };
@@ -118,7 +120,9 @@ class ComentarioController {
 
   // Deletar comentário
   async deletarComentario(id) {
-    const comentarioExistente = await comentarioService.getComentarioById(id);
+    const comentarioExistente = await comentarioRepository.getComentarioById(
+      id
+    );
     if (!comentarioExistente) {
       return {
         sucesso: false,
@@ -127,7 +131,7 @@ class ComentarioController {
     }
 
     try {
-      await comentarioService.deleteComentario(id);
+      await comentarioRepository.deleteComentario(id);
       return { sucesso: true, mensagem: "Comentário deletado com sucesso." };
     } catch (error) {
       throw new Error("Erro ao deletar comentário: " + error.message);
@@ -137,7 +141,7 @@ class ComentarioController {
   // Listar comentários de uma postagem
   async listarComentariosPorPostagem(postagemId) {
     try {
-      const comentarios = await comentarioService.getComentariosPorPostagem(
+      const comentarios = await comentarioRepository.getComentariosPorPostagem(
         postagemId
       );
       return { sucesso: true, comentarios };
