@@ -1,5 +1,10 @@
 const DatabaseConnection = require("../providers/databaseConnection.js");
 const Postagem = require("../entities/postagem.js");
+const ConteudoRepository = require("../service/conteudoRepository.js");
+const DiscussaoRepository = require("../service/discussaoRepository.js");
+
+const conteudoRepository = new ConteudoRepository();
+const discussaoRepository = new DiscussaoRepository();
 class PostagemRepository {
   constructor() {
     this.dbConnection = new DatabaseConnection();
@@ -144,6 +149,65 @@ class PostagemRepository {
     return rows;
   }
 
+  async getPostagensWithAllDetailsByAutorId(autorId) {
+    const connection = await this.dbConnection.connect();
+
+    const [rows] = await connection.execute(
+      `
+      SELECT 
+        p.id AS postagem_id,
+        p.titulo AS postagem_titulo,
+        p.tipo_postagem AS postagem_tipo,
+        p.data_publicacao AS postagem_data_publicacao,
+
+        u.id AS usuario_id,
+        u.usuario AS usuario_nome,
+        u.email AS usuario_email,
+        u.imagem AS usuario_imagem,
+        u.tipo AS usuario_tipo,
+        u.data_criacao AS usuario_data_criacao,
+
+        c.id AS categoria_id,
+        c.nome AS categoria_nome,
+        c.descricao AS categoria_descricao,
+        c.imagem AS categoria_imagem,
+
+        cert.id AS certificacao_id,
+        cert.nome AS certificacao_nome,
+        cert.descricao AS certificacao_descricao,
+        cert.nivel AS certificacao_nivel,
+
+        ct.id AS conteudo_id,
+        ct.tipo_conteudo AS conteudo_tipo,
+        ct.url AS conteudo_url,
+        ct.descricao AS conteudo_descricao,
+
+        d.id AS discussao_id,
+        d.tipo_discussao AS discussao_tipo,
+        d.texto AS discussao_texto
+
+      FROM 
+        Postagens p
+      LEFT JOIN 
+        Usuarios u ON p.autor_id = u.id
+      LEFT JOIN 
+        Categorias c ON p.categoria_id = c.id
+      LEFT JOIN 
+        Certificacoes cert ON p.certificacao_id = cert.id
+      LEFT JOIN 
+        Conteudos ct ON p.id = ct.postagem_id
+      LEFT JOIN 
+        Discussoes d ON p.id = d.postagem_id
+      WHERE
+        p.autor_id = ?
+      ORDER BY 
+        p.data_publicacao DESC
+    `,
+      [autorId]
+    );
+
+    return rows;
+  }
   // Obter todas as postagens por certificacao_id
   async getPostagensWithAllDetailsByCategoriaId(categoriaId) {
     const connection = await this.dbConnection.connect();
@@ -241,12 +305,59 @@ class PostagemRepository {
   // Excluir uma postagem por ID
   async deletePostagem(id) {
     const connection = await this.dbConnection.connect();
+
+    // Obter a postagem para verificar o tipo
+    const postagem = await this.getPostagemById(id);
+
+    // Se for conteúdo, excluir o conteúdo associado
+    if (postagem.tipo_postagem === "Conteudo") {
+      const conteudo = await conteudoRepository.getConteudoByPostagemId(id);
+      if (conteudo) {
+        await conteudoRepository.deleteConteudoByPostagemId(id);
+      }
+    }
+
+    // Se for discussão, excluir a discussão associada
+    if (postagem.tipo_postagem === "Discussao") {
+      const discussao = await discussaoRepository.getDiscussaoByPostagemId(id);
+      if (discussao) {
+        await discussaoRepository.deleteDiscussaoByPostagemId(id);
+      }
+    }
+
+    // Excluir a postagem
     const [result] = await connection.execute(
       "DELETE FROM Postagens WHERE id = ?",
       [id]
     );
 
     return result.affectedRows > 0;
+  }
+
+  async deletePostagensByAutorId(autorId) {
+    const connection = await this.dbConnection.connect();
+
+    // Obter todas as postagens do autor
+    const [postagens] = await connection.execute(
+      "SELECT * FROM Postagens WHERE autor_id = ?",
+      [autorId]
+    );
+
+    // Deletar conteúdo ou discussão de cada postagem antes de deletá-las
+    for (const postagem of postagens) {
+      if (postagem.tipo_postagem === "Conteudo") {
+        await this.conteudoRepository.deleteConteudoByPostagemId(postagem.id); // Deleta conteúdo
+      } else if (postagem.tipo_postagem === "Discussao") {
+        await this.discussaoRepository.deleteDiscussaoByPostagemId(postagem.id); // Deleta discussão
+      }
+
+      // Deleta a postagem
+      await connection.execute("DELETE FROM Postagens WHERE id = ?", [
+        postagem.id,
+      ]);
+    }
+
+    return postagens.length > 0;
   }
 }
 

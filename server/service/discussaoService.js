@@ -13,7 +13,6 @@ class DiscussaoRepository {
       [discussao.postagemId, discussao.tipoDiscussao, discussao.texto]
     );
 
-    // Retorna a discussão criada com o ID gerado
     return {
       id: result.insertId,
       ...discussao,
@@ -25,7 +24,7 @@ class DiscussaoRepository {
     const connection = await this.dbConnection.connect();
     const [rows] = await connection.execute("SELECT * FROM Discussoes");
 
-    return rows; // Retorna todas as discussões
+    return rows;
   }
 
   // Buscar discussão por ID
@@ -36,7 +35,18 @@ class DiscussaoRepository {
       [id]
     );
 
-    return rows[0]; // Retorna a discussão encontrada ou undefined
+    return rows[0];
+  }
+
+  // Buscar discussão por postagem_id
+  async getDiscussaoByPostagemId(postagem_id) {
+    const connection = await this.dbConnection.connect();
+    const [rows] = await connection.execute(
+      "SELECT * FROM Discussoes WHERE postagem_id = ?",
+      [postagem_id]
+    );
+
+    return rows[0];
   }
 
   // Atualizar discussão
@@ -60,7 +70,18 @@ class DiscussaoRepository {
       [id]
     );
 
-    return result.affectedRows > 0; // Retorna true se a discussão foi deletada
+    return result.affectedRows > 0;
+  }
+
+  // Deletar discussão por postagem_id
+  async deleteDiscussaoByPostagemId(postagem_id) {
+    const connection = await this.dbConnection.connect();
+    const [result] = await connection.execute(
+      "DELETE FROM Discussoes WHERE postagem_id = ?",
+      [postagem_id]
+    );
+
+    return result.affectedRows > 0;
   }
 }
 

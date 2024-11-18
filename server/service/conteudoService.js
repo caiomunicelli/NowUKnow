@@ -71,6 +71,17 @@ class ConteudoRepository {
     return conteudoconteudo;
   }
 
+  async getConteudoByPostagemId(postagem_id) {
+    const connection = await this.dbConnection.connect();
+    const [rows] = await connection.execute(
+      "SELECT * FROM Conteudos WHERE postagem_id = ?",
+      [postagem_id]
+    );
+
+    const conteudo = rows[0];
+    return conteudoconteudo;
+  }
+
   async updateConteudo(conteudo) {
     const connection = await this.dbConnection.connect();
     let urlArquivo = conteudo.url || null;
@@ -160,6 +171,28 @@ class ConteudoRepository {
     `);
 
     return rows;
+  }
+
+  async deleteConteudoByPostagemId(postagem_id) {
+    const connection = await this.dbConnection.connect();
+
+    // Verifica se o conteúdo tem um arquivo associado
+    const conteudoExistente = await this.getConteudoByPostagemId(postagem_id);
+    if (conteudoExistente && conteudoExistente.url) {
+      // Excluir o arquivo do S3
+      try {
+        await this.S3Provider.connect();
+        await this.S3Provider.deleteFile(conteudoExistente.url);
+      } catch (error) {
+        console.error("Erro ao excluir arquivo do S3:", error);
+      }
+    }
+
+    const [result] = await connection.execute(
+      "DELETE FROM Conteudos WHERE postagem_id = ?",
+      [postagem_id]
+    );
+    return result.affectedRows > 0; // Retorna true se o conteúdo foi deletado
   }
 }
 

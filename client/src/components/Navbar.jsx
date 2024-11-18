@@ -6,12 +6,11 @@ import Sidebar from "./Sidebar";
 import { Login } from "./";
 import "./Navbar.css";
 
-function Navbar() {
+function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
   const { isAuthenticated, logout } = useAuthContext();
   const [usuario, setUsuario] = useState(null);
   const [erro, setErro] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isLoginMenuOpen, setIsLoginMenuOpen] = useState(false);
   const location = useLocation();
 
   const toggleSidebar = () => {
@@ -42,6 +41,13 @@ function Navbar() {
     }
   }, [isAuthenticated]);
 
+  // Fecha o menu de login sempre que a rota mudar
+  useEffect(() => {
+    if (isLoginMenuOpen) {
+      setIsLoginMenuOpen(false);
+    }
+  }, [location]);
+
   return (
     <header className="nowuknow-header">
       <nav className="nowuknow-navbar">
@@ -54,7 +60,10 @@ function Navbar() {
           </Link>
         </div>
         <div className="nowuknow-navbar-middle">
-          <form className="nowuknow-search-form nowuknow-search" role="search">
+          <form
+            className="nowuknow-search-form nowuknow-search hide-on-resize-2"
+            role="search"
+          >
             <input
               type="search"
               placeholder="Busque algum conteúdo, categoria ou autor"
@@ -73,7 +82,7 @@ function Navbar() {
                 className="nowuknow-nav-link nowuknow-create-post-btn"
               >
                 <i className="bi bi-plus nowuknow-plus"></i>{" "}
-                <span>Criar Postagem</span>
+                <span className="hide-on-resize">Criar Postagem</span>
               </Link>
             )}
             {isAuthenticated && usuario && (

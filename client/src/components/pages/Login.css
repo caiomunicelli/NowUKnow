@@ -1,19 +1,19 @@
 .nowuknow-login-container {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .nowuknow-login-form {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .nowuknow-login-btn {
-    width: 30%;
+  width: 30%;
 }
 
 .nowuknow-login-btn-div {
-    display: flex;
+  display: flex;
 }
 
 .nowuknow-login-float {

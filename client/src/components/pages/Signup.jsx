@@ -4,7 +4,7 @@ import ErrorMessage from "../ErrorMessage";
 import { gerenciarErros } from "../../utils/validacoesUsuario";
 import { signup } from "../../services/usuarioService";
 
-function Signup() {
+function Signup({ onLoginClick }) {
   const [nome, setName] = useState("");
   const [usuario, setUsuario] = useState("");
   const [email, setEmail] = useState("");
@@ -78,7 +78,7 @@ function Signup() {
     const response = await signup(novoUsuario);
 
     if (response) {
-      navigate("/login");
+      navigate("/");
     } else {
       console.error("Erro ao cadastrar usuário.");
     }
@@ -181,7 +181,14 @@ function Signup() {
         </button>
       </form>
       <p className="mt-3">
-        Já tem uma conta? <a href="/login">Faça login aqui</a>
+        Já tem uma conta?{" "}
+        <button
+          type="button"
+          className="nowuknow-login-link"
+          onClick={onLoginClick}
+        >
+          Faça login aqui
+        </button>
       </p>
     </div>
   );
