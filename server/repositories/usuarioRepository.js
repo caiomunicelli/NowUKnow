@@ -2,7 +2,9 @@ const mysql = require("mysql2/promise");
 const bcrypt = require("bcryptjs");
 const DatabaseConnection = require("../providers/databaseConnection.js");
 const S3Provider = require("../providers/s3Provider.js");
+const PostagemService = require("./postagemRepository.js");
 
+const postagemService = new PostagemService();
 class UserRepository {
   constructor() {
     this.dbConnection = new DatabaseConnection();
@@ -175,10 +177,13 @@ class UserRepository {
       }
     }
 
+    postagemService.deletePostagensByAutorId(id);
+
     const [result] = await connection.execute(
       "DELETE FROM Usuarios WHERE id = ?",
       [id]
     );
+    console.log(result);
     return result.affectedRows > 0; // Retorna true se o usuário foi deletado
   }
 }

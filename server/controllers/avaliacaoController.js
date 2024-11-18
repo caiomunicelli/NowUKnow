@@ -1,7 +1,7 @@
-const AvaliacaoService = require("../service/avaliacaoService.js");
 const Avaliacao = require("../entities/avaliacao.js");
+const AvaliacaoRepository = require("../repositories/avaliacaoRepository.js");
 
-const avaliacaoService = new AvaliacaoService();
+const avaliacaoRepository = new AvaliacaoRepository();
 
 class AvaliacaoController {
   // Validar os dados de uma avaliação
@@ -39,7 +39,9 @@ class AvaliacaoController {
     }
 
     try {
-      const novaAvaliacao = await avaliacaoService.createAvaliacao(avaliacao);
+      const novaAvaliacao = await avaliacaoRepository.createAvaliacao(
+        avaliacao
+      );
       return { sucesso: true, avaliacao: novaAvaliacao };
     } catch (error) {
       throw new Error("Erro ao criar avaliação: " + error.message);
@@ -49,7 +51,7 @@ class AvaliacaoController {
   // Listar todas as avaliações
   async listarAvaliacoes() {
     try {
-      const avaliacoes = await avaliacaoService.getAllAvaliacoes();
+      const avaliacoes = await avaliacaoRepository.getAllAvaliacoes();
       return { sucesso: true, avaliacoes };
     } catch (error) {
       throw new Error("Erro ao buscar avaliações: " + error.message);
@@ -59,7 +61,7 @@ class AvaliacaoController {
   // Listar avaliação por ID
   async listarAvaliacaoPorId(id) {
     try {
-      const avaliacao = await avaliacaoService.getAvaliacaoById(id);
+      const avaliacao = await avaliacaoRepository.getAvaliacaoById(id);
       if (!avaliacao) {
         return {
           sucesso: false,
@@ -74,7 +76,7 @@ class AvaliacaoController {
 
   // Atualizar avaliação
   async atualizarAvaliacao(id, nota, comentario) {
-    const avaliacaoExistente = await avaliacaoService.getAvaliacaoById(id);
+    const avaliacaoExistente = await avaliacaoRepository.getAvaliacaoById(id);
     if (!avaliacaoExistente) {
       return {
         sucesso: false,
@@ -96,7 +98,7 @@ class AvaliacaoController {
     }
 
     try {
-      const resultadoAtualizacao = await avaliacaoService.updateAvaliacao(
+      const resultadoAtualizacao = await avaliacaoRepository.updateAvaliacao(
         avaliacaoAtualizada
       );
       return { sucesso: true, avaliacao: resultadoAtualizacao };
@@ -107,7 +109,7 @@ class AvaliacaoController {
 
   // Deletar avaliação
   async deletarAvaliacao(id) {
-    const avaliacaoExistente = await avaliacaoService.getAvaliacaoById(id);
+    const avaliacaoExistente = await avaliacaoRepository.getAvaliacaoById(id);
     if (!avaliacaoExistente) {
       return {
         sucesso: false,
@@ -116,7 +118,7 @@ class AvaliacaoController {
     }
 
     try {
-      await avaliacaoService.deleteAvaliacao(id);
+      await avaliacaoRepository.deleteAvaliacao(id);
       return { sucesso: true, mensagem: "Avaliação deletada com sucesso." };
     } catch (error) {
       throw new Error("Erro ao deletar avaliação: " + error.message);
@@ -126,7 +128,7 @@ class AvaliacaoController {
   // Listar avaliações de uma postagem
   async listarAvaliacoesPorPostagem(postagemId) {
     try {
-      const avaliacoes = await avaliacaoService.getAvaliacoesPorPostagem(
+      const avaliacoes = await avaliacaoRepository.getAvaliacoesPorPostagem(
         postagemId
       );
       return { sucesso: true, avaliacoes };

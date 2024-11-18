@@ -1,9 +1,9 @@
 const mysql = require("mysql2/promise");
 const DatabaseConnection = require("../providers/databaseConnection.js");
-const S3Provider = require("../providers/s3Provider");
-// const UserRepository = require("../service/usuarioService.js");
+const S3Provider = require("../providers/s3Provider.js");
+// const UserRepository = require("./usuarioRepository.js");
 // const userRepository = new UserRepository();
-// const PostagemRepository = require("../service/postagemService.js");
+// const PostagemRepository = require("./postagemRepository.js");
 // const postagemRepository = new PostagemRepository();
 
 class ConteudoRepository {
@@ -80,7 +80,7 @@ class ConteudoRepository {
     );
 
     const conteudo = rows[0];
-    return conteudoconteudo;
+    return conteudo;
   }
 
   async updateConteudo(conteudo) {

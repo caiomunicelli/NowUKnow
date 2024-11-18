@@ -1,4 +1,4 @@
-const CertificacaoRepository = require("../service/certificacaoService.js");
+const CertificacaoRepository = require("../repositories/certificacaoRepository.js");
 const Certificacao = require("../entities/certificacao.js");
 
 const certificacaoRepository = new CertificacaoRepository();

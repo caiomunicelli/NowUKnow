@@ -1,4 +1,4 @@
-const CategoriaRepository = require("../service/categoriaService.js");
+const CategoriaRepository = require("../repositories/categoriaRepository.js");
 const Categoria = require("../entities/categoria.js");
 
 const categoriaRepository = new CategoriaRepository();

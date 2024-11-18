@@ -143,13 +143,16 @@ body {
   flex-direction: row;
   margin-top: 60px;
   background-color: var(--nowuknow-bg-light);
+  width: 100%;
 }
 
-.nowuknow-left-container {
+.nowuknow-left-container,
+.nowuknow-right-container {
+  box-sizing: border-box;
   display: flex;
-  max-width: 15%;
-  min-width: 0;
-  flex: 1 1 auto;
+  flex: 0 1 25%;
+  min-width: 5%;
+  max-width: 25%;
 }
 
 .nowuknow-middle-container {
@@ -158,16 +161,9 @@ body {
   overflow-y: auto;
   padding: 40px;
   justify-content: center;
-  max-width: 100%;
-  flex: 1 1 auto;
-  min-width: 70%;
-}
-
-.nowuknow-right-container {
-  display: flex;
-  max-width: 15%;
-  flex: 1 1 auto;
-  min-width: 0;
+  max-width: 90%;
+  flex: 1 1 50%;
+  min-width: 50%;
 }
 
 .nowuknow-input {
@@ -239,4 +235,11 @@ body {
 .nowuknow-form-container {
   display: flex;
   flex-direction: column;
+}
+
+@media (max-width: 840px) {
+  .nowuknow-left-container,
+  .nowuknow-right-container {
+    display: none;
+  }
 }

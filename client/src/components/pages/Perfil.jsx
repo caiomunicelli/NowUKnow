@@ -35,15 +35,16 @@ const Perfil = () => {
     try {
       const resposta = await deletar(); // Chama o serviço de deletar
       if (resposta) {
+        console.log("Resposta:", resposta);
         // Caso o usuário seja deletado, você pode redirecionar ou exibir uma mensagem
         alert("Usuário deletado com sucesso!");
         logout();
         navigate("/");
       } else {
-        alert("Erro ao deletar usuário.");
+        alert("Erro ao deletar usuário. (handleDeletarUsuario)");
       }
     } catch (error) {
-      setErro("Erro ao deletar o usuário.");
+      setErro("Erro ao deletar o usuário. (handleDeletarUsuario)");
       console.error(error);
     }
   };

@@ -39,10 +39,10 @@ export const deletar = async () => {
     const token = getToken(); // Obtém o token do authService
     if (!token) throw new Error("Usuário não autenticado");
     const response = await deleteUsuarioAtual(token); // Chama a API de cadastro do usuário
-    if (!response) throw new Error("Erro ao deletar usuário");
+    if (!response) throw new Error("Erro ao deletar usuário. (usuarioService)");
     return response;
   } catch (error) {
-    console.error("Erro ao cadastrar usuário no service:", error);
+    console.error("Erro ao deletar usuário (usuarioService):", error);
     throw error;
   }
 };

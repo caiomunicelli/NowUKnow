@@ -1,7 +1,7 @@
 const DatabaseConnection = require("../providers/databaseConnection.js");
 const Postagem = require("../entities/postagem.js");
-const ConteudoRepository = require("./conteudoService.js");
-const DiscussaoRepository = require("./discussaoService.js");
+const ConteudoRepository = require("./conteudoRepository.js");
+const DiscussaoRepository = require("./discussaoRepository.js");
 
 const conteudoRepository = new ConteudoRepository();
 const discussaoRepository = new DiscussaoRepository();
@@ -343,21 +343,23 @@ class PostagemRepository {
       [autorId]
     );
 
-    // Deletar conteúdo ou discussão de cada postagem antes de deletá-las
-    for (const postagem of postagens) {
-      if (postagem.tipo_postagem === "Conteudo") {
-        await this.conteudoRepository.deleteConteudoByPostagemId(postagem.id); // Deleta conteúdo
-      } else if (postagem.tipo_postagem === "Discussao") {
-        await this.discussaoRepository.deleteDiscussaoByPostagemId(postagem.id); // Deleta discussão
-      }
+    if (postagens.length > 0) {
+      // Deletar conteúdo ou discussão de cada postagem antes de deletá-las
+      for (const postagem of postagens) {
+        if (postagem.tipo_postagem === "Conteudo") {
+          await conteudoRepository.deleteConteudoByPostagemId(postagem.id); // Deleta conteúdo
+        } else if (postagem.tipo_postagem === "Discussao") {
+          await discussaoRepository.deleteDiscussaoByPostagemId(postagem.id); // Deleta discussão
+        }
 
-      // Deleta a postagem
-      await connection.execute("DELETE FROM Postagens WHERE id = ?", [
-        postagem.id,
-      ]);
+        // Deleta a postagem
+        await connection.execute("DELETE FROM Postagens WHERE id = ?", [
+          postagem.id,
+        ]);
+      }
     }
 
-    return postagens.length > 0;
+    return true;
   }
 }
 
