@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const CategoriaController = require("../controllers/categoriaController.js");
-const verifyJWT = require("../service/jwtService.js"); // Middleware de autenticação
+const verifyJWT = require("../middleware/jwtService.js"); // Middleware de autenticação
 const categoriaController = new CategoriaController(); // Instância do controlador
 
 // Rota: Criar uma nova categoria (POST /) - Protegida com JWT

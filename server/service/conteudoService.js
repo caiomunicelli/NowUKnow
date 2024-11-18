@@ -1,38 +1,38 @@
 const mysql = require("mysql2/promise");
-const DatabaseConnection = require("../db/databaseConnection.js");
-const BucketConnection = require("../db/bucketConnection.js");
-const { PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const DatabaseConnection = require("../providers/databaseConnection.js");
+const PostagemRepository = require("../service/postagemService.js");
+const UserRepository = require("../service/usuarioService.js");
+const S3Provider = require("../providers/s3Provider");
 
+const userRepository = new UserRepository();
+const postagemRepository = new PostagemRepository();
 class ConteudoRepository {
   constructor() {
     this.dbConnection = new DatabaseConnection();
-    this.bucketConnection = new BucketConnection();
+    this.S3Provider = new S3Provider();
   }
 
   async createConteudo(conteudo) {
     console.log("Conteudo: ", conteudo);
     const connection = await this.dbConnection.connect();
-    let nomeArquivo = null;
+    let urlArquivo = null;
     // Upload para o S3, se houver um arquivo de conteúdo
     if (conteudo.arquivo) {
       try {
-        const bucketConnection = await this.bucketConnection.connect();
-        const { bucketName } = this.bucketConnection.config;
-        nomeArquivo = `conteudos/${Date.now()}_${conteudo.postagem_id}`;
-
-        const uploadParams = {
-          Bucket: bucketName,
-          Key: nomeArquivo,
-          Body: conteudo.arquivo.buffer,
-          ContentType: conteudo.arquivo.mimetype,
-        };
-
-        const command = new PutObjectCommand(uploadParams);
-        await bucketConnection.send(command);
+        await this.S3Provider.connect();
+        const postagem = await postagemRepository.getPostagemById(
+          conteudo.postagem_id
+        );
+        const autor = await userRepository.getUserById(postagem.autor_id);
+        urlArquivo = await this.S3Provider.uploadFile(
+          "conteudos",
+          autor.usuario,
+          conteudo.arquivo,
+          `_${conteudo.postagem_id}`
+        );
       } catch (error) {
-        console.error("Erro ao enviar o arquivo para o S3:", error);
-        throw new Error("Falha no upload do arquivo de conteúdo");
+        console.error("Erro ao enviar arquivo para o S3:", error);
+        throw new Error("Falha no upload do arquivo");
       }
     }
 
@@ -41,7 +41,7 @@ class ConteudoRepository {
       [
         conteudo.postagem_id,
         conteudo.tipo_conteudo,
-        nomeArquivo || null,
+        urlArquivo || null,
         conteudo.descricao || null,
       ]
     );
@@ -50,42 +50,14 @@ class ConteudoRepository {
       id: result.insertId,
       postagem_id: conteudo.postagem_id,
       tipo_conteudo: conteudo.tipo_conteudo,
-      url: nomeArquivo || null,
+      url: urlArquivo || null,
       descricao: conteudo.descricao,
     };
   }
-
-  async getConteudoComSignedUrl(conteudo) {
-    console.log(conteudo);
-    if (conteudo.url) {
-      try {
-        const bucketConnection = await this.bucketConnection.connect();
-        const { bucketName } = this.bucketConnection.config;
-        const command = new GetObjectCommand({
-          Bucket: bucketName,
-          Key: conteudo.url,
-        });
-
-        const signedUrl = await getSignedUrl(bucketConnection, command, {
-          expiresIn: 3600,
-        });
-
-        conteudo.url = signedUrl;
-      } catch (error) {
-        console.error("Erro ao gerar o signed URL do conteúdo:", error);
-      }
-    }
-    console.log("Conteudo com signed", conteudo);
-    return conteudo;
-  }
-
   async getAllConteudos() {
     const connection = await this.dbConnection.connect();
     const [rows] = await connection.execute("SELECT * FROM Conteudos");
-    const conteudosWithUrls = await Promise.all(
-      rows.map(async (conteudo) => await this.getConteudoComSignedUrl(conteudo))
-    );
-    return conteudosWithUrls;
+    return rows;
   }
 
   async getConteudoById(id) {
@@ -96,17 +68,52 @@ class ConteudoRepository {
     );
 
     const conteudo = rows[0];
-    return conteudo ? await this.getConteudoComSignedUrl(conteudo) : null;
+    return conteudoconteudo;
   }
 
   async updateConteudo(conteudo) {
     const connection = await this.dbConnection.connect();
+    let urlArquivo = conteudo.url || null;
+
+    // Se o conteúdo tiver um novo arquivo, excluir o arquivo anterior
+    if (conteudo.arquivo) {
+      const conteudoExistente = await this.getConteudoById(conteudo.id);
+
+      // Excluir o arquivo anterior do S3, se existir
+      if (conteudoExistente && conteudoExistente.url) {
+        try {
+          await this.S3Provider.connect();
+          await this.S3Provider.deleteFile(conteudoExistente.url); // Exclui o arquivo antigo
+        } catch (error) {
+          console.error("Erro ao excluir arquivo anterior:", error);
+        }
+      }
+
+      // Carregar o novo arquivo para o S3
+      try {
+        await this.S3Provider.connect();
+        const postagem = await postagemRepository.getPostagemById(
+          conteudo.postagem_id
+        );
+        const autor = await userRepository.getUserById(postagem.autor_id);
+        urlArquivo = await this.S3Provider.uploadFile(
+          "conteudos",
+          autor.usuario,
+          conteudo.arquivo,
+          `_${conteudo.postagem_id}`
+        );
+      } catch (error) {
+        console.error("Erro ao enviar novo arquivo para o S3:", error);
+        throw new Error("Falha no upload do arquivo");
+      }
+    }
+
     const [result] = await connection.execute(
       `UPDATE Conteudos SET postagem_id = ?, tipo_conteudo = ?, url = ?, descricao = ? WHERE id = ?`,
       [
         conteudo.postagem_id,
         conteudo.tipo_conteudo,
-        conteudo.url || null,
+        urlArquivo || null,
         conteudo.descricao || null,
         conteudo.id,
       ]
@@ -116,15 +123,26 @@ class ConteudoRepository {
       ? "Conteúdo atualizado com sucesso."
       : "Nenhum conteúdo foi alterado.";
   }
-
   async deleteConteudo(id) {
     const connection = await this.dbConnection.connect();
+
+    // Verifica se o conteúdo tem um arquivo associado
+    const conteudoExistente = await this.getConteudoById(id);
+    if (conteudoExistente && conteudoExistente.url) {
+      // Excluir o arquivo do S3
+      try {
+        await this.S3Provider.connect();
+        await this.S3Provider.deleteFile(conteudoExistente.url);
+      } catch (error) {
+        console.error("Erro ao excluir arquivo do S3:", error);
+      }
+    }
+
     const [result] = await connection.execute(
       "DELETE FROM Conteudos WHERE id = ?",
       [id]
     );
-
-    return result.affectedRows > 0;
+    return result.affectedRows > 0; // Retorna true se o conteúdo foi deletado
   }
 
   async getConteudosComAutor() {
@@ -141,11 +159,7 @@ class ConteudoRepository {
       INNER JOIN Postagens p ON c.postagem_id = p.id
     `);
 
-    const conteudosWithUrls = await Promise.all(
-      rows.map(async (conteudo) => await this.getConteudoComSignedUrl(conteudo))
-    );
-
-    return conteudosWithUrls;
+    return rows;
   }
 }
 

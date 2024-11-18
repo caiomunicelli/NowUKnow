@@ -1,4 +1,4 @@
-const DatabaseConnection = require("../db/databaseConnection.js");
+const DatabaseConnection = require("../providers/databaseConnection.js");
 
 class DiscussaoRepository {
   constructor() {
@@ -10,11 +10,7 @@ class DiscussaoRepository {
     const connection = await this.dbConnection.connect();
     const [result] = await connection.execute(
       `INSERT INTO Discussoes (postagem_id, tipo_discussao, texto) VALUES (?, ?, ?)`,
-      [
-        discussao.postagemId,
-        discussao.tipoDiscussao,
-        discussao.texto,
-      ]
+      [discussao.postagemId, discussao.tipoDiscussao, discussao.texto]
     );
 
     // Retorna a discussão criada com o ID gerado
@@ -48,11 +44,7 @@ class DiscussaoRepository {
     const connection = await this.dbConnection.connect();
     const [result] = await connection.execute(
       `UPDATE Discussoes SET tipo_discussao = ?, texto = ? WHERE id = ?`,
-      [
-        discussao.tipoDiscussao,
-        discussao.texto,
-        discussao.id,
-      ]
+      [discussao.tipoDiscussao, discussao.texto, discussao.id]
     );
 
     return result.affectedRows > 0

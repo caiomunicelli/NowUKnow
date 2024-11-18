@@ -1,12 +1,8 @@
-const DatabaseConnection = require("../db/databaseConnection.js");
-const Postagem = require("../models/postagem.js");
-const BucketConnection = require("../db/bucketConnection.js");
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const { PutObjectCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const DatabaseConnection = require("../providers/databaseConnection.js");
+const Postagem = require("../entities/postagem.js");
 class PostagemRepository {
   constructor() {
     this.dbConnection = new DatabaseConnection();
-    this.bucketConnection = new BucketConnection();
   }
 
   // Criar uma nova postagem
@@ -93,33 +89,6 @@ class PostagemRepository {
     );
     return rows;
   }
-  async getSignedUrlForConteudo(conteudoUrl) {
-    if (!conteudoUrl) return null; // Retorna null se o URL for nulo
-
-    try {
-      // Conecte-se ao S3
-      const bucketConnection = await this.bucketConnection.connect();
-      const { bucketName } = this.bucketConnection.config; // Nome do bucket do S3
-      const key = conteudoUrl; // URL do conteúdo
-
-      // Configura o comando para obter o signed URL
-      const command = new GetObjectCommand({
-        Bucket: bucketName,
-        Key: key, // Nome da chave do arquivo no S3
-      });
-
-      // Gerando o signed URL que permite acessar a imagem privada
-      const signedUrl = await getSignedUrl(bucketConnection, command, {
-        expiresIn: 3600, // URL válida por 1 hora
-      });
-
-      return signedUrl;
-    } catch (error) {
-      console.error("Erro ao gerar o signed URL do conteúdo:", error);
-      return null; // Retorna null em caso de erro
-    }
-  }
-
   async getPostagensWithAllDetails() {
     const connection = await this.dbConnection.connect();
 
@@ -168,25 +137,11 @@ class PostagemRepository {
         Conteudos ct ON p.id = ct.postagem_id
       LEFT JOIN 
         Discussoes d ON p.id = d.postagem_id
+      ORDER BY 
+        p.data_publicacao DESC
     `);
 
-    const postagensComSignedUrls = await Promise.all(
-      rows.map(async (postagem) => {
-        // Se for um tipo de postagem com conteúdo e o URL não for nulo
-        if (postagem.conteudo_tipo && postagem.conteudo_url) {
-          const signedUrl = await this.getSignedUrlForConteudo(
-            postagem.conteudo_url
-          );
-
-          if (signedUrl) {
-            postagem.conteudo_url = signedUrl; // Atualiza o URL do conteúdo com o signed URL
-          }
-        }
-        return postagem;
-      })
-    );
-
-    return postagensComSignedUrls;
+    return rows;
   }
 
   // Obter todas as postagens por certificacao_id
@@ -242,28 +197,11 @@ class PostagemRepository {
         WHERE
           p.categoria_id = ?
         ORDER BY 
-          p.data_publicacao DESC  -- Ordenando pela data de publicação mais recente primeiro
+          p.data_publicacao DESC
       `,
         [categoriaId]
       );
-
-      const postagensComSignedUrls = await Promise.all(
-        rows.map(async (postagem) => {
-          // Se for um tipo de postagem com conteúdo e o URL não for nulo
-          if (postagem.conteudo_tipo && postagem.conteudo_url) {
-            const signedUrl = await this.getSignedUrlForConteudo(
-              postagem.conteudo_url
-            );
-
-            if (signedUrl) {
-              postagem.conteudo_url = signedUrl; // Atualiza o URL do conteúdo com o signed URL
-            }
-          }
-          return postagem;
-        })
-      );
-
-      return postagensComSignedUrls;
+      return rows;
     } catch (error) {
       console.error("Erro ao obter detalhes das postagens:", error);
       throw error;

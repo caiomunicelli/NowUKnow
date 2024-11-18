@@ -1,59 +1,33 @@
 const express = require("express");
-const app = express();
 const cors = require("cors");
 const path = require("path");
-const clientPath = path.join(__dirname, "../client/dist");
-const port = process.env.PORT || 8080;
 require("dotenv").config({ path: path.join(__dirname, "./.env") });
 
+console.log(process.env.BUCKET_NAME);
+
+const app = express();
+const port = process.env.PORT || 8080;
+
+// Configuração de middlewares
 app.use(cors());
 app.use(express.json());
 
-//Rota de Usuario
-const usuarioRoutes = require("./routes/usuarioRoutes.js");
-app.use("/api/v1/usuarios", usuarioRoutes);
+// Importação das rotas centralizadas
+const apiRoutes = require("./routes/index.js");
 
-//Rota de Usuario
-const conteudoRoutes = require("./routes/conteudoRoutes.js");
-app.use("/api/v1/conteudos", conteudoRoutes);
+// Define o prefixo para todas as rotas da API
+app.use("/api/v1", apiRoutes);
 
-//Rota de Discussoes
-const discussoesRoutes = require("./routes/discussaoRoutes.js");
-app.use("/api/v1/discussoes", discussoesRoutes);
-
-//Rota de About
-const aboutRoutes = require("./routes/aboutRoutes.js");
-app.use("/api/v1/about", aboutRoutes);
-
-//Rota de Respostas
-const comentariosRoutes = require("./routes/comentarioRoutes.js");
-app.use("/api/v1/comentarios", comentariosRoutes);
-
-//Rota de Avaliacoes
-const avaliacaoRoutes = require("./routes/avaliacaoRoutes.js");
-app.use("/api/v1/avaliacoes", avaliacaoRoutes);
-
-//Rota de Categorias
-const categoriaRoutes = require("./routes/categoriaRoutes.js");
-app.use("/api/v1/categorias", categoriaRoutes);
-
-//Rota de Certificacoes
-const certificacoesRoutes = require("./routes/certificacaoRoutes.js");
-app.use("/api/v1/certificacoes", certificacoesRoutes);
-
-//Rota de Postagens
-const PostagensRoutes = require("./routes/postagemRoutes.js");
-app.use("/api/v1/postagens", PostagensRoutes);
-
+// Servir arquivos estáticos da aplicação React
+const clientPath = path.join(__dirname, "../client/dist");
 app.use(express.static(clientPath));
 
+// Define a rota catch-all para o React
 app.get("*", (req, res) => {
   res.sendFile(path.join(clientPath, "index.html"));
 });
 
 // Inicia o servidor
 app.listen(port, () => {
-  console.log(
-    `Servidor rodando https://nowuknow-dev.azurewebsites.net:${port}`
-  );
+  console.log(`Servidor rodando na porta ${port}`);
 });

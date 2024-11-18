@@ -1,5 +1,5 @@
 const mysql = require("mysql2/promise");
-const DatabaseConfig = require("../config/databaseConfig.js");
+const DatabaseConfig = require("./config/databaseConfig.js");
 
 class DatabaseConnection {
   constructor() {
