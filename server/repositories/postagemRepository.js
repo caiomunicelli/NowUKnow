@@ -272,16 +272,6 @@ class PostagemRepository {
     }
   }
 
-  // Obter todas as postagens por autor_id
-  async getPostagensByAutorId(autorId) {
-    const connection = await this.dbConnection.connect();
-    const [rows] = await connection.execute(
-      "SELECT * FROM Postagens WHERE autor_id = ?",
-      [autorId]
-    );
-    return rows;
-  }
-
   // Atualizar uma postagem por ID
   async updatePostagem(postagem) {
     const connection = await this.dbConnection.connect();

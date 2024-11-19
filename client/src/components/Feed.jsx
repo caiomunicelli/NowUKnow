@@ -2,16 +2,22 @@ import React, { useState, useEffect } from "react";
 import Post from "./Post";
 import "./Feed.css";
 
-const Feed = () => {
+const Feed = ({postagens}) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/v1/postagens/allDetails`);
-      const newPosts = await response.json();
-      setPosts(newPosts);
+      console.log(JSON.stringify(postagens) + " posts - ")
+      if(postagens.length == 0){
+        const response = await fetch(`/api/v1/postagens/allDetails`);
+        const newPosts = await response.json();
+        setPosts(newPosts);
+      }
+      else{
+        setPosts(postagens);
+      }
     } catch (error) {
       console.error("Erro ao carregar posts:", error);
     } finally {
