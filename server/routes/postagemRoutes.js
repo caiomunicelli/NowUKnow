@@ -56,7 +56,7 @@ router.get("/allDetails/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const resultado =
-      await postagemController.listarPostagensComDetalhesPorCertificacaoId(id);
+      await postagemController.listarPostagensComDetalhesPorCategoriaId(id);
     res.status(200).json(resultado.postagens); // Retorna a lista de postagens
   } catch (error) {
     res

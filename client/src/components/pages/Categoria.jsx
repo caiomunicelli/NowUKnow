@@ -66,7 +66,7 @@ const FeedCategoria = () => {
       {loadingPosts ? (
         <p>Carregando posts...</p>
       ) : posts.length > 0 ? (
-        <Feed posts={posts} />
+        <Feed postagens={posts} />
       ) : (
         <p className="no-posts">Sem postagens para essa categoria.</p>
       )}
