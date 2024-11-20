@@ -22,6 +22,7 @@ const CreatePost = () => {
   const [certificacaoId, setCertificacaoId] = useState("");
   const [categorias, setCategorias] = useState([]);
   const [certificacoes, setCertificacoes] = useState([]);
+  const [certificacoesFiltradas, setCertificacoesFiltradas] = useState([]);
   const [tipoDiscussao, setTipoDiscussao] = useState("");
   const [texto, setTexto] = useState("");
   const [tipoConteudo, setTipoConteudo] = useState("");
@@ -72,6 +73,17 @@ const CreatePost = () => {
     getCategorias();
     getCertificacoes();
   }, []);
+
+  const handleCategoriaChange = (value) => {
+    console.log(value);
+    setCategoriaId(value);
+    console.log(JSON.stringify(certificacoes));
+    const categoriaIdNumerico = Number(value);
+    const certificacoesPorCategoria = certificacoes.filter((certificacao) => {
+      return certificacao.categoriaId === categoriaIdNumerico;
+    });
+    setCertificacoesFiltradas(certificacoesPorCategoria);
+  };
 
   const handleArquivoChange = (e) => {
     const file = e.target.files[0];
@@ -205,7 +217,10 @@ const CreatePost = () => {
               <select
                 className="nowuknow-input"
                 value={categoriaId}
-                onChange={(e) => setCategoriaId(e.target.value)}
+                onChange={(e) => {
+                  setCategoriaId(e.target.value);
+                  handleCategoriaChange(e.target.value);
+                }}
                 required
               >
                 <option value="">Selecione uma categoria</option>
@@ -217,21 +232,23 @@ const CreatePost = () => {
               </select>
             </div>
 
-            <div className="mb-3">
-              <label>Certificação:</label>
-              <select
-                className="nowuknow-input"
-                value={certificacaoId}
-                onChange={(e) => setCertificacaoId(e.target.value)}
-              >
-                <option value="">Selecione uma certificação</option>
-                {certificacoes.map((certificacao) => (
-                  <option key={certificacao.id} value={certificacao.id}>
-                    {certificacao.nome}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {categoriaId !== "" && (
+              <div className="mb-3">
+                <label>Certificação:</label>
+                <select
+                  className="nowuknow-input"
+                  value={certificacaoId}
+                  onChange={(e) => setCertificacaoId(e.target.value)}
+                >
+                  <option value="">Selecione uma certificação</option>
+                  {certificacoesFiltradas.map((cert) => (
+                    <option key={cert.id} value={cert.id}>
+                      {cert.nome}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             {tipoPostagem === "Conteudo" && (
               <div>

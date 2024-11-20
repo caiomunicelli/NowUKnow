@@ -47,3 +47,23 @@
 .nowuknow-categoria-btn-div {
     display: flex;
 }
+
+.nowuknow-tabs {
+    display: flex;
+    margin-bottom: 16px;
+  }
+  
+  .nowuknow-tab {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background-color: #499ffa;
+    margin-right: 8px;
+    border-radius: 4px;
+  }
+  
+  .nowuknow-tab.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+  }

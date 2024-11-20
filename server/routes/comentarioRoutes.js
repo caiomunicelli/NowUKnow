@@ -12,7 +12,7 @@ router.post("/", verifyJWT, async (req, res) => {
   try {
     const resultado = await comentarioController.criarComentario(
       postagemId,
-      usuarioId,
+      req.usuarioId,
       texto,
       parentId
     );
@@ -52,6 +52,19 @@ router.get("/:id", async (req, res) => {
     res
       .status(500)
       .json({ error: "Erro ao buscar comentário", details: error.message });
+  }
+});
+
+// Rota: Buscar comentários de uma postagem (GET /allComments/:id)
+router.get("/allComments/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const resultado = await comentarioController.listarComentariosPorPostagem(id);
+    res.status(200).json(resultado.comentarios); // Retorna a lista de comentarios
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Erro ao buscar comentários de uma postagem", details: error.message });
   }
 });
 

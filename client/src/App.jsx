@@ -14,7 +14,9 @@ import {
   PrivateRoute,
   Categorias,
   Categoria,
+  Postagem,
   Sidebar,
+  Certificacao
 } from "./components";
 import {
   BrowserRouter as Router,
@@ -43,6 +45,8 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/categorias" element={<Categorias />} />
                 <Route path="/categoria/:id" element={<Categoria />} />
+                <Route path="/postagem/:id" element={<Postagem />} />
+                <Route path="/certificacao/:id" element={<Certificacao />} />
                 <Route
                   path="/signup"
                   element={

@@ -5,7 +5,7 @@ import { useAuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "./Post.css";
 
-const Post = ({ post }) => {
+const Post = ({ postagemId, post, comentarioCount, }) => {
   const [usuario, setUsuario] = useState(null);
   const [postagem, setPostagem] = useState(post);
   const { isAuthenticated } = useAuthContext();
@@ -16,6 +16,12 @@ const Post = ({ post }) => {
   const formattedDate = new Date(
     post.postagem_data_publicacao
   ).toLocaleDateString("pt-BR");
+
+  const navigate = useNavigate();
+
+  const handleViewContent = () => {
+    navigate(`/postagem/${postagemId}`);
+  };
 
   useEffect(() => {
     setPostagem(post);
@@ -71,7 +77,12 @@ const Post = ({ post }) => {
             )}
           </>
         )}
-
+        <span className="nowuknow-comment-count">{comentarioCount}</span>
+        <i
+          className="bi bi-chat nowuknow-comment-icon"
+          onClick={handleViewContent}
+          title="Ver comentários"
+        ></i>
         {usuario && post.usuario_id === usuario.id && (
           <div className="nowuknow-post-actions">
             <button

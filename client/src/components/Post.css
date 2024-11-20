@@ -53,3 +53,20 @@
   border-radius: 12px;
   width: 100%;
 }
+
+.nowuknow-comment-icon {
+  cursor: pointer; 
+  font-size: 1.5rem; 
+  color: #333; 
+  transition: color 0.3s ease; 
+}
+
+.nowuknow-comment-icon:hover {
+  color: var(--nowuknow-border);
+  
+}
+
+.nowuknow-comment-count {
+  margin-right: 5px;
+  
+}
