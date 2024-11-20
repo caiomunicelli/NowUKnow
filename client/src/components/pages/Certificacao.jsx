@@ -5,17 +5,17 @@ import "./Certificacao.css";
 
 const FeedCertificacao = () => {
   const { id } = useParams();
-  const [posts, setPosts] = useState([]); // Feed de posts permanece
-  const [certificacoes, setCertificacoes] = useState([]); // Lista de certificações
+  const [posts, setPosts] = useState([]);
+  const [certificacao, setCertificacao] = useState(null);
   const [loadingPosts, setLoadingPosts] = useState(false);
-  const [loadingCertificacoes, setLoadingCertificacoes] = useState(false); // Estado de carregamento das certificações
+  const [loadingCertificacao, setLoadingCertificacao] = useState(false);
 
   const fetchPostsByCertificacao = async () => {
     setLoadingPosts(true);
     try {
       const response = await fetch(`/api/v1/postagens/certificacao/${id}`);
-      const categoriaPosts = await response.json();
-      setPosts(categoriaPosts);
+      const certificacaoPosts = await response.json();
+      setPosts(certificacaoPosts);
     } catch (error) {
       console.error("Erro ao carregar posts da certificação:", error);
     } finally {
@@ -23,60 +23,60 @@ const FeedCertificacao = () => {
     }
   };
 
-  const fetchCertificacoes = async () => {
-    setLoadingCertificacoes(true);
+  const fetchCertificacao = async () => {
+    setLoadingCertificacao(true);
     try {
       const response = await fetch(`/api/v1/certificacoes/${id}`);
-      const certificacoesData = await response.json();
-      setCertificacoes(certificacoesData);
+      const certificacaoData = await response.json();
+      setCertificacao(certificacaoData);
     } catch (error) {
-      console.error("Erro ao carregar certificações:", error);
+      console.error("Erro ao carregar certificação:", error);
     } finally {
-      setLoadingCertificacoes(false);
+      setLoadingCertificacao(false);
     }
   };
 
   useEffect(() => {
     if (id) {
       fetchPostsByCertificacao();
-      fetchCertificacoes();
+      fetchCertificacao();
     }
   }, [id]);
 
   return (
-    <div className="nowuknow-categoria-box-container">
-      {/* Exibição das certificações */}
-      {loadingCertificacoes ? (
-        <p>Carregando certificações...</p>
-      ) : certificacoes ? (
-        <div className="nowuknow-certificacoes-container">
-            <div key={certificacoes.id} className="nowuknow-certificacao-card">
-              <img
-                src={certificacoes.imagem}
-                alt={certificacoes.nome}
-                className="nowuknow-certificacao-imagem"
-              />
-              <div className="nowuknow-certificacao-info">
-                <h3 className="nowuknow-certificacao-nome">
-                  {certificacoes.nome}
-                </h3>
-                <p className="nowuknow-certificacao-descricao">
-                  {certificacoes.descricao}
-                </p>
-                <p className="nowuknow-certificacao-requisitos">
-                  <strong>Requisitos:</strong> {certificacoes.requisitos}
-                </p>
-                <p className="nowuknow-certificacao-nivel">
-                  <strong>Nível:</strong> {certificacoes.nivel}
-                </p>
-              </div>
+    <div className="nowuknow-certificacao-box-container">
+      {/* Exibição da certificação */}
+      {loadingCertificacao ? (
+        <p>Carregando certificação...</p>
+      ) : certificacao ? (
+        <div>
+          <div key={certificacao.id} className="nowuknow-certificacao-card">
+            <img
+              src={certificacao.imagem}
+              alt={certificacao.nome}
+              className="nowuknow-certificacao-imagem"
+            />
+            <div className="nowuknow-certificacao-info">
+              <h3 className="nowuknow-certificacao-nome">
+                {certificacao.nome}
+              </h3>
+              <p className="nowuknow-certificacao-descricao">
+                {certificacao.descricao}
+              </p>
+              <p className="nowuknow-certificacao-requisitos">
+                <strong>Requisitos:</strong> {certificacao.requisitos}
+              </p>
+              <p className="nowuknow-certificacao-nivel">
+                <strong>Nível:</strong> {certificacao.nivel}
+              </p>
             </div>
+          </div>
         </div>
       ) : (
-        <p>Sem certificações para esta categoria.</p>
+        <p>Sem detalhes da certificação.</p>
       )}
 
-      {/* Exibição dos posts, se necessário */}
+      {/* Exibição dos posts */}
       {loadingPosts ? (
         <p>Carregando posts...</p>
       ) : posts.length > 0 ? (

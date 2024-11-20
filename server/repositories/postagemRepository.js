@@ -280,6 +280,7 @@ class PostagemRepository {
       [autorId]
     );
     return rows;
+  }
      
   // Obter todas as postagens por certificacao_id
   async getPostagensWithAllDetailsByCertificacaoId(certificacaoId) {
