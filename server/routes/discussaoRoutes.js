@@ -54,6 +54,22 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// Rota: Buscar discussão por ID (GET /:id)
+router.get("/postagem/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const resultado = await discussaoController.listarDiscussaoPorPostagemId(id);
+    if (!resultado.sucesso) {
+      return res.status(404).json({ erros: resultado.erros });
+    }
+    res.status(200).json(resultado.discussao); // Retorna a discussão encontrada
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Erro ao buscar discussão", details: error.message });
+  }
+});
+
 // Rota: Atualizar discussão (PUT /:id)
 router.put("/:id", verifyJWT, async (req, res) => {
   const { id } = req.params;

@@ -1,31 +1,73 @@
 import React, { useState, useEffect } from "react";
 import "./CreatePost.css";
 import { useAuthContext } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { fetchCategorias } from "../../services/categoriaService";
 import { fetchCertificacoes } from "../../services/certificacaoService";
-import { publicaPostagem } from "../../services/postagemService";
-import { publicaDiscussao } from "../../services/discussaoService";
-import { publicaConteudo } from "../../services/conteudoService";
+// Método para buscar conteúdo
+import { publicaPostagem, editaPostagem } from "../../services/postagemService";
+import {
+  publicaDiscussao,
+  editaDiscussao,
+  pegaDiscussao,
+} from "../../services/discussaoService";
+import {
+  publicaConteudo,
+  editaConteudo,
+  pegaConteudo,
+} from "../../services/conteudoService";
 
 const CreatePost = () => {
   const { error } = useAuthContext();
+  const location = useLocation();
+  const postagem = location.state?.postagem || null; // Pegando a postagem do state, se existir
+  const navigate = useNavigate();
+  const [conteudo, setConteudo] = useState(null);
+  const [discussao, setDiscussao] = useState();
   const [title, setTitle] = useState("");
   const [tipoConteudo, setTipoConteudo] = useState("");
   const [categoriaId, setCategoriaId] = useState("");
   const [certificacaoId, setCertificacaoId] = useState("");
   const [categorias, setCategorias] = useState([]);
   const [certificacoes, setCertificacoes] = useState([]);
-  const [certificacoesFiltradas, setCertificacoesFiltradas] = useState([]);
   const [tipoDiscussao, setTipoDiscussao] = useState("");
   const [texto, setTexto] = useState("");
   const [tipoConteudoDetalhado, setTipoConteudoDetalhado] = useState("");
   const [descricao, setDescricao] = useState("");
   const [conteudoArquivo, setConteudoArquivo] = useState(null);
+  const [previewConteudoArquivo, setPreviewConteudoArquivo] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  const navigate = useNavigate();
-  let categoriaPreenchida = null
 
+  // Efeito para preencher os campos quando uma postagem existente for editada
+  useEffect(() => {
+    if (postagem) {
+      setTitle(postagem.titulo || "");
+      setTipoConteudo(postagem.tipo_postagem || "");
+      setCategoriaId(postagem.categoria_id || "");
+      setCertificacaoId(postagem.certificacao_id || "");
+
+      // Se for "conteudo", buscar detalhes do conteúdo
+      if (postagem.tipo_postagem === "conteudo") {
+        pegaConteudo(postagem.id).then((conteudo) => {
+          setConteudo(conteudo);
+          setTipoConteudoDetalhado(conteudo.tipo_conteudo || "");
+          setDescricao(conteudo.descricao || "");
+          setConteudoArquivo(conteudo.url || null);
+        });
+      }
+
+      // Se for "discussao", preencher texto e tipo de discussão
+      if (postagem.tipoPostagem === "discussao") {
+        pegaDiscussao(postagem.id).then((discussao) => {
+          setDiscussao(discussao);
+          setTipoDiscussao(discussao.tipo_discussao || "");
+          setTexto(discussao.texto || "");
+        });
+      }
+    }
+  }, [postagem]);
+
+  // Buscar categorias e certificações
   useEffect(() => {
     const getCategorias = async () => {
       try {
@@ -48,24 +90,14 @@ const CreatePost = () => {
     getCategorias();
     getCertificacoes();
   }, []);
-  function handleCategoriaChange(value) {
-    console.log(value);
-    setCategoriaId(value);
-    console.log(JSON.stringify(certificacoes))
-    const categoriaIdNumerico = Number(value);
-    const certificacoesPorCategoria = certificacoes.filter(certificacao => {
-      console.log("Comparando:", certificacao.categoriaId, "com", categoriaIdNumerico);
-      return certificacao.categoriaId === categoriaIdNumerico;
-     });
-      console.log(JSON.stringify(certificacoesPorCategoria))
-    setCertificacoesFiltradas(certificacoesPorCategoria);
-  }
 
+  // Manter o arquivo ao selecionar outro
   const handleArquivoChange = (e) => {
     const file = e.target.files[0];
     setConteudoArquivo(file);
   };
 
+  // Enviar formulário de criação ou edição
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !tipoConteudo || !categoriaId) {
@@ -76,29 +108,41 @@ const CreatePost = () => {
     const postData = {
       titulo: title,
       tipoPostagem: tipoConteudo,
-      autorId: 1,
+      autorId: 1, // Este valor deveria vir do contexto de autenticação
       categoriaId: parseInt(categoriaId),
       certificacaoId: parseInt(certificacaoId),
     };
 
     try {
-      setIsUploading(true); // Ativa o estado de upload
-      const response = await publicaPostagem(postData);
+      setIsUploading(true);
+      let response = null;
+
+      if (postagem) {
+        // Atualizando postagem existente
+        response = await editaPostagem(postData, postagem.id);
+      } else {
+        // Criando nova postagem
+        response = await publicaPostagem(postData);
+      }
+
       if (response) {
         const postagemId = response.id;
 
+        // Se for "discussao", cria ou atualiza a discussão
         if (tipoConteudo === "discussao") {
           const postDataDiscussao = {
             postagemId: postagemId,
             tipoDiscussao: tipoDiscussao,
             texto: texto,
           };
-          const responseDiscussao = await publicaDiscussao(postDataDiscussao);
-
-          if (!responseDiscussao) {
-            console.log("Erro desconhecido ao criar discussão");
+          // Se a postagem for uma edição, atualize a discussão
+          if (postagem) {
+            await editaDiscussao(postDataDiscussao, postagem.id);
+          } else {
+            await publicaDiscussao(postDataDiscussao);
           }
         } else if (tipoConteudo === "conteudo") {
+          // Se for "conteudo", cria ou atualiza o conteúdo
           const conteudoData = new FormData();
           conteudoData.append("postagem_id", postagemId);
           conteudoData.append("tipo_conteudo", tipoConteudoDetalhado);
@@ -107,35 +151,28 @@ const CreatePost = () => {
           }
           conteudoData.append("descricao", descricao);
 
-          const responseConteudo = await publicaConteudo(conteudoData);
-
-          if (!responseConteudo) {
-            console.log("Erro desconhecido ao criar conteúdo");
+          // Se a postagem for uma edição, atualize o conteúdo
+          if (postagem) {
+            await editaConteudo(conteudoData, postagem.id);
+          } else {
+            await publicaConteudo(conteudoData);
           }
         }
 
         navigate("/");
       } else {
-        alert("Erro ao cadastrar postagem: Erro desconhecido.");
+        alert("Erro ao cadastrar ou editar postagem.");
       }
     } catch (error) {
       alert("Erro na requisição: " + error.message);
     } finally {
-      setIsUploading(false); // Desativa o estado de upload
+      setIsUploading(false);
     }
-
-    setTitle("");
-    setTipoConteudo("");
-    setCategoriaId("");
-    setCertificacaoId("");
-    setTipoConteudoDetalhado("");
-    setDescricao("");
-    setConteudoArquivo(null);
   };
 
   return (
     <div className="nowuknow-box-container">
-      <h2>Criar uma Nova Postagem</h2>
+      <h2>{postagem ? "Editar Postagem" : "Criar uma Nova Postagem"}</h2>
       <form onSubmit={handleSubmit} className="nowuknow-form-container">
         {error && <div className="alert alert-danger">{error}</div>}
 
@@ -216,16 +253,15 @@ const CreatePost = () => {
                 className="nowuknow-input"
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
-                placeholder="Descrição do conteúdo"
+                placeholder="Adicione uma descrição"
               />
             </div>
             <div className="mb-3">
-              <label>Upload de Arquivo:</label>
+              <label>Arquivo (se aplicável):</label>
               <input
                 type="file"
                 className="nowuknow-input"
                 onChange={handleArquivoChange}
-                accept="video/*, application/pdf, application/vnd.ms-powerpoint, application/msword"
               />
             </div>
           </>
@@ -236,19 +272,18 @@ const CreatePost = () => {
           <select
             className="nowuknow-input"
             value={categoriaId}
-            onChange={(e) => handleCategoriaChange(e.target.value)}
+            onChange={(e) => setCategoriaId(e.target.value)}
             required
           >
             <option value="">Selecione uma categoria</option>
-            {categorias.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.nome}
+            {categorias.map((categoria) => (
+              <option key={categoria.id} value={categoria.id}>
+                {categoria.nome}
               </option>
             ))}
           </select>
         </div>
 
-        {categoriaId !== "" && (
         <div className="mb-3">
           <label>Certificação:</label>
           <select
@@ -257,25 +292,27 @@ const CreatePost = () => {
             onChange={(e) => setCertificacaoId(e.target.value)}
           >
             <option value="">Selecione uma certificação</option>
-            {certificacoesFiltradas.map((cert) => (
-              <option key={cert.id} value={cert.id}>
-                {cert.nome}
+            {certificacoes.map((certificacao) => (
+              <option key={certificacao.id} value={certificacao.id}>
+                {certificacao.nome}
               </option>
             ))}
           </select>
         </div>
-        )}
 
-        <button type="submit" className="nowuknow-btn" disabled={isUploading}>
-          {isUploading ? (
-            <>
-              <i className="bi bi-arrow-repeat spinner"></i> Upload do Arquivo
-              em Andamento
-            </>
-          ) : (
-            "Postar"
-          )}
-        </button>
+        <div className="mb-3">
+          <button
+            type="submit"
+            className="nowuknow-submit-button"
+            disabled={isUploading}
+          >
+            {isUploading
+              ? "Carregando..."
+              : postagem
+              ? "Atualizar Postagem"
+              : "Criar Postagem"}
+          </button>
+        </div>
       </form>
     </div>
   );

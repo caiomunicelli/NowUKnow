@@ -26,6 +26,18 @@ class DiscussaoController {
     return { sucesso: true, discussao };
   }
 
+  async listarDiscussaoPorPostagemId(postagem_id) {
+    const discussao = await discussaoRepository.getDiscussaoByPostagemId(
+      postagem_id
+    );
+    if (!discussao) {
+      return {
+        sucesso: false,
+        erros: [{ campo: "id", mensagem: "Discussão não encontrada." }],
+      };
+    }
+    return { sucesso: true, discussao };
+  }
   async atualizarDiscussao(id, tipo_discussao, texto) {
     const discussaoExistente = await discussaoRepository.getDiscussaoById(id);
     if (!discussaoExistente) {
