@@ -38,13 +38,7 @@ const Feed = ({postagens}) => {
           posts.map((post, index) => (
             <Post
               key={post.postagem_id || index}
-              title={post.postagem_titulo}
-              username={post.usuario_nome}
-              date={post.postagem_data_publicacao}
-              text={post.discussao_texto}
-              postType={post.postagem_tipo}
-              contentType={post.conteudo_tipo}
-              contentUrl={post.conteudo_url}
+              post={post}
             />
           ))
         ) : (

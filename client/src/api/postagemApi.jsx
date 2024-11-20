@@ -16,3 +16,9 @@ export const createPostagem = async (postagem, token) => {
       return false;
     }
   };
+
+export const deletePostagem = async (postagem_id,token) => {
+  try{
+    const response = await fetch("/api/v1/postagens/"+postagem_id,",)
+  }
+}

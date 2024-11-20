@@ -65,6 +65,19 @@ router.get("/allDetails/:id", async (req, res) => {
   }
 });
 
+router.get("/allDetails/autor/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const resultado =
+      await postagemController.listarPostagensComDetalhesPorAutorId(id);
+    res.status(200).json(resultado.postagens); // Retorna a lista de postagens
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Erro ao buscar postagens", details: error.message });
+  }
+});
+
 // Rota: Buscar postagens por título (GET /titulo)
 router.get("/titulo/:titulo", async (req, res) => {
   const { titulo } = req.params;

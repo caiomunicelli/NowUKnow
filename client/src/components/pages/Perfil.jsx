@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { fetchUsuarioLogado, deletar } from "../../services/usuarioService";
+import Feed from "../Feed";
 import "./Perfil.css";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../contexts/AuthContext";
 
 const Perfil = () => {
   const [usuario, setUsuario] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [loadingPosts, setLoadingPosts] = useState(false);
   const [erro, setErro] = useState(null);
   const navigate = useNavigate();
   const { logout } = useAuthContext();
+
+  // Função para carregar os dados do usuário logado
   useEffect(() => {
     const loadUsuario = async () => {
       try {
-        const dadosUsuario = await fetchUsuarioLogado(); // Chama o serviço para pegar dados do usuário
+        const dadosUsuario = await fetchUsuarioLogado();
         setUsuario(dadosUsuario);
       } catch (error) {
         setErro("Erro ao carregar os dados do usuário.");
@@ -23,20 +28,32 @@ const Perfil = () => {
     loadUsuario();
   }, []);
 
-  if (erro) {
-    return <div>{erro}</div>; // Exibe mensagem de erro, se houver
-  }
+  // Função para carregar os posts do autor
+  useEffect(() => {
+    const fetchPostsByAutor = async () => {
+      if (!usuario) return;
+      setLoadingPosts(true);
+      try {
+        const response = await fetch(
+          `/api/v1/postagens/allDetails/autor/${usuario.id}`
+        );
+        const autorPosts = await response.json();
+        setPosts(autorPosts);
+      } catch (error) {
+        console.error("Erro ao carregar posts do autor:", error);
+      } finally {
+        setLoadingPosts(false);
+      }
+    };
 
-  if (!usuario) {
-    return <div>Carregando...</div>; // Exibe "Carregando..." enquanto os dados não são carregados
-  }
+    fetchPostsByAutor();
+  }, [usuario]);
 
+  // Função para deletar o usuário
   const handleDeletarUsuario = async () => {
     try {
-      const resposta = await deletar(); // Chama o serviço de deletar
+      const resposta = await deletar();
       if (resposta) {
-        console.log("Resposta:", resposta);
-        // Caso o usuário seja deletado, você pode redirecionar ou exibir uma mensagem
         alert("Usuário deletado com sucesso!");
         logout();
         navigate("/");
@@ -48,6 +65,14 @@ const Perfil = () => {
       console.error(error);
     }
   };
+
+  if (erro) {
+    return <div>{erro}</div>;
+  }
+
+  if (!usuario) {
+    return <div>Carregando...</div>;
+  }
 
   return (
     <div className="perfil-container">
@@ -77,6 +102,17 @@ const Perfil = () => {
       <button onClick={handleDeletarUsuario} className="deletar-btn">
         Deletar Conta
       </button>
+
+      <div className="perfil-posts">
+        <h2>Minhas Postagens</h2>
+        {loadingPosts ? (
+          <p>Carregando posts...</p>
+        ) : posts.length > 0 ? (
+          <Feed postagens={posts} />
+        ) : (
+          <p className="no-posts">Você ainda não possui postagens.</p>
+        )}
+      </div>
     </div>
   );
 };
