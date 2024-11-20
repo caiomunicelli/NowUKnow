@@ -271,6 +271,7 @@ class PostagemRepository {
       throw error;
     }
   }
+  
    // Obter todas as postagens por autor_id
    async getPostagensByAutorId(autorId) {
     const connection = await this.dbConnection.connect();
@@ -279,7 +280,7 @@ class PostagemRepository {
       [autorId]
     );
     return rows;
-  }
+     
   // Obter todas as postagens por certificacao_id
   async getPostagensWithAllDetailsByCertificacaoId(certificacaoId) {
     const connection = await this.dbConnection.connect();
