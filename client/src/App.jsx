@@ -61,6 +61,14 @@ function App() {
                   }
                 />
                 <Route
+                  path="/editarPerfil"
+                  element={
+                    <PrivateRoute>
+                      <Signup />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
                   path="/createPost"
                   element={
                     <PrivateRoute>
