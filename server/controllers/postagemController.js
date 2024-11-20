@@ -1,5 +1,5 @@
-const PostagemRepository = require("../service/postagemService.js");
-const Postagem = require("../models/postagem.js");
+const PostagemRepository = require("../repositories/postagemRepository.js");
+const Postagem = require("../entities/postagem.js");
 
 class PostagemController {
   constructor() {
@@ -61,11 +61,22 @@ class PostagemController {
     return { sucesso: true, postagens };
   }
   async listarPostagensComDetalhes() {
-    const postagens = await this.postagemRepository.getPostagensWithAllDetails();
+    const postagens =
+      await this.postagemRepository.getPostagensWithAllDetails();
     return { sucesso: true, postagens };
   }
-  async listarPostagensComDetalhesPorCertificacaoId(categoriaId) {
-    const postagens = await this.postagemRepository.getPostagensWithAllDetailsByCategoriaId(categoriaId);
+  async listarPostagensComDetalhesPorCategoriaId(categoriaId) {
+    const postagens =
+      await this.postagemRepository.getPostagensWithAllDetailsByCategoriaId(
+        categoriaId
+      );
+    return { sucesso: true, postagens };
+  }
+  async listarPostagensComDetalhesPorAutorId(autorId) {
+    const postagens =
+      await this.postagemRepository.getPostagensWithAllDetailsByAutorId(
+        autorId
+      );
     return { sucesso: true, postagens };
   }
 

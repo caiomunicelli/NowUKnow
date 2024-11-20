@@ -13,6 +13,6 @@ export const createDiscussao = async (discussao, token) => {
       }
     } catch (error) {
       console.error("Erro na discussão:", error);
-      return false; // Falha no login
+      return false;
     }
   };

@@ -16,3 +16,15 @@
   text-align: center;
   color: #888;
 }
+
+.nowuknow-feed-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.nowuknow-post-feed {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

@@ -1,46 +1,118 @@
-@import url('fonts.css');
+@import url("fonts.css");
 
 :root {
   /* Cores principais */
   --nouwknow-font-family: "Poppins", sans-serif;
-  --nowuknow-bg-dark: hsla(211, 53%, 11%, 1);  /* Rich Black */
+  --nowuknow-bg-dark: hsla(211, 53%, 11%, 1); /* Rich Black */
   --nowuknow-bg-light: hsla(75, 6%, 87%, 1); /* Platinum */
   --nowuknow-bg-accent: hsla(212, 29%, 36%, 1); /* Yinmn Blue (Accent) */
-  
+  --nowuknow-bg-medium: hsla(211, 0.88%, 80.29%, 1);
+  --nowuknow-bg-medium-light: hsla(211, 8.26%, 84.71%, 1);
+
   /* Textos */
   --nowuknow-text-primary: hsla(75, 6%, 87%, 1);
-  --nowuknow-text-primary-dark: hsla(211, 53%, 11%, 1);  /* Platinum */
-  --nowuknow-text-secondary: hsla(214, 23%, 56%, 1);  /* Silver Lake Blue */
-  --nowuknow-text-tertiary: hsla(212, 29%, 36%, 1);  /* Yinmn Blue */
-  --nowuknow-text-muted: hsla(219, 37%, 17%, 1);  /* Oxford Blue */
-  
+  --nowuknow-text-primary-dark: hsla(211, 53%, 11%, 1); /* Platinum */
+  --nowuknow-text-secondary: hsla(214, 23%, 56%, 1); /* Silver Lake Blue */
+  --nowuknow-text-tertiary: hsla(212, 29%, 36%, 1); /* Yinmn Blue */
+  --nowuknow-text-muted: hsla(219, 37%, 17%, 1); /* Oxford Blue */
+
   /* Bordas */
-  --nowuknow-border: hsla(212, 29%, 36%, 1);  /* Yinmn Blue */
-  --nowuknow-border-light: hsla(214, 23%, 56%, 1);  /* Silver Lake Blue */
-  --nowuknow-border-dark: hsla(211, 53%, 11%, 1);  /* Rich Black */
-  
+  --nowuknow-border: hsla(212, 29%, 36%, 1); /* Yinmn Blue */
+  --nowuknow-border-light: hsla(214, 23%, 56%, 1); /* Silver Lake Blue */
+  --nouwknow-border-lighter: hsla(212, 6.47%, 80.79%, 1);
+  --nowuknow-border-dark: hsla(211, 53%, 11%, 1); /* Rich Black */
+
   /* Links */
-  --nowuknow-link: hsla(212, 29%, 36%, 1);  /* Yinmn Blue */
-  --nowuknow-link-hover: hsla(214, 23%, 56%, 1);  /* Silver Lake Blue */
-  
+  --nowuknow-link: hsla(212, 29%, 36%, 1); /* Yinmn Blue */
+  --nowuknow-link-hover: hsla(214, 23%, 56%, 1); /* Silver Lake Blue */
+
   /* Mensagens (Verde, Amarelo, Vermelho) */
-  --nowuknow-success: hsla(120, 40%, 40%, 1);  /* Success - Verde */
-  --nowuknow-success-light: hsla(120, 40%, 60%, 1);  /* Success - Verde Claro */
-  --nowuknow-warning: hsla(45, 100%, 50%, 1);  /* Warning - Amarelo */
-  --nowuknow-warning-light: hsla(45, 100%, 70%, 1);  /* Warning - Amarelo Claro */
-  --nowuknow-error: hsla(0, 100%, 50%, 1);  /* Error - Vermelho */
-  --nowuknow-error-light: hsla(0, 100%, 70%, 1);  /* Error - Vermelho Claro */
+  --nowuknow-success: hsla(120, 40%, 40%, 1); /* Success - Verde */
+  --nowuknow-success-light: hsla(120, 40%, 60%, 1); /* Success - Verde Claro */
+  --nowuknow-warning: hsla(45, 100%, 50%, 1); /* Warning - Amarelo */
+  --nowuknow-warning-light: hsla(
+    45,
+    100%,
+    70%,
+    1
+  ); /* Warning - Amarelo Claro */
+  --nowuknow-error: hsla(0, 100%, 50%, 1); /* Error - Vermelho */
+  --nowuknow-error-light: hsla(0, 100%, 70%, 1); /* Error - Vermelho Claro */
 
   /* Gradientes */
-  --nowuknow-gradient-top: linear-gradient(0deg, hsla(211, 53%, 11%, 1), hsla(219, 37%, 17%, 1), hsla(212, 29%, 36%, 1), hsla(214, 23%, 56%, 1), hsla(75, 6%, 87%, 1));  /* Gradiente com todas as cores */
-  --nowuknow-gradient-right: linear-gradient(90deg, hsla(211, 53%, 11%, 1), hsla(219, 37%, 17%, 1), hsla(212, 29%, 36%, 1), hsla(214, 23%, 56%, 1), hsla(75, 6%, 87%, 1));
-  --nowuknow-gradient-bottom: linear-gradient(180deg, hsla(211, 53%, 11%, 1), hsla(219, 37%, 17%, 1), hsla(212, 29%, 36%, 1), hsla(214, 23%, 56%, 1), hsla(75, 6%, 87%, 1));
-  --nowuknow-gradient-left: linear-gradient(270deg, hsla(211, 53%, 11%, 1), hsla(219, 37%, 17%, 1), hsla(212, 29%, 36%, 1), hsla(214, 23%, 56%, 1), hsla(75, 6%, 87%, 1));
-  --nowuknow-gradient-top-right: linear-gradient(45deg, hsla(211, 53%, 11%, 1), hsla(219, 37%, 17%, 1), hsla(212, 29%, 36%, 1), hsla(214, 23%, 56%, 1), hsla(75, 6%, 87%, 1));
-  --nowuknow-gradient-bottom-right: linear-gradient(135deg, hsla(211, 53%, 11%, 1), hsla(219, 37%, 17%, 1), hsla(212, 29%, 36%, 1), hsla(214, 23%, 56%, 1), hsla(75, 6%, 87%, 1));
-  --nowuknow-gradient-top-left: linear-gradient(225deg, hsla(211, 53%, 11%, 1), hsla(219, 37%, 17%, 1), hsla(212, 29%, 36%, 1), hsla(214, 23%, 56%, 1), hsla(75, 6%, 87%, 1));
-  --nowuknow-gradient-bottom-left: linear-gradient(315deg, hsla(211, 53%, 11%, 1), hsla(219, 37%, 17%, 1), hsla(212, 29%, 36%, 1), hsla(214, 23%, 56%, 1), hsla(75, 6%, 87%, 1));
-  --nowuknow-gradient-radial: radial-gradient(hsla(211, 53%, 11%, 1), hsla(219, 37%, 17%, 1), hsla(212, 29%, 36%, 1), hsla(214, 23%, 56%, 1), hsla(75, 6%, 87%, 1));
+  --nowuknow-gradient-top: linear-gradient(
+    0deg,
+    hsla(211, 53%, 11%, 1),
+    hsla(219, 37%, 17%, 1),
+    hsla(212, 29%, 36%, 1),
+    hsla(214, 23%, 56%, 1),
+    hsla(75, 6%, 87%, 1)
+  ); /* Gradiente com todas as cores */
+  --nowuknow-gradient-right: linear-gradient(
+    90deg,
+    hsla(211, 53%, 11%, 1),
+    hsla(219, 37%, 17%, 1),
+    hsla(212, 29%, 36%, 1),
+    hsla(214, 23%, 56%, 1),
+    hsla(75, 6%, 87%, 1)
+  );
+  --nowuknow-gradient-bottom: linear-gradient(
+    180deg,
+    hsla(211, 53%, 11%, 1),
+    hsla(219, 37%, 17%, 1),
+    hsla(212, 29%, 36%, 1),
+    hsla(214, 23%, 56%, 1),
+    hsla(75, 6%, 87%, 1)
+  );
+  --nowuknow-gradient-left: linear-gradient(
+    270deg,
+    hsla(211, 53%, 11%, 1),
+    hsla(219, 37%, 17%, 1),
+    hsla(212, 29%, 36%, 1),
+    hsla(214, 23%, 56%, 1),
+    hsla(75, 6%, 87%, 1)
+  );
+  --nowuknow-gradient-top-right: linear-gradient(
+    45deg,
+    hsla(211, 53%, 11%, 1),
+    hsla(219, 37%, 17%, 1),
+    hsla(212, 29%, 36%, 1),
+    hsla(214, 23%, 56%, 1),
+    hsla(75, 6%, 87%, 1)
+  );
+  --nowuknow-gradient-bottom-right: linear-gradient(
+    135deg,
+    hsla(211, 53%, 11%, 1),
+    hsla(219, 37%, 17%, 1),
+    hsla(212, 29%, 36%, 1),
+    hsla(214, 23%, 56%, 1),
+    hsla(75, 6%, 87%, 1)
+  );
+  --nowuknow-gradient-top-left: linear-gradient(
+    225deg,
+    hsla(211, 53%, 11%, 1),
+    hsla(219, 37%, 17%, 1),
+    hsla(212, 29%, 36%, 1),
+    hsla(214, 23%, 56%, 1),
+    hsla(75, 6%, 87%, 1)
+  );
+  --nowuknow-gradient-bottom-left: linear-gradient(
+    315deg,
+    hsla(211, 53%, 11%, 1),
+    hsla(219, 37%, 17%, 1),
+    hsla(212, 29%, 36%, 1),
+    hsla(214, 23%, 56%, 1),
+    hsla(75, 6%, 87%, 1)
+  );
+  --nowuknow-gradient-radial: radial-gradient(
+    hsla(211, 53%, 11%, 1),
+    hsla(219, 37%, 17%, 1),
+    hsla(212, 29%, 36%, 1),
+    hsla(214, 23%, 56%, 1),
+    hsla(75, 6%, 87%, 1)
+  );
+
+  --nowuknow-header-height: 60px;
 }
 
 body {
@@ -48,92 +120,126 @@ body {
 }
 
 .nowuknow-app {
-    background-color: var(--nowuknow-bg-light);
-    font-family: var(--nouwknow-font-family);
-    color: var(--nowuknow-text-primary);
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    min-width: 100vw;
-    max-height: 100vh;
-    max-width: 100vw;
+  background-color: var(--nowuknow-bg-light);
+  font-family: var(--nouwknow-font-family);
+  color: var(--nowuknow-text-primary);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 100vw;
+  max-height: 100vh;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .nowuknow-app h1 {
-    color: var(--nowuknow-text-muted);
+  color: var(--nowuknow-text-muted);
 }
 
 .nowuknow-main {
   color: var(--nowuknow-text-primary-dark);
   flex: 1;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 60px 20px;
-  margin-top: 60px; /* Altura do header */
-  margin-bottom: 60px; /* Altura do footer */
-  overflow-y: auto; /* Habilita o scroll vertical */
+  flex-direction: row;
+  margin-top: 60px;
+  background-color: var(--nowuknow-bg-light);
   width: 100%;
+}
+
+.nowuknow-left-container,
+.nowuknow-right-container {
   box-sizing: border-box;
+  display: flex;
+  flex: 0 1 25%;
+  min-width: 5%;
+  max-width: 25%;
+}
+
+.nowuknow-middle-container {
+  display: flex;
+  box-sizing: border-box;
+  overflow-y: auto;
+  padding: 40px;
+  justify-content: center;
+  max-width: 90%;
+  flex: 1 1 50%;
+  min-width: 50%;
 }
 
 .nowuknow-input {
-    border-radius: 25px;
-    width: 100%;
-    border: 1px solid var(--nowuknow-bg-accent);
-    background-color: var(--nowuknow-bg-light);
-    color: var(--nowuknow-text-primary-dark);
-    padding: .375rem .75rem;
+  border-radius: 25px;
+  width: 100%;
+  border: 1px solid var(--nowuknow-bg-accent);
+  background-color: var(--nowuknow-bg-light);
+  color: var(--nowuknow-text-primary-dark);
+  padding: 0.375rem 0.75rem;
 }
 
 .nowuknow-input ::placeholder {
-    color: var(--nowuknow-text-secondary);
+  color: var(--nowuknow-text-secondary);
 }
 
 .nowuknow-main h2 {
-  color: var(--nowuknow-text-secondary);  /* Texto secundário em Yinmn Blue */
+  color: var(--nowuknow-text-secondary); /* Texto secundário em Yinmn Blue */
 }
 
 .nowuknow-main h3 {
-  color: var(--nowuknow-text-tertiary);  /* Cor de destaque clara (Silver Lake Blue) */
+  color: var(
+    --nowuknow-text-tertiary
+  ); /* Cor de destaque clara (Silver Lake Blue) */
 }
 
 .nowuknow-support1 {
-  color: var(--nowuknow-highlight-light);  /* Cor de suporte principal (Yinmn Blue) */
+  color: var(
+    --nowuknow-highlight-light
+  ); /* Cor de suporte principal (Yinmn Blue) */
 }
 
 .nowuknow-support2 {
-  color: var(--nowuknow-text-muted); /* Cor de alerta ou secundária (Silver Lake Blue) */
+  color: var(
+    --nowuknow-text-muted
+  ); /* Cor de alerta ou secundária (Silver Lake Blue) */
 }
 
 .nowuknow-button1 {
-  background-color: var(--nowuknow-success);  /* Cor de fundo do botão (Yinmn Blue) */
+  background-color: var(
+    --nowuknow-success
+  ); /* Cor de fundo do botão (Yinmn Blue) */
 }
 
 .nowuknow-btn {
-    background-color: var(--nowuknow-border);
-    border-radius: 20px;
+  background-color: var(--nowuknow-border);
+  border-radius: 20px;
 }
 .nowuknow-button2 {
-  background-color: var(--nowuknow-warning);  /* Cor de fundo do botão (Silver Lake Blue) */
+  background-color: var(
+    --nowuknow-warning
+  ); /* Cor de fundo do botão (Silver Lake Blue) */
 }
 
 .nowuknow-box-container {
-    background-color: var(--nowuknow-bg-dark);
-    padding: 20px 40px;
-    border-radius: 30px;
-    box-shadow: rgb(0 0 0 / 30%) 0 1px 4px;
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-    color: var(--nowuknow-text-primary);
+  background-color: var(--nowuknow-bg-dark);
+  padding: 20px 40px;
+  border-radius: 30px;
+  box-shadow: rgb(0 0 0 / 30%) 0 1px 4px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  color: var(--nowuknow-text-primary);
 }
 
-.nowuknow-box-container h1{
-    color: var(--nowuknow-text-primary);
+.nowuknow-box-container h1 {
+  color: var(--nowuknow-text-primary);
 }
 
 .nowuknow-form-container {
-      display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 840px) {
+  .nowuknow-left-container,
+  .nowuknow-right-container {
+    display: none;
+  }
 }

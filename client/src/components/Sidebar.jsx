@@ -1,7 +1,7 @@
-// Sidebar.js
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Sidebar.css";
+import { Footer } from "./";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const location = useLocation();
@@ -10,53 +10,50 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   return (
     <div className={`nowuknow-sidebar ${isOpen ? "open" : ""}`}>
-      <div className="nowuknow-close-btn-div">
-        <button onClick={toggleSidebar} className="nowuknow-close-btn">
-          <i className="bi bi-list"></i>
-        </button>
+      <div className="nowuknow-sidebar-top">
+        <ul className="nowuknow-sidebar-nav">
+          <li className="nowuknow-sidebar-item">
+            <Link
+              className={`nowuknow-sidebar-link ${
+                isActive("/") ? "nowuknow-active" : ""
+              }`}
+              to="/"
+            >
+              <i className="bi bi-house-door nowuknow-sidebar-icon"></i>{" "}
+              {/* Ícone de casa para Home */}
+              Home
+            </Link>
+          </li>
+          <li className="nowuknow-sidebar-item">
+            <Link
+              className={`nowuknow-sidebar-link ${
+                isActive("/categorias") ? "nowuknow-active" : ""
+              }`}
+              to="/categorias"
+            >
+              <i className="bi bi-grid nowuknow-sidebar-icon"></i>{" "}
+              {/* Ícone de grade para Categorias */}
+              Categorias
+            </Link>
+          </li>
+          <li className="nowuknow-sidebar-item">
+            <Link
+              className={`nowuknow-sidebar-link ${
+                isActive("/about") ? "nowuknow-active" : ""
+              }`}
+              to="/about"
+            >
+              <i className="bi bi-info-circle nowuknow-sidebar-icon"></i>{" "}
+              {/* Ícone de informação para Sobre */}
+              Sobre
+            </Link>
+          </li>
+        </ul>
       </div>
-      <ul className="nowuknow-sidebar-nav">
-        <li className="nowuknow-sidebar-item">
-          <Link
-            className={`nowuknow-sidebar-link ${
-              isActive("/") ? "nowuknow-active" : ""
-            }`}
-            to="/"
-          >
-            Home
-          </Link>
-        </li>
-        <li className="nowuknow-sidebar-item">
-          <Link
-            className={`nowuknow-sidebar-link ${
-              isActive("/categorias") ? "nowuknow-active" : ""
-            }`}
-            to="/categorias"
-          >
-            Categorias
-          </Link>
-        </li>
-        <li className="nowuknow-sidebar-item">
-          <Link
-            className={`nowuknow-sidebar-link ${
-              isActive("/about") ? "nowuknow-active" : ""
-            }`}
-            to="/about"
-          >
-            Sobre
-          </Link>
-        </li>
-        <li className="nowuknow-sidebar-item">
-          <Link
-            className={`nowuknow-sidebar-link ${
-              isActive("/createPost") ? "nowuknow-active" : ""
-            }`}
-            to="/createPost"
-          >
-            Criar Postagem
-          </Link>
-        </li>
-      </ul>
+      <div className="nowuknow-sidebar-middle"></div>
+      <div className="nowuknow-sidebar-bottom">
+        <Footer />
+      </div>
     </div>
   );
 };

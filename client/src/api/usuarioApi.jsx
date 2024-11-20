@@ -12,7 +12,7 @@ export const loginUsuario = async (credenciais) => {
     }
   } catch (error) {
     console.error("Erro no login:", error);
-    return false; // Falha no login
+    return false;
   }
 };
 
@@ -27,14 +27,14 @@ export const signupUsuario = async (novoUsuario) => {
     if (response.ok) {
       const data = await response.json();
       console.log("Sucesso: ", data);
-      return true; // Cadastro bem-sucedido
+      return true;
     } else {
       console.error("Erro na resposta:", response.statusText);
       return false;
     }
   } catch (error) {
     console.error("Erro no cadastro:", error);
-    return false; // Falha no cadastro
+    return false;
   }
 };
 
@@ -44,18 +44,21 @@ export const updateUsuario = async (token, updatedUsuario) => {
       method: "PUT",
       headers: {
         "x-access-token": token,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify(updatedUsuario),
+      body: updatedUsuario,
     });
+    const data = await response.json();
+
     if (response.ok) {
-      const data = await response.json();
-      console.log("Sucesso: ", data);
-      return true; // Login bem-sucedido
+      console.log("Sucesso:", data);
+      return data.mensagem; // Retorna a mensagem de sucesso
+    } else {
+      console.error("Erro retornado pela API:", data.errors || data.error);
+      return data.errors || data.error; // Retorna os erros da API
     }
   } catch (error) {
-    console.error("Erro no login:", error);
-    return false; // Falha no login
+    console.error("Erro no usuarioApi.updateUsuario:", error);
+    return "Erro inesperado ao comunicar com o servidor.";
   }
 };
 
@@ -70,10 +73,35 @@ export const getUsuarioAtual = async (token) => {
     if (response.ok) {
       const data = await response.json();
       console.log("Sucesso: ", data);
-      return data; // Login bem-sucedido
+      return data;
     }
   } catch (error) {
     console.error("Erro no login:", error);
-    return null; // Falha no login
+    return null;
+  }
+};
+
+export const deleteUsuarioAtual = async (token) => {
+  try {
+    const response = await fetch("/api/v1/usuarios", {
+      method: "DELETE",
+      headers: {
+        "x-access-token": token,
+      },
+    });
+
+    // Tenta processar a resposta JSON, mesmo em caso de erro
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log("Sucesso:", data);
+      return data.mensagem; // Retorna a mensagem de sucesso
+    } else {
+      console.error("Erro retornado pela API:", data.errors || data.error);
+      return data.errors || data.error; // Retorna os erros da API
+    }
+  } catch (error) {
+    console.error("Erro no usuarioApi.deleteUsuarioAtual:", error);
+    return "Erro inesperado ao comunicar com o servidor.";
   }
 };

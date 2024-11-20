@@ -1,17 +1,25 @@
-// Navbar.js
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
 import { fetchUsuarioLogado } from "../services/usuarioService";
-import Sidebar from "./Sidebar"; // Importando Sidebar
+import Sidebar from "./Sidebar";
+import { Login } from "./";
 import "./Navbar.css";
 
-function Navbar() {
+function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
   const { isAuthenticated, logout } = useAuthContext();
   const [usuario, setUsuario] = useState(null);
   const [erro, setErro] = useState(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Controle da sidebar
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const toggleLoginMenu = () => {
+    setIsLoginMenuOpen(!isLoginMenuOpen);
+  };
 
   useEffect(() => {
     const fetchUsuario = async () => {
@@ -20,6 +28,8 @@ function Navbar() {
         setUsuario(dadosUsuario);
       } catch (erro) {
         setErro("Não foi possível carregar os dados do usuário.");
+        setUsuario(null);
+        logout();
         console.error(erro);
       }
     };
@@ -31,11 +41,12 @@ function Navbar() {
     }
   }, [isAuthenticated]);
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
-  const isActive = (path) => location.pathname === path;
+  // Fecha o menu de login sempre que a rota mudar
+  useEffect(() => {
+    if (isLoginMenuOpen) {
+      setIsLoginMenuOpen(false);
+    }
+  }, [location]);
 
   return (
     <header className="nowuknow-header">
@@ -49,21 +60,33 @@ function Navbar() {
           </Link>
         </div>
         <div className="nowuknow-navbar-middle">
-          <form className="nowuknow-search-form nowuknow-search" role="search">
+          <form
+            className="nowuknow-search-form nowuknow-search hide-on-resize-2"
+            role="search"
+          >
             <input
               type="search"
               placeholder="Busque algum conteúdo, categoria ou autor"
               aria-label="Search"
             />
-            <button className="nowuknow-search-btn" type="submit">
+            <button className="nowuknow-btn-icon" type="submit">
               <i className="bi bi-search"></i>
             </button>
           </form>
         </div>
         <div className="nowuknow-navbar-right">
           <ul className="nowuknow-navbar-nav">
-            <li className="nowuknow-nav-item">
-              {isAuthenticated && usuario ? (
+            {isAuthenticated && (
+              <Link
+                to="/createPost"
+                className="nowuknow-nav-link nowuknow-create-post-btn"
+              >
+                <i className="bi bi-plus nowuknow-plus"></i>{" "}
+                <span className="hide-on-resize">Criar Postagem</span>
+              </Link>
+            )}
+            {isAuthenticated && usuario && (
+              <li className="nowuknow-nav-item">
                 <Link to="/perfil" className="nowuknow-nav-link">
                   <img
                     src={usuario.imagem}
@@ -71,23 +94,26 @@ function Navbar() {
                     className="nowuknow-perfil-icon"
                   />
                 </Link>
-              ) : (
-                <Link className="nowuknow-nav-link" to="/login">
-                  Login
-                </Link>
-              )}
-            </li>
-            {isAuthenticated && (
-              <li className="nowuknow-nav-item">
+              </li>
+            )}
+            <li className="nowuknow-nav-item">
+              {isAuthenticated ? (
                 <button onClick={logout} className="nowuknow-nav-link">
                   Logout
                 </button>
-              </li>
-            )}
+              ) : (
+                <button onClick={toggleLoginMenu} className="nowuknow-nav-link">
+                  Login
+                </button>
+              )}
+            </li>
           </ul>
+          {isLoginMenuOpen && (
+            <Login onClose={() => setIsLoginMenuOpen(false)} />
+          )}
         </div>
+        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       </nav>
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
     </header>
   );
 }

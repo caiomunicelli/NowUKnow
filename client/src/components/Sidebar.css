@@ -1,15 +1,17 @@
 .nowuknow-sidebar {
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0;
   width: 250px;
-  height: 100%;
-  background-color: var(--nowuknow-bg-dark);
-  color: var(--nowuknow-text-primary);
-  transform: translateX(-100%);
+  height: calc(100% - var(--nowuknow-header-height));
+  background-color: var(--nowuknow-bg-medium-light);
+  color: var(--nowuknow-text-muted);
+  transform: translate(-100%);
   transition: transform 0.3s ease;
   z-index: 10;
-  box-shadow: rgb(0 0 0 / 30%) 0 1px 4px;
+  box-shadow: #0000004d 0 1px 4px;
+  display: flex;
+  flex-direction: column;
 }
 
 .nowuknow-sidebar.open {
@@ -22,7 +24,7 @@
 }
 
 .nowuknow-sidebar-link {
-  color: var(--nowuknow-text-primary);
+  color: var(--nowuknow-text-muted);
   text-decoration: none;
   display: block;
   padding: 10px 0;
@@ -33,17 +35,35 @@
 }
 
 .nowuknow-close-btn-div {
-    display: flex;
-    flex: 1;
-    justify-content: flex-start;
+  display: flex;
+  flex: 1;
+  justify-content: flex-start;
 }
 .nowuknow-close-btn {
   background: none;
   border: none;
   color: white;
   font-size: 1.5rem;
-  width:60px;
+  width: 60px;
   margin-left: 10px;
   cursor: pointer;
   margin-top: 2px;
+}
+
+.nowuknow-sidebar-icon {
+  padding-right: 0.2em;
+}
+
+.nowuknow-sidebar-top {
+  display: flex;
+  flex-direction: column;
+}
+
+.nowuknow-sidebar-middle {
+  display: flex;
+  flex-grow: 1;
+}
+
+.nowuknow-sidebar-bottom {
+  display: flex;
 }

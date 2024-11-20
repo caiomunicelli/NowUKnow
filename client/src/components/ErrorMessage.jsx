@@ -1,4 +1,3 @@
-// src/components/ErrorMessage.jsx
 import React from "react";
 
 function ErrorMessage({ message }) {
@@ -7,7 +6,7 @@ function ErrorMessage({ message }) {
       className="alert alert-danger d-flex align-items-center mt-2"
       role="alert"
     >
-      <i className="bi bi-x-circle me-2"></i> {/* Ícone de erro */}
+      <i className="bi bi-x-circle me-2"></i>
       <span>{message}</span>
     </div>
   ) : null;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import {
   Navbar,
@@ -13,7 +13,8 @@ import {
   About,
   PrivateRoute,
   Categorias,
-  Categoria
+  Categoria,
+  Sidebar,
 } from "./components";
 import {
   BrowserRouter as Router,
@@ -24,53 +25,61 @@ import {
 import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
+  const [isLoginMenuOpen, setIsLoginMenuOpen] = useState(false);
+
   return (
     <AuthProvider>
       <Router>
         <div className="nowuknow-app">
-          <Navbar />
+          <Navbar
+            isLoginMenuOpen={isLoginMenuOpen}
+            setIsLoginMenuOpen={setIsLoginMenuOpen}
+          />
           <main className="nowuknow-main">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/categorias" element={<Categorias />} />
-              <Route path="/categoria/:id" element={<Categoria />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="*" element={<Navigate to="/" />} />
-
-              {/* Rota privada, acessível apenas se o usuário estiver autenticado */}
-              <Route
-                path="/createPost"
-                element={
-                  <PrivateRoute>
-                    <CreatePost />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/feed"
-                element={
-                    <Feed />
-                }
-              />
-              <Route
-                path="/post"
-                element={
-                    <Post />
-                }
-              />
-              <Route
-                path="/perfil"
-                element={
-                  <PrivateRoute>
-                    <Perfil />
-                  </PrivateRoute>
-                }
-              />
-              <Route path="/about" element={<About />} />
-            </Routes>
+            <div className="nowuknow-left-container"></div>
+            <div className="nowuknow-middle-container">
+              <Routes>
+                <Route path="*" element={<Navigate to="/" />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/categorias" element={<Categorias />} />
+                <Route path="/categoria/:id" element={<Categoria />} />
+                <Route
+                  path="/signup"
+                  element={
+                    <Signup onLoginClick={() => setIsLoginMenuOpen(true)} />
+                  }
+                />
+                <Route path="/feed" element={<Feed />} />
+                <Route path="/post" element={<Post />} />
+                <Route path="/about" element={<About />} />
+                <Route
+                  path="/perfil"
+                  element={
+                    <PrivateRoute>
+                      <Perfil />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/editarPerfil"
+                  element={
+                    <PrivateRoute>
+                      <Signup />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/createPost"
+                  element={
+                    <PrivateRoute>
+                      <CreatePost />
+                    </PrivateRoute>
+                  }
+                />
+              </Routes>
+            </div>
+            <div className="nowuknow-right-container"></div>
           </main>
-          <Footer />
         </div>
       </Router>
     </AuthProvider>

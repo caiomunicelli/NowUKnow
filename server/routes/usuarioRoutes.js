@@ -1,36 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const UsuarioController = require("../controllers/usuarioController.js");
-const verifyJWT = require("../service/jwtService.js");
+const verifyJWT = require("../middleware/jwtService.js");
 const usuarioController = new UsuarioController();
 const jwt = require("jsonwebtoken");
 const { compare } = require("bcryptjs");
-const multer = require("multer");
-
-const storage = multer.memoryStorage();
-
-const upload = multer({
-  storage: storage,
-  fileFilter: (req, file, cb) => {
-    const arquivosPermitidos = [
-      "image/png",
-      "image/jpeg",
-      "image/jpg",
-      "image/gif",
-      "image/webp",
-    ];
-    if (arquivosPermitidos.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(
-        new Error(
-          "Tipo de arquivo não permitido. Apenas PNG, JPG, GIF e WEBP são aceitos."
-        )
-      );
-    }
-  },
-  limits: { fileSize: 5 * 1024 * 1024 }, // Limite de 5 MB
-});
+const upload = require("../middleware/multerConfig.js")("imagem");
 
 const SECRET = process.env.SECRET_KEY;
 const EXPIRES = 30000;
@@ -121,11 +96,14 @@ router.get("/", verifyJWT, async (req, res) => {
 });
 
 // Rota: Atualizar usuário por ID (PUT /)
-router.put("/", verifyJWT, async (req, res) => {
-  const { usuario, nome, email, senha, tipo, imagem } = req.body;
+router.put("/", verifyJWT, upload.single("foto"), async (req, res) => {
+  const { usuario, nome, email, senha, tipo } = req.body;
+  const imagem = req.file; // Acessa a imagem carregada
+
   try {
+    // Passa a imagem e outros dados para o controller
     const resultado = await usuarioController.atualizarUsuario(
-      req.usuarioId,
+      req.usuarioId, // O id do usuário vem do JWT
       usuario,
       nome,
       email,
@@ -136,7 +114,7 @@ router.put("/", verifyJWT, async (req, res) => {
     if (!resultado.sucesso) {
       return res.status(400).json({ errors: resultado.erros });
     }
-    res.status(200).json(resultado.usuario);
+    res.status(200).json(resultado.usuario); // Retorna o usuário atualizado
   } catch (error) {
     res
       .status(500)

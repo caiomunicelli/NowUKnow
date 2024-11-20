@@ -1,17 +1,45 @@
 .nowuknow-login-container {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .nowuknow-login-form {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .nowuknow-login-btn {
-    width: 30%;
+  width: 30%;
 }
 
 .nowuknow-login-btn-div {
-    display: flex;
+  display: flex;
+}
+
+.nowuknow-login-float {
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  background-color: var(--nowuknow-bg-dark);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  width: 250px;
+  z-index: 1000;
+  color: var(--nowuknow-text-primary);
+}
+
+.nowuknow-login-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--nowuknow-text-primary);
+  cursor: pointer;
+}
+
+.nowuknow-login-close:hover {
+  color: var(--nowuknow-text-secondary);
 }

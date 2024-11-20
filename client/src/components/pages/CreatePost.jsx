@@ -6,6 +6,7 @@ import { fetchCategorias } from "../../services/categoriaService";
 import { fetchCertificacoes } from "../../services/certificacaoService";
 import { publicaPostagem } from "../../services/postagemService";
 import { publicaDiscussao } from "../../services/discussaoService";
+import { publicaConteudo } from "../../services/conteudoService";
 
 const CreatePost = () => {
   const { error } = useAuthContext();
@@ -15,12 +16,15 @@ const CreatePost = () => {
   const [certificacaoId, setCertificacaoId] = useState("");
   const [categorias, setCategorias] = useState([]);
   const [certificacoes, setCertificacoes] = useState([]);
+  const [certificacoesFiltradas, setCertificacoesFiltradas] = useState([]);
   const [tipoDiscussao, setTipoDiscussao] = useState("");
   const [texto, setTexto] = useState("");
   const [tipoConteudoDetalhado, setTipoConteudoDetalhado] = useState("");
-  const [url, setUrl] = useState("");
   const [descricao, setDescricao] = useState("");
+  const [conteudoArquivo, setConteudoArquivo] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
   const navigate = useNavigate();
+  let categoriaPreenchida = null
 
   useEffect(() => {
     const getCategorias = async () => {
@@ -44,6 +48,23 @@ const CreatePost = () => {
     getCategorias();
     getCertificacoes();
   }, []);
+  function handleCategoriaChange(value) {
+    console.log(value);
+    setCategoriaId(value);
+    console.log(JSON.stringify(certificacoes))
+    const categoriaIdNumerico = Number(value);
+    const certificacoesPorCategoria = certificacoes.filter(certificacao => {
+      console.log("Comparando:", certificacao.categoriaId, "com", categoriaIdNumerico);
+      return certificacao.categoriaId === categoriaIdNumerico;
+     });
+      console.log(JSON.stringify(certificacoesPorCategoria))
+    setCertificacoesFiltradas(certificacoesPorCategoria);
+  }
+
+  const handleArquivoChange = (e) => {
+    const file = e.target.files[0];
+    setConteudoArquivo(file);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,35 +72,46 @@ const CreatePost = () => {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
+
     const postData = {
       titulo: title,
       tipoPostagem: tipoConteudo,
-      autorId: 1, // Ajuste conforme necessário
+      autorId: 1,
       categoriaId: parseInt(categoriaId),
       certificacaoId: parseInt(certificacaoId),
     };
 
     try {
+      setIsUploading(true); // Ativa o estado de upload
       const response = await publicaPostagem(postData);
       if (response) {
         const postagemId = response.id;
+
         if (tipoConteudo === "discussao") {
           const postDataDiscussao = {
             postagemId: postagemId,
             tipoDiscussao: tipoDiscussao,
             texto: texto,
           };
-          const responseDiscussao = publicaDiscussao(postDataDiscussao);
+          const responseDiscussao = await publicaDiscussao(postDataDiscussao);
+
           if (!responseDiscussao) {
             console.log("Erro desconhecido ao criar discussão");
           }
         } else if (tipoConteudo === "conteudo") {
-          await createConteudo({
-            postagemId,
-            tipoConteudo: tipoConteudoDetalhado,
-            url,
-            descricao,
-          });
+          const conteudoData = new FormData();
+          conteudoData.append("postagem_id", postagemId);
+          conteudoData.append("tipo_conteudo", tipoConteudoDetalhado);
+          if (conteudoArquivo) {
+            conteudoData.append("arquivo", conteudoArquivo);
+          }
+          conteudoData.append("descricao", descricao);
+
+          const responseConteudo = await publicaConteudo(conteudoData);
+
+          if (!responseConteudo) {
+            console.log("Erro desconhecido ao criar conteúdo");
+          }
         }
 
         navigate("/");
@@ -88,12 +120,17 @@ const CreatePost = () => {
       }
     } catch (error) {
       alert("Erro na requisição: " + error.message);
+    } finally {
+      setIsUploading(false); // Desativa o estado de upload
     }
 
     setTitle("");
     setTipoConteudo("");
     setCategoriaId("");
     setCertificacaoId("");
+    setTipoConteudoDetalhado("");
+    setDescricao("");
+    setConteudoArquivo(null);
   };
 
   return (
@@ -159,7 +196,7 @@ const CreatePost = () => {
         {tipoConteudo === "conteudo" && (
           <>
             <div className="mb-3">
-              <label>Tipo de Conteúdo:</label>
+              <label>Tipo de Conteúdo Detalhado:</label>
               <select
                 className="nowuknow-input"
                 value={tipoConteudoDetalhado}
@@ -167,22 +204,11 @@ const CreatePost = () => {
                 required
               >
                 <option value="">Selecione o tipo de conteúdo</option>
-                <option value="video">Vídeo</option>
-                <option value="material_de_aprendizado">
+                <option value="Video">Vídeo</option>
+                <option value="Material_de_Aprendizado">
                   Material de Aprendizado
                 </option>
               </select>
-            </div>
-            <div className="mb-3">
-              <label>URL:</label>
-              <input
-                type="url"
-                className="nowuknow-input"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder="Informe o URL"
-                required
-              />
             </div>
             <div className="mb-3">
               <label>Descrição (opcional):</label>
@@ -193,6 +219,15 @@ const CreatePost = () => {
                 placeholder="Descrição do conteúdo"
               />
             </div>
+            <div className="mb-3">
+              <label>Upload de Arquivo:</label>
+              <input
+                type="file"
+                className="nowuknow-input"
+                onChange={handleArquivoChange}
+                accept="video/*, application/pdf, application/vnd.ms-powerpoint, application/msword"
+              />
+            </div>
           </>
         )}
 
@@ -201,7 +236,7 @@ const CreatePost = () => {
           <select
             className="nowuknow-input"
             value={categoriaId}
-            onChange={(e) => setCategoriaId(e.target.value)}
+            onChange={(e) => handleCategoriaChange(e.target.value)}
             required
           >
             <option value="">Selecione uma categoria</option>
@@ -213,6 +248,7 @@ const CreatePost = () => {
           </select>
         </div>
 
+        {categoriaId !== "" && (
         <div className="mb-3">
           <label>Certificação:</label>
           <select
@@ -221,16 +257,24 @@ const CreatePost = () => {
             onChange={(e) => setCertificacaoId(e.target.value)}
           >
             <option value="">Selecione uma certificação</option>
-            {certificacoes.map((cert) => (
+            {certificacoesFiltradas.map((cert) => (
               <option key={cert.id} value={cert.id}>
                 {cert.nome}
               </option>
             ))}
           </select>
         </div>
+        )}
 
-        <button type="submit" className="nowuknow-btn">
-          Postar
+        <button type="submit" className="nowuknow-btn" disabled={isUploading}>
+          {isUploading ? (
+            <>
+              <i className="bi bi-arrow-repeat spinner"></i> Upload do Arquivo
+              em Andamento
+            </>
+          ) : (
+            "Postar"
+          )}
         </button>
       </form>
     </div>
