@@ -76,6 +76,18 @@ class CertificacaoController {
     }
   }
 
+  async listarCertificacoesPorCategoriaId(id) {
+    try {
+      const certificacoes = await certificacaoRepository.getAllCertificacoesByCategoriaId(id);;
+      return { sucesso: true, certificacoes };
+    } catch (error) {
+      return {
+        sucesso: false,
+        erros: [{ campo: "erro", mensagem: error.message }],
+      };
+    }
+  }
+
   async atualizarCertificacao(
     id,
     nome,

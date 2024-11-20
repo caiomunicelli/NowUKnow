@@ -55,6 +55,25 @@ class CertificacaoRepository {
     );
   }
 
+  async getAllCertificacoesByCategoriaId(id) {
+    const connection = await this.dbConnection.connect();
+    const [rows] = await connection.execute("SELECT * FROM Certificacoes WHERE categoria_id = ?", [id]);
+
+    return rows.map(
+      (row) =>
+        new Certificacao(
+          row.id,
+          row.nome,
+          row.descricao,
+          row.requisitos,
+          row.imagem,
+          row.categoria_id,
+          row.nivel,
+          row.data_criacao
+        )
+    );
+  }
+
   // Buscar certificação por ID
   async getCertificacaoById(id) {
     const connection = await this.dbConnection.connect();
