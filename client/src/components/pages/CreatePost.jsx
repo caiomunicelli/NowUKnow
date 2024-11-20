@@ -196,7 +196,45 @@ const CreatePost = () => {
         </div>
 
         <div className="mb-3">
-          <label>Tipo de Conteúdo:</label>
+          <label>Categoria:</label>
+          <select
+            className="nowuknow-input"
+            value={categoriaId}
+            onChange={(e) => {
+              setCategoriaId(e.target.value);
+              handleCategoriaChange(e.target.value);
+            }}
+            required
+          >
+            <option value="">Selecione uma categoria</option>
+            {categorias.map((categoria) => (
+              <option key={categoria.id} value={categoria.id}>
+                {categoria.nome}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {categoriaId !== "" && (
+          <div className="mb-3">
+            <label>Certificação:</label>
+            <select
+              className="nowuknow-input"
+              value={certificacaoId}
+              onChange={(e) => setCertificacaoId(e.target.value)}
+            >
+              <option value="">Selecione uma certificação</option>
+              {certificacoesFiltradas.map((cert) => (
+                <option key={cert.id} value={cert.id}>
+                  {cert.nome}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        <div className="mb-3">
+          <label>Tipo de Postagem:</label>
           <select
             className="nowuknow-input"
             value={tipoPostagem}
@@ -204,7 +242,7 @@ const CreatePost = () => {
             required
             disabled={!!postagem}
           >
-            <option value="">Selecione o tipo de conteúdo</option>
+            <option value="">Selecione o tipo de postagem</option>
             <option value="Discussao">Discussão</option>
             <option value="Conteudo">Conteúdo</option>
           </select>
@@ -212,44 +250,6 @@ const CreatePost = () => {
 
         {tipoPostagem && (
           <div>
-            <div className="mb-3">
-              <label>Categoria:</label>
-              <select
-                className="nowuknow-input"
-                value={categoriaId}
-                onChange={(e) => {
-                  setCategoriaId(e.target.value);
-                  handleCategoriaChange(e.target.value);
-                }}
-                required
-              >
-                <option value="">Selecione uma categoria</option>
-                {categorias.map((categoria) => (
-                  <option key={categoria.id} value={categoria.id}>
-                    {categoria.nome}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {categoriaId !== "" && (
-              <div className="mb-3">
-                <label>Certificação:</label>
-                <select
-                  className="nowuknow-input"
-                  value={certificacaoId}
-                  onChange={(e) => setCertificacaoId(e.target.value)}
-                >
-                  <option value="">Selecione uma certificação</option>
-                  {certificacoesFiltradas.map((cert) => (
-                    <option key={cert.id} value={cert.id}>
-                      {cert.nome}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
             {tipoPostagem === "Conteudo" && (
               <div>
                 <div className="mb-3">

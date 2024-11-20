@@ -17,7 +17,6 @@ const Post = ({ postagemId, post, comentarioCount, }) => {
     post.postagem_data_publicacao
   ).toLocaleDateString("pt-BR");
 
-  const navigate = useNavigate();
 
   const handleViewContent = () => {
     navigate(`/postagem/${postagemId}`);
