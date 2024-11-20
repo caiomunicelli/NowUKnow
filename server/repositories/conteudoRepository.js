@@ -69,7 +69,7 @@ class ConteudoRepository {
     );
 
     const conteudo = rows[0];
-    return conteudoconteudo;
+    return conteudo;
   }
 
   async getConteudoByPostagemId(postagem_id) {
@@ -85,17 +85,14 @@ class ConteudoRepository {
 
   async updateConteudo(conteudo) {
     const connection = await this.dbConnection.connect();
-    let urlArquivo = conteudo.url || null;
+    let urlArquivo = null;
 
     // Se o conteúdo tiver um novo arquivo, excluir o arquivo anterior
     if (conteudo.arquivo) {
-      const conteudoExistente = await this.getConteudoById(conteudo.id);
-
-      // Excluir o arquivo anterior do S3, se existir
-      if (conteudoExistente && conteudoExistente.url) {
+      if (conteudo.url) {
         try {
           await this.S3Provider.connect();
-          await this.S3Provider.deleteFile(conteudoExistente.url); // Exclui o arquivo antigo
+          await this.S3Provider.deleteFile(conteudo.url); // Exclui o arquivo antigo
         } catch (error) {
           console.error("Erro ao excluir arquivo anterior:", error);
         }
@@ -119,8 +116,9 @@ class ConteudoRepository {
         console.error("Erro ao enviar novo arquivo para o S3:", error);
         throw new Error("Falha no upload do arquivo");
       }
+    } else {
+      urlArquivo = conteudo.url || null;
     }
-
     const [result] = await connection.execute(
       `UPDATE Conteudos SET postagem_id = ?, tipo_conteudo = ?, url = ?, descricao = ? WHERE id = ?`,
       [

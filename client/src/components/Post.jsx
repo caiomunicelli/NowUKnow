@@ -7,8 +7,11 @@ import "./Post.css";
 
 const Post = ({ postagemId, post, comentarioCount, }) => {
   const [usuario, setUsuario] = useState(null);
+  const [postagem, setPostagem] = useState(post);
   const { isAuthenticated } = useAuthContext();
   const [erro, setErro] = useState(null);
+
+  const navigate = useNavigate();
 
   const formattedDate = new Date(
     post.postagem_data_publicacao
@@ -21,6 +24,7 @@ const Post = ({ postagemId, post, comentarioCount, }) => {
   };
 
   useEffect(() => {
+    setPostagem(post);
     const loadUsuario = async () => {
       try {
         const dadosUsuario = await fetchUsuarioLogado();
@@ -86,6 +90,12 @@ const Post = ({ postagemId, post, comentarioCount, }) => {
               onClick={() => deletaPostagem(post.postagem_id)}
             >
               Excluir
+            </button>
+            <button
+              className="nowuknow-edit-button"
+              onClick={() => navigate("/editarPost", { state: { postagem } })}
+            >
+              Editar Post
             </button>
           </div>
         )}

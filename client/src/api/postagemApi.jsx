@@ -35,3 +35,19 @@ export const deletePostagem = async (postagem_id, token) => {
     return "Erro inesperado ao comunicar com o servidor.";
   }
 };
+
+export const updatePostagem = async (postagem, postagem_id, token) => {
+  console.log("Postagem json:", JSON.stringify(postagem));
+  try {
+    const response = await fetch(`/api/v1/postagens/${postagem_id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", "x-access-token": token },
+      body: JSON.stringify(postagem),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Erro na postagens:", error);
+    return false;
+  }
+};
