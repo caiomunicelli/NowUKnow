@@ -105,3 +105,27 @@ export const deleteUsuarioAtual = async (token) => {
     return "Erro inesperado ao comunicar com o servidor.";
   }
 };
+
+export const removerFotoUsuario = async (token) => {
+  try {
+    const response = await fetch("/api/v1/usuarios/imagem", {
+      method: "DELETE",
+      headers: {
+        "x-access-token": token,
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log("Foto de perfil removida com sucesso:", data);
+      return data.mensagem; // Retorna a mensagem de sucesso
+    } else {
+      console.error("Erro retornado pela API:", data.errors || data.error);
+      return data.errors || data.error; // Retorna os erros da API
+    }
+  } catch (error) {
+    console.error("Erro ao remover foto do usuário:", error);
+    return "Erro inesperado ao comunicar com o servidor.";
+  }
+};

@@ -2,18 +2,23 @@ import React, { useState, useEffect } from "react";
 import { fetchUsuarioLogado } from "../services/usuarioService";
 import { deletaPostagem } from "../services/postagemService";
 import { useAuthContext } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import "./Post.css";
 
 const Post = ({ post }) => {
   const [usuario, setUsuario] = useState(null);
+  const [postagem, setPostagem] = useState(post);
   const { isAuthenticated } = useAuthContext();
   const [erro, setErro] = useState(null);
+
+  const navigate = useNavigate();
 
   const formattedDate = new Date(
     post.postagem_data_publicacao
   ).toLocaleDateString("pt-BR");
 
   useEffect(() => {
+    setPostagem(post);
     const loadUsuario = async () => {
       try {
         const dadosUsuario = await fetchUsuarioLogado();
@@ -74,6 +79,12 @@ const Post = ({ post }) => {
               onClick={() => deletaPostagem(post.postagem_id)}
             >
               Excluir
+            </button>
+            <button
+              className="nowuknow-edit-button"
+              onClick={() => navigate("/editarPost", { state: { postagem } })}
+            >
+              Editar Post
             </button>
           </div>
         )}

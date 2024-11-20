@@ -75,7 +75,10 @@ router.put("/:id", verifyJWT, upload.single("arquivo"), async (req, res) => {
       return res.status(400).json({ errors: resultado.erros });
     }
 
-    res.status(200).json(resultado.conteudo); // Retorna o conteúdo atualizado
+    res.status(200);
+    res.status(200).json({
+      mensagem: resultado.mensagem,
+    }); // Retorna o conteúdo atualizado
   } catch (error) {
     res
       .status(500)

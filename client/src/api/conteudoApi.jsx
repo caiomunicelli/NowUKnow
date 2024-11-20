@@ -30,21 +30,18 @@ export const getConteudoByPost = async (postagem_id) => {
   }
 };
 
-export const updateConteudo = async (conteudo_id, conteudo, token) => {
+export const updateConteudo = async (conteudo, conteudo_id, token) => {
   try {
-    const response = await fetch(`/api/v1/discussoes/${conteudo_id}`, {
+    const response = await fetch(`/api/v1/conteudos/${conteudo_id}`, {
       method: "PUT",
       headers: { "x-access-token": token },
       body: conteudo,
     });
     const data = await response.json();
-    if (response.ok) {
-      return data.mensagem;
-    } else {
-      return data.errors;
-    }
+    console.log(data);
+    return data;
   } catch (error) {
-    console.error("Erro na discussão:", error);
+    console.error("Erro interno do servidor:", error);
     return false;
   }
 };

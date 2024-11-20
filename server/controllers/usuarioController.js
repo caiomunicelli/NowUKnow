@@ -162,6 +162,29 @@ class UsuarioController {
     await userRepository.deleteUser(id);
     return { sucesso: true, mensagem: "Usuário deletado com sucesso." };
   }
+
+  async removerFotoPerfil(idUsuario) {
+    try {
+      const resultado = await userRepository.removerFotoPerfil(idUsuario);
+      if (!resultado) {
+        return {
+          sucesso: false,
+          mensagem: "Não foi possível remover a foto de perfil.",
+        };
+      }
+      return {
+        sucesso: true,
+        mensagem: "Foto de perfil removida com sucesso.",
+      };
+    } catch (error) {
+      console.error("Erro no controller ao remover foto de perfil:", error);
+      return {
+        sucesso: false,
+        mensagem: "Erro ao remover a foto de perfil.",
+        detalhes: error.message,
+      };
+    }
+  }
 }
 
 module.exports = UsuarioController;

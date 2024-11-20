@@ -4,70 +4,52 @@ import { useAuthContext } from "../../contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { fetchCategorias } from "../../services/categoriaService";
 import { fetchCertificacoes } from "../../services/certificacaoService";
-// Método para buscar conteúdo
 import { publicaPostagem, editaPostagem } from "../../services/postagemService";
 import {
   publicaDiscussao,
   editaDiscussao,
-  pegaDiscussao,
 } from "../../services/discussaoService";
-import {
-  publicaConteudo,
-  editaConteudo,
-  pegaConteudo,
-} from "../../services/conteudoService";
+import { publicaConteudo, editaConteudo } from "../../services/conteudoService";
 
 const CreatePost = () => {
   const { error } = useAuthContext();
   const location = useLocation();
-  const postagem = location.state?.postagem || null; // Pegando a postagem do state, se existir
+  const postagem = location.state?.postagem || null;
   const navigate = useNavigate();
-  const [conteudo, setConteudo] = useState(null);
-  const [discussao, setDiscussao] = useState();
   const [title, setTitle] = useState("");
-  const [tipoConteudo, setTipoConteudo] = useState("");
+  const [tipoPostagem, setTipoPostagem] = useState("");
   const [categoriaId, setCategoriaId] = useState("");
   const [certificacaoId, setCertificacaoId] = useState("");
   const [categorias, setCategorias] = useState([]);
   const [certificacoes, setCertificacoes] = useState([]);
   const [tipoDiscussao, setTipoDiscussao] = useState("");
   const [texto, setTexto] = useState("");
-  const [tipoConteudoDetalhado, setTipoConteudoDetalhado] = useState("");
+  const [tipoConteudo, setTipoConteudo] = useState("");
   const [descricao, setDescricao] = useState("");
   const [conteudoArquivo, setConteudoArquivo] = useState(null);
   const [previewConteudoArquivo, setPreviewConteudoArquivo] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  // Efeito para preencher os campos quando uma postagem existente for editada
   useEffect(() => {
     if (postagem) {
-      setTitle(postagem.titulo || "");
-      setTipoConteudo(postagem.tipo_postagem || "");
+      setTitle(postagem.postagem_titulo || "");
+      setTipoPostagem(postagem.postagem_tipo || "");
       setCategoriaId(postagem.categoria_id || "");
       setCertificacaoId(postagem.certificacao_id || "");
 
-      // Se for "conteudo", buscar detalhes do conteúdo
-      if (postagem.tipo_postagem === "conteudo") {
-        pegaConteudo(postagem.id).then((conteudo) => {
-          setConteudo(conteudo);
-          setTipoConteudoDetalhado(conteudo.tipo_conteudo || "");
-          setDescricao(conteudo.descricao || "");
-          setConteudoArquivo(conteudo.url || null);
-        });
+      if (postagem.postagem_tipo === "Conteudo") {
+        setTipoConteudo(postagem.conteudo_tipo || "");
+        setDescricao(postagem.conteudo_descricao || "");
+        setPreviewConteudoArquivo(postagem.conteudo_url || null);
       }
 
-      // Se for "discussao", preencher texto e tipo de discussão
-      if (postagem.tipoPostagem === "discussao") {
-        pegaDiscussao(postagem.id).then((discussao) => {
-          setDiscussao(discussao);
-          setTipoDiscussao(discussao.tipo_discussao || "");
-          setTexto(discussao.texto || "");
-        });
+      if (postagem.postagem_tipo === "Discussao") {
+        setTipoDiscussao(postagem.discussao_tipo || "");
+        setTexto(postagem.discussao_texto || "");
       }
     }
   }, [postagem]);
 
-  // Buscar categorias e certificações
   useEffect(() => {
     const getCategorias = async () => {
       try {
@@ -91,24 +73,42 @@ const CreatePost = () => {
     getCertificacoes();
   }, []);
 
-  // Manter o arquivo ao selecionar outro
   const handleArquivoChange = (e) => {
     const file = e.target.files[0];
+    if (!file) {
+      setPreviewConteudoArquivo(null);
+      return;
+    }
+
+    if (tipoConteudo === "Video") {
+      const fileUrl = URL.createObjectURL(file);
+      setPreviewConteudoArquivo(fileUrl);
+    } else if (tipoConteudo === "Material_de_Aprendizado") {
+      setPreviewConteudoArquivo(file.name);
+    }
+
     setConteudoArquivo(file);
   };
 
-  // Enviar formulário de criação ou edição
+  useEffect(() => {
+    return () => {
+      if (previewConteudoArquivo) {
+        URL.revokeObjectURL(previewConteudoArquivo);
+      }
+    };
+  }, [previewConteudoArquivo]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!title || !tipoConteudo || !categoriaId) {
+    if (!title || !tipoPostagem || !categoriaId) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
 
     const postData = {
       titulo: title,
-      tipoPostagem: tipoConteudo,
-      autorId: 1, // Este valor deveria vir do contexto de autenticação
+      tipoPostagem: tipoPostagem,
+      autorId: 1,
       categoriaId: parseInt(categoriaId),
       certificacaoId: parseInt(certificacaoId),
     };
@@ -118,42 +118,36 @@ const CreatePost = () => {
       let response = null;
 
       if (postagem) {
-        // Atualizando postagem existente
-        response = await editaPostagem(postData, postagem.id);
+        response = await editaPostagem(postData, postagem.postagem_id);
       } else {
-        // Criando nova postagem
         response = await publicaPostagem(postData);
       }
 
       if (response) {
-        const postagemId = response.id;
+        const postagemId = postagem ? postagem.postagem_id : response.id;
 
-        // Se for "discussao", cria ou atualiza a discussão
-        if (tipoConteudo === "discussao") {
+        if (tipoPostagem === "Discussao") {
           const postDataDiscussao = {
             postagemId: postagemId,
             tipoDiscussao: tipoDiscussao,
             texto: texto,
           };
-          // Se a postagem for uma edição, atualize a discussão
           if (postagem) {
-            await editaDiscussao(postDataDiscussao, postagem.id);
+            await editaDiscussao(postDataDiscussao, postagem.discussao_id);
           } else {
             await publicaDiscussao(postDataDiscussao);
           }
-        } else if (tipoConteudo === "conteudo") {
-          // Se for "conteudo", cria ou atualiza o conteúdo
+        } else if (tipoPostagem === "Conteudo") {
           const conteudoData = new FormData();
           conteudoData.append("postagem_id", postagemId);
-          conteudoData.append("tipo_conteudo", tipoConteudoDetalhado);
+          conteudoData.append("tipo_conteudo", tipoConteudo);
           if (conteudoArquivo) {
             conteudoData.append("arquivo", conteudoArquivo);
           }
           conteudoData.append("descricao", descricao);
 
-          // Se a postagem for uma edição, atualize o conteúdo
           if (postagem) {
-            await editaConteudo(conteudoData, postagem.id);
+            await editaConteudo(conteudoData, postagem.conteudo_id);
           } else {
             await publicaConteudo(conteudoData);
           }
@@ -185,6 +179,7 @@ const CreatePost = () => {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Preencha o título"
             required
+            disabled={!!postagem}
           />
         </div>
 
@@ -192,125 +187,147 @@ const CreatePost = () => {
           <label>Tipo de Conteúdo:</label>
           <select
             className="nowuknow-input"
-            value={tipoConteudo}
-            onChange={(e) => setTipoConteudo(e.target.value)}
+            value={tipoPostagem}
+            onChange={(e) => setTipoPostagem(e.target.value)}
             required
+            disabled={!!postagem}
           >
             <option value="">Selecione o tipo de conteúdo</option>
-            <option value="discussao">Discussão</option>
-            <option value="conteudo">Conteúdo</option>
+            <option value="Discussao">Discussão</option>
+            <option value="Conteudo">Conteúdo</option>
           </select>
         </div>
 
-        {tipoConteudo === "discussao" && (
-          <>
+        {tipoPostagem && (
+          <div>
             <div className="mb-3">
-              <label>Tipo de Discussão:</label>
+              <label>Categoria:</label>
               <select
                 className="nowuknow-input"
-                value={tipoDiscussao}
-                onChange={(e) => setTipoDiscussao(e.target.value)}
+                value={categoriaId}
+                onChange={(e) => setCategoriaId(e.target.value)}
                 required
               >
-                <option value="">Selecione o tipo de discussão</option>
-                <option value="duvida">Dúvida</option>
-                <option value="tutorial">Tutorial</option>
+                <option value="">Selecione uma categoria</option>
+                {categorias.map((categoria) => (
+                  <option key={categoria.id} value={categoria.id}>
+                    {categoria.nome}
+                  </option>
+                ))}
               </select>
             </div>
-            <div className="mb-3">
-              <label>Texto:</label>
-              <textarea
-                className="nowuknow-input"
-                value={texto}
-                onChange={(e) => setTexto(e.target.value)}
-                placeholder="Escreva o texto da discussão"
-                required
-              />
-            </div>
-          </>
-        )}
 
-        {tipoConteudo === "conteudo" && (
-          <>
             <div className="mb-3">
-              <label>Tipo de Conteúdo Detalhado:</label>
+              <label>Certificação:</label>
               <select
                 className="nowuknow-input"
-                value={tipoConteudoDetalhado}
-                onChange={(e) => setTipoConteudoDetalhado(e.target.value)}
-                required
+                value={certificacaoId}
+                onChange={(e) => setCertificacaoId(e.target.value)}
               >
-                <option value="">Selecione o tipo de conteúdo</option>
-                <option value="Video">Vídeo</option>
-                <option value="Material_de_Aprendizado">
-                  Material de Aprendizado
-                </option>
+                <option value="">Selecione uma certificação</option>
+                {certificacoes.map((certificacao) => (
+                  <option key={certificacao.id} value={certificacao.id}>
+                    {certificacao.nome}
+                  </option>
+                ))}
               </select>
             </div>
-            <div className="mb-3">
-              <label>Descrição (opcional):</label>
-              <textarea
-                className="nowuknow-input"
-                value={descricao}
-                onChange={(e) => setDescricao(e.target.value)}
-                placeholder="Adicione uma descrição"
-              />
-            </div>
-            <div className="mb-3">
-              <label>Arquivo (se aplicável):</label>
-              <input
-                type="file"
-                className="nowuknow-input"
-                onChange={handleArquivoChange}
-              />
-            </div>
-          </>
+
+            {tipoPostagem === "Conteudo" && (
+              <div>
+                <div className="mb-3">
+                  <label>Tipo de Conteúdo:</label>
+                  <select
+                    className="nowuknow-input"
+                    value={tipoConteudo}
+                    onChange={(e) => setTipoConteudo(e.target.value)}
+                    required
+                  >
+                    <option value="">Selecione o tipo</option>
+                    <option value="Video">Vídeo</option>
+                    <option value="Material_de_Aprendizado">
+                      Material de Aprendizado
+                    </option>
+                  </select>
+                </div>
+
+                <div className="mb-3">
+                  <label>Descrição:</label>
+                  <textarea
+                    className="nowuknow-input"
+                    value={descricao}
+                    onChange={(e) => setDescricao(e.target.value)}
+                    placeholder="Descreva o conteúdo"
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label>Arquivo de Conteúdo:</label>
+                  <input
+                    type="file"
+                    onChange={handleArquivoChange}
+                    accept="video/*,.pdf,.doc,.docx,.ppt,.pptx"
+                  />
+                  {previewConteudoArquivo && (
+                    <div className="file-preview">
+                      {tipoConteudo === "Video" ? (
+                        <video
+                          src={previewConteudoArquivo}
+                          controls
+                          style={{ width: "100%" }}
+                        />
+                      ) : (
+                        <span>{previewConteudoArquivo}</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {tipoPostagem === "Discussao" && (
+              <div>
+                <div className="mb-3">
+                  <label>Tipo de Discussão:</label>
+                  <select
+                    className="nowuknow-input"
+                    value={tipoDiscussao}
+                    onChange={(e) => setTipoDiscussao(e.target.value)}
+                    required
+                  >
+                    <option value="">Selecione o tipo</option>
+                    <option value="Duvida">Dúvida</option>
+                    <option value="Tutorial">Tutorial</option>
+                  </select>
+                </div>
+
+                <div className="mb-3">
+                  <label>Texto da Discussão:</label>
+                  <textarea
+                    className="nowuknow-input"
+                    value={texto}
+                    onChange={(e) => setTexto(e.target.value)}
+                    placeholder="Descreva sua dúvida ou tutorial"
+                    required
+                  />
+                </div>
+              </div>
+            )}
+          </div>
         )}
-
-        <div className="mb-3">
-          <label>Categoria:</label>
-          <select
-            className="nowuknow-input"
-            value={categoriaId}
-            onChange={(e) => setCategoriaId(e.target.value)}
-            required
-          >
-            <option value="">Selecione uma categoria</option>
-            {categorias.map((categoria) => (
-              <option key={categoria.id} value={categoria.id}>
-                {categoria.nome}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="mb-3">
-          <label>Certificação:</label>
-          <select
-            className="nowuknow-input"
-            value={certificacaoId}
-            onChange={(e) => setCertificacaoId(e.target.value)}
-          >
-            <option value="">Selecione uma certificação</option>
-            {certificacoes.map((certificacao) => (
-              <option key={certificacao.id} value={certificacao.id}>
-                {certificacao.nome}
-              </option>
-            ))}
-          </select>
-        </div>
 
         <div className="mb-3">
           <button
             type="submit"
-            className="nowuknow-submit-button"
+            className="nowuknow-button"
             disabled={isUploading}
           >
             {isUploading
-              ? "Carregando..."
+              ? "Publicando..."
               : postagem
-              ? "Atualizar Postagem"
-              : "Criar Postagem"}
+              ? "Salvar Alterações"
+              : "Publicar nova Postagem"}
           </button>
         </div>
       </form>

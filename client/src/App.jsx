@@ -76,6 +76,14 @@ function App() {
                     </PrivateRoute>
                   }
                 />
+                <Route
+                  path="/editarPost"
+                  element={
+                    <PrivateRoute>
+                      <CreatePost />
+                    </PrivateRoute>
+                  }
+                />
               </Routes>
             </div>
             <div className="nowuknow-right-container"></div>

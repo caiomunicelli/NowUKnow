@@ -4,6 +4,7 @@ import {
   getUsuarioAtual,
   deleteUsuarioAtual,
   updateUsuario,
+  removerFotoUsuario,
 } from "../api/usuarioApi";
 import { getToken } from "./authService";
 
@@ -61,6 +62,22 @@ export const editar = async (usuario) => {
     return response;
   } catch (error) {
     console.error("Erro ao editar usuário no service:", error);
+    throw error;
+  }
+};
+
+export const removerFotoPerfil = async () => {
+  try {
+    const token = getToken(); // Obtém o token do authService
+    if (!token) throw new Error("Usuário não autenticado");
+
+    const response = await removerFotoUsuario(token); // Chama a API para remover a foto
+    if (!response)
+      throw new Error("Erro ao remover foto do usuário (userService)");
+
+    return response; // Retorna a resposta
+  } catch (error) {
+    console.error("Erro ao remover foto no service:", error);
     throw error;
   }
 };

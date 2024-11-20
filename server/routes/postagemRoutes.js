@@ -43,6 +43,32 @@ router.delete("/:id", verifyJWT, async (req, res) => {
   }
 });
 
+router.put("/:id", verifyJWT, async (req, res) => {
+  const { titulo, tipoPostagem, autorId, categoriaId, certificacaoId } =
+    req.body;
+  console.log("Body:", req.body);
+  try {
+    const resultado = await postagemController.atualizarPostagem(
+      req.params.id,
+      titulo,
+      tipoPostagem,
+      req.usuarioId,
+      categoriaId,
+      certificacaoId
+    );
+    if (!resultado.sucesso) {
+      return res.status(404).json({ errors: resultado.erros });
+    }
+    res.status(200).json({
+      mensagem: resultado.mensagem,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Erro ao deletar postagem", details: error.message });
+  }
+});
+
 // Rota: Listar todas as postagens (GET /)
 router.get("/", async (req, res) => {
   try {

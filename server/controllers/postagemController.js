@@ -231,7 +231,17 @@ class PostagemController {
         erros: [{ campo: "id", mensagem: "Postagem não encontrada." }],
       };
     }
-
+    if (postagemExistente.autor_id != autorId) {
+      return {
+        sucesso: false,
+        erros: [
+          {
+            campo: "autor_id",
+            mensagem: "Somente o autor da postagem pode alterá-la.",
+          },
+        ],
+      };
+    }
     const postagemAtualizada = new Postagem(
       id,
       titulo,
@@ -249,7 +259,7 @@ class PostagemController {
     const resultadoAtualizacao = await this.postagemRepository.updatePostagem(
       postagemAtualizada
     );
-    return { sucesso: true, postagem: resultadoAtualizacao };
+    return { sucesso: true, mensagem: resultadoAtualizacao };
   }
 
   // Deletar uma postagem

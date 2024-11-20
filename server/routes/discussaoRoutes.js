@@ -58,7 +58,9 @@ router.get("/:id", async (req, res) => {
 router.get("/postagem/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const resultado = await discussaoController.listarDiscussaoPorPostagemId(id);
+    const resultado = await discussaoController.listarDiscussaoPorPostagemId(
+      id
+    );
     if (!resultado.sucesso) {
       return res.status(404).json({ erros: resultado.erros });
     }
@@ -85,7 +87,9 @@ router.put("/:id", verifyJWT, async (req, res) => {
     if (!resultado.sucesso) {
       return res.status(400).json({ erros: resultado.erros });
     }
-    res.status(200).json(resultado.discussao); // Retorna a discussão atualizada
+    res.status(200).json({
+      mensagem: resultado.mensagem,
+    }); // Retorna a discussão atualizada
   } catch (error) {
     res
       .status(500)

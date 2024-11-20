@@ -30,19 +30,17 @@ export const getDiscussaoByPost = async (postagem_id) => {
   }
 };
 
-export const updateDiscussao = async (discussao_id, discussao, token) => {
+export const updateDiscussao = async (discussao, discussao_id, token) => {
   try {
+    console.log("Discussao json:", JSON.stringify(discussao));
     const response = await fetch(`/api/v1/discussoes/${discussao_id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json", "x-access-token": token },
       body: JSON.stringify(discussao),
     });
     const data = await response.json();
-    if (response.ok) {
-      return data.mensagem;
-    } else {
-      return data.errors;
-    }
+    console.log("Data discussao:", data);
+    return data;
   } catch (error) {
     console.error("Erro na discussão:", error);
     return false;
