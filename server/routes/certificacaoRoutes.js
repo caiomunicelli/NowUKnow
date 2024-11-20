@@ -40,6 +40,19 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Rota: Listar todas as certificações por categoria
+router.get("/categoria/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const resultado = await certificacaoController.listarCertificacoesPorCategoria(id);
+    res.status(200).json(resultado.certificacoes);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Erro ao listar certificações", details: error.message });
+  }
+});
+
 // Rota: Buscar certificação por ID (GET /:id)
 router.get("/:id", async (req, res) => {
   const { id } = req.params;

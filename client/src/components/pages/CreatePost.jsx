@@ -16,6 +16,7 @@ const CreatePost = () => {
   const [certificacaoId, setCertificacaoId] = useState("");
   const [categorias, setCategorias] = useState([]);
   const [certificacoes, setCertificacoes] = useState([]);
+  const [certificacoesFiltradas, setCertificacoesFiltradas] = useState([]);
   const [tipoDiscussao, setTipoDiscussao] = useState("");
   const [texto, setTexto] = useState("");
   const [tipoConteudoDetalhado, setTipoConteudoDetalhado] = useState("");
@@ -23,6 +24,7 @@ const CreatePost = () => {
   const [conteudoArquivo, setConteudoArquivo] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const navigate = useNavigate();
+  let categoriaPreenchida = null
 
   useEffect(() => {
     const getCategorias = async () => {
@@ -46,6 +48,18 @@ const CreatePost = () => {
     getCategorias();
     getCertificacoes();
   }, []);
+  function handleCategoriaChange(value) {
+    console.log(value);
+    setCategoriaId(value);
+    console.log(JSON.stringify(certificacoes))
+    const categoriaIdNumerico = Number(value);
+    const certificacoesPorCategoria = certificacoes.filter(certificacao => {
+      console.log("Comparando:", certificacao.categoriaId, "com", categoriaIdNumerico);
+      return certificacao.categoriaId === categoriaIdNumerico;
+     });
+      console.log(JSON.stringify(certificacoesPorCategoria))
+    setCertificacoesFiltradas(certificacoesPorCategoria);
+  }
 
   const handleArquivoChange = (e) => {
     const file = e.target.files[0];
@@ -222,7 +236,7 @@ const CreatePost = () => {
           <select
             className="nowuknow-input"
             value={categoriaId}
-            onChange={(e) => setCategoriaId(e.target.value)}
+            onChange={(e) => handleCategoriaChange(e.target.value)}
             required
           >
             <option value="">Selecione uma categoria</option>
@@ -234,6 +248,7 @@ const CreatePost = () => {
           </select>
         </div>
 
+        {categoriaId !== "" && (
         <div className="mb-3">
           <label>Certificação:</label>
           <select
@@ -242,13 +257,14 @@ const CreatePost = () => {
             onChange={(e) => setCertificacaoId(e.target.value)}
           >
             <option value="">Selecione uma certificação</option>
-            {certificacoes.map((cert) => (
+            {certificacoesFiltradas.map((cert) => (
               <option key={cert.id} value={cert.id}>
                 {cert.nome}
               </option>
             ))}
           </select>
         </div>
+        )}
 
         <button type="submit" className="nowuknow-btn" disabled={isUploading}>
           {isUploading ? (
