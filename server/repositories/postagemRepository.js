@@ -281,7 +281,6 @@ class PostagemRepository {
     );
     return rows;
   }
-     
   // Obter todas as postagens por certificacao_id
   async getPostagensWithAllDetailsByCertificacaoId(certificacaoId) {
     const connection = await this.dbConnection.connect();
