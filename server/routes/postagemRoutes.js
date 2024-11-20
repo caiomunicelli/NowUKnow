@@ -29,6 +29,22 @@ router.post("/", verifyJWT, async (req, res) => {
   }
 });
 
+// Rota: Buscar postagem por ID (GET /postagem/:id)
+router.get("/postagem/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const resultado = await postagemController.listarPostagemPorId(id);
+    if (!resultado.sucesso) {
+      return res.status(404).json({ erros: resultado.erros });
+    }
+    res.status(200).json(resultado.postagem); // Retorna a postagem encontrada
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Erro ao buscar postagem", details: error.message });
+  }
+});
+
 router.delete("/:id", verifyJWT, async (req, res) => {
   try {
     const resultado = await postagemController.deletarPostagem(req.params.id);
