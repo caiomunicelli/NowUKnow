@@ -8,6 +8,7 @@ export { default as CreatePost } from "./pages/CreatePost";
 export { default as About } from "./pages/About";
 export { default as Categorias } from "./pages/Categorias";
 export { default as Categoria } from "./pages/Categoria";
+export { default as Certificacao } from "./pages/Certificacao";
 export { default as Feed } from "./Feed";
 export { default as Post } from "./Post";
 export { default as Perfil } from "./pages/Perfil";

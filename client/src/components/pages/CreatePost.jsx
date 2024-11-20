@@ -54,10 +54,8 @@ const CreatePost = () => {
     console.log(JSON.stringify(certificacoes))
     const categoriaIdNumerico = Number(value);
     const certificacoesPorCategoria = certificacoes.filter(certificacao => {
-      console.log("Comparando:", certificacao.categoriaId, "com", categoriaIdNumerico);
       return certificacao.categoriaId === categoriaIdNumerico;
      });
-      console.log(JSON.stringify(certificacoesPorCategoria))
     setCertificacoesFiltradas(certificacoesPorCategoria);
   }
 

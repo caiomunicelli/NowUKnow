@@ -197,7 +197,7 @@ class PostagemController {
       };
     }
 
-    const postagens = await this.postagemRepository.getPostagemByCertificacaoId(
+    const postagens = await this.postagemRepository.getPostagensWithAllDetailsByCertificacaoId(
       certificacaoId
     );
     if (postagens.length === 0) {

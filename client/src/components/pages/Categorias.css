@@ -47,3 +47,88 @@
 .nowuknow-categoria-btn-div {
     display: flex;
 }
+
+.nowuknow-tabs {
+    display: flex;
+    margin-bottom: 16px;
+  }
+  
+  .nowuknow-tab {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background-color: #499ffa;
+    margin-right: 8px;
+    border-radius: 4px;
+  }
+  
+  .nowuknow-tab.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+  }
+/* Container das certificações */
+.nowuknow-certificacoes-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding-top: 20px;
+    justify-items: center; /* Centraliza os itens dentro da grid */
+    flex-direction: column;
+
+  }
+  
+  /* Cartão de certificação */
+  .nowuknow-certificacao-card {
+    background-color: transparent; /* Remover o fundo */
+    border: 2px solid #ddd; /* Definindo uma borda sutil */
+    border-radius: 12px; /* Borda arredondada */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza o conteúdo dentro do cartão */
+    padding: 16px;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Imagem da certificação */
+  .nowuknow-certificacao-imagem {
+    width: 50%;
+    height: 50%;
+    object-fit: cover;
+    border-radius: 8px; /* Borda arredondada na imagem */
+    margin-bottom: 16px;
+  }
+  
+  /* Informações da certificação */
+  .nowuknow-certificacao-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center; /* Centraliza o texto */
+  }
+  
+  .nowuknow-certificacao-nome {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .nowuknow-certificacao-descricao {
+    font-size: 1em;
+    color: #555;
+    text-align: center;
+  }
+  
+  .nowuknow-certificacao-requisitos,
+  .nowuknow-certificacao-nivel {
+    font-size: 0.9em;
+    color: #777;
+    text-align: center;
+  }
+  
+  .nowuknow-certificacao-requisitos strong,
+  .nowuknow-certificacao-nivel strong {
+    color: #333;
+  }

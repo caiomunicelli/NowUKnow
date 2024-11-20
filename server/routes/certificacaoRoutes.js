@@ -44,7 +44,7 @@ router.get("/", async (req, res) => {
 router.get("/categoria/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const resultado = await certificacaoController.listarCertificacoesPorCategoria(id);
+    const resultado = await certificacaoController.listarCertificacoesPorCategoriaId(id);
     res.status(200).json(resultado.certificacoes);
   } catch (error) {
     res
