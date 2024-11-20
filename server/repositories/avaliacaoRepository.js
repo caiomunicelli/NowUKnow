@@ -11,13 +11,12 @@ class AvaliacaoRepository {
     const connection = await this.dbConnection.connect();
 
     const [result] = await connection.execute(
-      `INSERT INTO Avaliacoes (usuario_id, postagem_id, nota, comentario) 
-             VALUES (?, ?, ?, ?)`,
+      `INSERT INTO Avaliacoes (usuario_id, postagem_id, feedback) 
+             VALUES (?, ?, ?)`,
       [
         avaliacao.usuarioId,
         avaliacao.postagemId,
-        avaliacao.nota,
-        avaliacao.comentario,
+        avaliacao.feedback,
       ]
     );
 
@@ -25,8 +24,7 @@ class AvaliacaoRepository {
       result.insertId,
       avaliacao.usuarioId,
       avaliacao.postagemId,
-      avaliacao.nota,
-      avaliacao.comentario,
+      avaliacao.feedback,
       new Date() // Data de criação no momento da inserção
     );
   }
@@ -42,8 +40,7 @@ class AvaliacaoRepository {
           row.id,
           row.usuario_id,
           row.postagem_id,
-          row.nota,
-          row.comentario,
+          row.feedback,
           row.data_avaliacao
         )
     );
@@ -64,8 +61,7 @@ class AvaliacaoRepository {
       row.id,
       row.usuario_id,
       row.postagem_id,
-      row.nota,
-      row.comentario,
+      row.feedback,
       row.data_avaliacao
     );
   }
@@ -75,8 +71,8 @@ class AvaliacaoRepository {
     const connection = await this.dbConnection.connect();
 
     const [result] = await connection.execute(
-      `UPDATE Avaliacoes SET nota = ?, comentario = ? WHERE id = ?`,
-      [avaliacao.nota, avaliacao.comentario, avaliacao.id]
+      `UPDATE Avaliacoes SET feedback = ? WHERE id = ?`,
+      [avaliacao.feedback, avaliacao.id]
     );
 
     return result.affectedRows > 0
@@ -110,8 +106,7 @@ class AvaliacaoRepository {
           row.id,
           row.usuario_id,
           row.postagem_id,
-          row.nota,
-          row.comentario,
+          row.feedback,
           row.data_avaliacao
         )
     );
