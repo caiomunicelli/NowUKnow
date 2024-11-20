@@ -1,0 +1,66 @@
+
+  
+  /* Cartão de certificação */
+  .nowuknow-certificacao-card {
+    background-color: transparent; /* Remover o fundo */
+    border: 2px solid #ddd; /* Definindo uma borda sutil */
+    border-radius: 12px; /* Borda arredondada */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza o conteúdo dentro do cartão */
+    padding: 16px;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Imagem da certificação */
+  .nowuknow-certificacao-imagem {
+    width: 30%;
+    height: 30%;
+    object-fit: cover;
+    border-radius: 8px; /* Borda arredondada na imagem */
+    margin-bottom: 16px;
+  }
+  
+  /* Informações da certificação */
+  .nowuknow-certificacao-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center; /* Centraliza o texto */
+  }
+  
+  .nowuknow-certificacao-nome {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .nowuknow-certificacao-descricao {
+    font-size: 1em;
+    color: #555;
+    text-align: center;
+  }
+  
+  .nowuknow-certificacao-requisitos,
+  .nowuknow-certificacao-nivel {
+    font-size: 0.9em;
+    color: #777;
+    text-align: center;
+  }
+  
+  .nowuknow-certificacao-requisitos strong,
+  .nowuknow-certificacao-nivel strong {
+    color: #333;
+  }
+  .nowuknow-certificacao-box-container {
+    background-color: var(--nowuknow-bg-light);
+    padding: 20px 40px;
+    border-radius: 30px;
+    box-shadow: rgb(0 0 0 / 30%) 0 1px 4px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    color: var(--nowuknow-text-muted);
+}
