@@ -102,6 +102,12 @@ const Perfil = () => {
       <button onClick={handleDeletarUsuario} className="deletar-btn">
         Deletar Conta
       </button>
+      <button
+        onClick={() => navigate("/editarPerfil", { state: { usuario } })}
+        className="editar-btn"
+      >
+        Editar Perfil
+      </button>
 
       <div className="perfil-posts">
         <h2>Minhas Postagens</h2>

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { fetchUsuarioLogado, deletar } from "../../services/usuarioService";
-import { useAuthContext } from "../../contexts/AuthContext";
+import { fetchUsuarioLogado } from "../services/usuarioService";
+import { deletaPostagem } from "../services/postagemService";
+import { useAuthContext } from "../contexts/AuthContext";
 import "./Post.css";
 
 const Post = ({ post }) => {
   const [usuario, setUsuario] = useState(null);
+  const { isAuthenticated } = useAuthContext();
+  const [erro, setErro] = useState(null);
 
   const formattedDate = new Date(
     post.postagem_data_publicacao
@@ -14,15 +17,21 @@ const Post = ({ post }) => {
     const loadUsuario = async () => {
       try {
         const dadosUsuario = await fetchUsuarioLogado();
+        console.log("dadosUsuario:", dadosUsuario);
         setUsuario(dadosUsuario);
       } catch (error) {
         setErro("Erro ao carregar os dados do usuário.");
         console.error(error);
       }
     };
-
-    loadUsuario();
+    if (isAuthenticated) {
+      loadUsuario();
+    }
   }, []);
+
+  useEffect(() => {
+    console.log("Usuário atualizado:", usuario);
+  }, [usuario]);
 
   return (
     <div className="nowuknow-post-container">
@@ -58,11 +67,11 @@ const Post = ({ post }) => {
           </>
         )}
 
-        {usuario && post.autor_id === usuario.id && (
+        {usuario && post.usuario_id === usuario.id && (
           <div className="nowuknow-post-actions">
             <button
               className="nowuknow-delete-button"
-              onClick={() => deletar(post.id)}
+              onClick={() => deletaPostagem(post.postagem_id)}
             >
               Excluir
             </button>

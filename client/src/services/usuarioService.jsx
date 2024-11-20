@@ -3,6 +3,7 @@ import {
   signupUsuario,
   getUsuarioAtual,
   deleteUsuarioAtual,
+  updateUsuario,
 } from "../api/usuarioApi";
 import { getToken } from "./authService";
 
@@ -43,6 +44,23 @@ export const deletar = async () => {
     return response;
   } catch (error) {
     console.error("Erro ao deletar usuário (usuarioService):", error);
+    throw error;
+  }
+};
+
+export const editar = async (usuario) => {
+  try {
+    console.log("Editar:");
+    for (let [key, value] of usuario.entries()) {
+      console.log(`${key}:`, value);
+    }
+    const token = getToken(); // Obtém o token do authService
+    if (!token) throw new Error("Usuário não autenticado");
+    const response = await updateUsuario(token, usuario); // Chama a API de cadastro do usuário
+    if (!response) throw new Error("Erro ao editar usuário no service");
+    return response;
+  } catch (error) {
+    console.error("Erro ao editar usuário no service:", error);
     throw error;
   }
 };

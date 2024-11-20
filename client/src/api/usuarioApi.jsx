@@ -44,18 +44,21 @@ export const updateUsuario = async (token, updatedUsuario) => {
       method: "PUT",
       headers: {
         "x-access-token": token,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify(updatedUsuario),
+      body: updatedUsuario,
     });
+    const data = await response.json();
+
     if (response.ok) {
-      const data = await response.json();
-      console.log("Sucesso: ", data);
-      return true;
+      console.log("Sucesso:", data);
+      return data.mensagem; // Retorna a mensagem de sucesso
+    } else {
+      console.error("Erro retornado pela API:", data.errors || data.error);
+      return data.errors || data.error; // Retorna os erros da API
     }
   } catch (error) {
-    console.error("Erro no login:", error);
-    return false;
+    console.error("Erro no usuarioApi.updateUsuario:", error);
+    return "Erro inesperado ao comunicar com o servidor.";
   }
 };
 
@@ -102,4 +105,3 @@ export const deleteUsuarioAtual = async (token) => {
     return "Erro inesperado ao comunicar com o servidor.";
   }
 };
-
