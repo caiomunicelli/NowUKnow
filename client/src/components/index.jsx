@@ -14,3 +14,5 @@ export { default as Feed } from "./Feed";
 export { default as Post } from "./Post";
 export { default as Perfil } from "./pages/Perfil";
 export { default as Sidebar } from "./Sidebar";
+export { default as Comentario } from "./Comentario";
+export { default as NovoComentario } from "./NovoComentario";
