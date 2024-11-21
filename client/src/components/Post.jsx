@@ -43,7 +43,7 @@ const Post = ({ postagemId, post, comentarioCount }) => {
   
         // Verifica se o feedback pertence ao usuário logado
         if (feedback.usuarioId === usuario.id) {
-          usuarioFeedback = feedback.feedback; // Armazena o tipo de feedback dado pelo usuário
+          usuarioFeedback = feedback; // Armazena o tipo de feedback dado pelo usuário
         }
       });
   
@@ -53,9 +53,10 @@ const Post = ({ postagemId, post, comentarioCount }) => {
       // Atualiza o estado do feedback dado pelo usuário
       if (usuarioFeedback) {
         setFeedbackDado({
-          positivo: usuarioFeedback === "positivo",
-          negativo: usuarioFeedback === "negativo",
+          positivo: usuarioFeedback.feedback === "positivo",
+          negativo: usuarioFeedback.feedback === "negativo",
         });
+        setAvaliacao(usuarioFeedback);
       }
     } catch (error) {
       console.error("Erro ao carregar feedbacks:", error);
