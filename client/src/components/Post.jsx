@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { fetchFeedback, enviarFeedback } from "../services/avaliacaoService";
 import { fetchUsuarioLogado } from "../services/usuarioService";
 import { deletaPostagem } from "../services/postagemService";
 import { useAuthContext } from "../contexts/AuthContext";
@@ -7,31 +8,56 @@ import "./Post.css";
 const Post = ({ post }) => {
   const [usuario, setUsuario] = useState(null);
   const { isAuthenticated } = useAuthContext();
+  const [feedback, setFeedback] = useState({ positivos: 0, negativos: 0 });
   const [erro, setErro] = useState(null);
+  const [feedbackDado, setFeedbackDado] = useState({ positivo: false, negativo: false });
 
-  const formattedDate = new Date(
-    post.postagem_data_publicacao
-  ).toLocaleDateString("pt-BR");
+  const formattedDate = new Date(post.postagem_data_publicacao).toLocaleDateString("pt-BR");
 
   useEffect(() => {
     const loadUsuario = async () => {
       try {
         const dadosUsuario = await fetchUsuarioLogado();
-        console.log("dadosUsuario:", dadosUsuario);
         setUsuario(dadosUsuario);
       } catch (error) {
         setErro("Erro ao carregar os dados do usuário.");
         console.error(error);
       }
     };
+
+    const loadFeedback = async () => {
+      try {
+        const feedbackData = await fetchFeedback(post.postagem_id);
+        setFeedback(feedbackData);
+      } catch (error) {
+        console.error("Erro ao carregar feedbacks:", error);
+      }
+    };
+
     if (isAuthenticated) {
       loadUsuario();
     }
-  }, []);
+    loadFeedback();
+  }, [isAuthenticated, post.postagem_id]);
 
-  useEffect(() => {
-    console.log("Usuário atualizado:", usuario);
-  }, [usuario]);
+  const handleFeedback = async (tipo) => {
+    try {
+      const feedbackValue = tipo === "positivo" ? "positivo" : "negativo";
+      await enviarFeedback(post.postagem_id, feedbackValue);
+
+      // Desabilitar os botões após o feedback ser dado
+      if (feedbackValue === "positivo") {
+        setFeedbackDado({ ...feedbackDado, positivo: true });
+      } else {
+        setFeedbackDado({ ...feedbackDado, negativo: true });
+      }
+
+      const feedbackData = await fetchFeedback(post.postagem_id);
+      setFeedback(feedbackData); // Atualiza a contagem de feedbacks após o envio
+    } catch (error) {
+      console.error("Erro ao enviar feedback:", error);
+    }
+  };
 
   return (
     <div className="nowuknow-post-container">
@@ -54,11 +80,7 @@ const Post = ({ post }) => {
                 </video>
               </div>
             ) : post.conteudo_tipo === "Material_de_Aprendizado" ? (
-              <a
-                href={post.conteudo_url}
-                download
-                className="nowuknow-download-button"
-              >
+              <a href={post.conteudo_url} download className="nowuknow-download-button">
                 Baixar Material
               </a>
             ) : (
@@ -66,6 +88,23 @@ const Post = ({ post }) => {
             )}
           </>
         )}
+
+        <div className="nowuknow-feedback">
+          <button
+            className="btn btn-outline-success"
+            onClick={() => handleFeedback("positivo")}
+            disabled={feedbackDado.positivo} // Desabilitar o botão após feedback positivo
+          >
+            <i className="bi bi-hand-thumbs-up"></i> {feedback.positivos}
+          </button>
+          <button
+            className="btn btn-outline-danger"
+            onClick={() => handleFeedback("negativo")}
+            disabled={feedbackDado.negativo} // Desabilitar o botão após feedback negativo
+          >
+            <i className="bi bi-hand-thumbs-down"></i> {feedback.negativos}
+          </button>
+        </div>
 
         {usuario && post.usuario_id === usuario.id && (
           <div className="nowuknow-post-actions">

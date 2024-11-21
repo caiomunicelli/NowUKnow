@@ -24,6 +24,8 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 function App() {
   const [isLoginMenuOpen, setIsLoginMenuOpen] = useState(false);
