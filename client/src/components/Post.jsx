@@ -21,7 +21,6 @@ const Post = ({ postagemId, post, comentarioCount, }) => {
   const handleViewContent = () => {
     navigate(`/postagem/${postagemId}`);
   };
-
   useEffect(() => {
     setPostagem(post);
     const loadUsuario = async () => {
