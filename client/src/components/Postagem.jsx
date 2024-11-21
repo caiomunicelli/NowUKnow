@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
 import "./Postagem.css";
 import { getToken } from "../services/authService";
+import Post from "./Post";
+
 
 const Postagem = () => {
     const { id } = useParams();
@@ -98,40 +100,12 @@ const Postagem = () => {
             {loadingPostagem ? (
                 <p>Carregando detalhes da postagem...</p>
             ) : postagem ? (
-                <div className="nowuknow-comentarios-post-container">
-                    <div className="nowuknow-post">
-                        <h3 className="nowuknow-post-title">{postagem.postagem_titulo}</h3>
-                        <p className="nowuknow-post-user">Por: {postagem.usuario_nome}</p>
-                        <p className="nowuknow-post-date">Publicado em: {new Date(postagem.postagem_data_publicacao).toLocaleDateString("pt-BR")}</p>
-
-                        {postagem.postagem_tipo === "Discussao" && postagem.discussao_texto && (
-                            <p className="nowuknow-post-text">{postagem.discussao_texto}</p>
-                        )}
-
-                        {postagem.postagem_tipo === "Conteudo" && (
-                            <>
-                                {postagem.conteudo_tipo === "Video" ? (
-                                    <div className="nowuknow-post-video-container">
-                                        <video controls className="nowuknow-post-video-player">
-                                            <source src={postagem.conteudo_url} type="video/mp4" />
-                                            Seu navegador não suporta a reprodução de vídeo.
-                                        </video>
-                                    </div>
-                                ) : postagem.conteudo_tipo === "Material_de_Aprendizado" ? (
-                                    <a
-                                        href={postagem.conteudo_url}
-                                        download
-                                        className="nowuknow-download-button"
-                                    >
-                                        Baixar Material
-                                    </a>
-                                ) : (
-                                    <p>Tipo de conteúdo não suportado.</p>
-                                )}
-                            </>
-                        )}
-                    </div>
-                </div>
+                <Post
+              key={postagem.postagem_id}
+              postagemId={postagem.postagem_id}
+              post={postagem}
+              comentarioCount={comentarios.length || 0} // Passa o número de comentários
+            />
             ) : (
                 <p>Postagem não encontrada.</p>
             )}

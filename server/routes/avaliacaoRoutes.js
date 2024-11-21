@@ -92,11 +92,11 @@ router.delete("/:id", verifyJWT, async (req, res) => {
 });
 
 // Rota: Listar avaliações por postagem (GET /postagem/:postagemId)
-router.get("/postagem/:postagemId", async (req, res) => {
-  const { postagemId } = req.params;
+router.get("/postagem/:id", async (req, res) => {
+  const { id } = req.params;
   try {
     const resultado = await avaliacaoController.listarAvaliacoesPorPostagem(
-      postagemId
+      id
     );
     res.status(200).json(resultado.avaliacoes); // Retorna as avaliações da postagem
   } catch (error) {

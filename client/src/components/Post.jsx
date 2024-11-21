@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { fetchFeedback, enviarFeedback } from "../services/avaliacaoService";
+import { fetchFeedback, enviarFeedback, deletarFeedback,atualizarFeedback } from "../services/avaliacaoService";
 import { fetchUsuarioLogado } from "../services/usuarioService";
 import { deletaPostagem } from "../services/postagemService";
 import { useAuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "./Post.css";
 
-const Post = ({ postagemId, post, comentarioCount, }) => {
+const Post = ({ postagemId, post, comentarioCount }) => {
   const [usuario, setUsuario] = useState(null);
   const [postagem, setPostagem] = useState(post);
+  const [avaliacao, setAvaliacao] = useState(null);
   const { isAuthenticated } = useAuthContext();
   const [feedback, setFeedback] = useState({ positivos: 0, negativos: 0 });
   const [erro, setErro] = useState(null);
@@ -17,12 +18,52 @@ const Post = ({ postagemId, post, comentarioCount, }) => {
 
   const formattedDate = new Date(post.postagem_data_publicacao).toLocaleDateString("pt-BR");
 
-
   const handleViewContent = () => {
     navigate(`/postagem/${postagemId}`);
   };
+
+  const loadFeedback = async (usuario, postagemId) => {
+    if (!usuario) return; // Garante que o usuário esteja definido antes de continuar
+  
+    try {
+      const feedbackData = await fetchFeedback(postagemId);
+  
+      // Inicializa contadores de feedbacks
+      let positivos = 0;
+      let negativos = 0;
+      let usuarioFeedback = null;
+  
+      // Verifica o feedback dado pelo usuário e calcula os totais
+      feedbackData.forEach((feedback) => {
+        if (feedback.feedback === "positivo") {
+          positivos++;
+        } else if (feedback.feedback === "negativo") {
+          negativos++;
+        }
+  
+        // Verifica se o feedback pertence ao usuário logado
+        if (feedback.usuarioId === usuario.id) {
+          usuarioFeedback = feedback.feedback; // Armazena o tipo de feedback dado pelo usuário
+        }
+      });
+  
+      // Atualiza o estado com as somas de feedbacks
+      setFeedback({ positivos, negativos });
+  
+      // Atualiza o estado do feedback dado pelo usuário
+      if (usuarioFeedback) {
+        setFeedbackDado({
+          positivo: usuarioFeedback === "positivo",
+          negativo: usuarioFeedback === "negativo",
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao carregar feedbacks:", error);
+    }
+  };
+  
+  // UseEffect para carregar o usuário
   useEffect(() => {
-    setPostagem(post);
     const loadUsuario = async () => {
       try {
         const dadosUsuario = await fetchUsuarioLogado();
@@ -32,38 +73,60 @@ const Post = ({ postagemId, post, comentarioCount, }) => {
         console.error(error);
       }
     };
-
-    const loadFeedback = async () => {
-      try {
-        const feedbackData = await fetchFeedback(post.postagem_id);
-        setFeedback(feedbackData);
-      } catch (error) {
-        console.error("Erro ao carregar feedbacks:", error);
-      }
-    };
-
+  
     if (isAuthenticated) {
       loadUsuario();
     }
-    loadFeedback();
-  }, [isAuthenticated, post.postagem_id]);
+  }, [isAuthenticated]);
+  
+  // UseEffect para carregar feedback
+  useEffect(() => {
+    if (usuario) {
+      loadFeedback(usuario, postagemId);
+    }
+  }, [usuario, postagemId]);
+  
 
   const handleFeedback = async (tipo) => {
     try {
-      const feedbackValue = tipo === "positivo" ? "positivo" : "negativo";
-      await enviarFeedback(post.postagem_id, feedbackValue);
-
-      // Desabilitar os botões após o feedback ser dado
-      if (feedbackValue === "positivo") {
-        setFeedbackDado({ ...feedbackDado, positivo: true });
+      if (avaliacao) {
+        if (avaliacao.feedback === tipo) {
+          // Se o feedback selecionado for o mesmo já dado, remove o feedback
+          const response = await deletarFeedback(avaliacao.id);
+          if (response) {
+            setFeedbackDado({ positivo: false, negativo: false });
+            setAvaliacao(null);
+            console.log("Avaliação removida:", response);
+          }
+        } else {
+          // Se o feedback selecionado for diferente, atualiza o feedback existente
+          const response = await atualizarFeedback(avaliacao.id, tipo);
+          if (response) {
+            setFeedbackDado({
+              positivo: tipo === "positivo",
+              negativo: tipo === "negativo",
+            });
+            avaliacao.feedback = tipo;
+            setAvaliacao(avaliacao);
+          }
+        }
       } else {
-        setFeedbackDado({ ...feedbackDado, negativo: true });
+        // Caso não exista uma avaliação, cria um novo feedback
+        const response = await enviarFeedback(post.postagem_id, tipo);
+        if (response) {
+          setFeedbackDado({
+            positivo: tipo === "positivo",
+            negativo: tipo === "negativo",
+          });
+          setAvaliacao(response);
+          console.log("Avaliação enviada:", response);
+        }
       }
-
-      const feedbackData = await fetchFeedback(post.postagem_id);
-      setFeedback(feedbackData); // Atualiza a contagem de feedbacks após o envio
+  
+      // Atualiza a contagem de feedbacks
+      loadFeedback(usuario, post.postagem_id);
     } catch (error) {
-      console.error("Erro ao enviar feedback:", error);
+      console.error("Erro ao manipular feedback:", error);
     }
   };
 
@@ -78,45 +141,33 @@ const Post = ({ postagemId, post, comentarioCount, }) => {
           <p className="nowuknow-post-text">{post.discussao_texto}</p>
         )}
 
-        {post.postagem_tipo === "Conteudo" && (
-          <>
-            {post.conteudo_tipo === "Video" ? (
-              <div className="nowuknow-post-video-container">
-                <video controls className="nowuknow-post-video-player">
-                  <source src={post.conteudo_url} type="video/mp4" />
-                  Seu navegador não suporta a reprodução de vídeo.
-                </video>
-              </div>
-            ) : post.conteudo_tipo === "Material_de_Aprendizado" ? (
-              <a href={post.conteudo_url} download className="nowuknow-download-button">
-                Baixar Material
-              </a>
-            ) : (
-              <p>Tipo de conteúdo não suportado.</p>
-            )}
-          </>
-        )}
-        <span className="nowuknow-comment-count">{comentarioCount}</span>
-        <i
-          className="bi bi-chat nowuknow-comment-icon"
-          onClick={handleViewContent}
-          title="Ver comentários"
-        ></i>
-        <button
-            className="btn btn-outline-success"
+        <div className="nowuknow-feedback">
+          <i
+            className={`bi bi-hand-thumbs-up nowuknow-feedback-icon ${
+              feedbackDado.positivo ? "active" : ""
+            }`}
             onClick={() => handleFeedback("positivo")}
-            disabled={feedbackDado.positivo} // Desabilitar o botão após feedback positivo
-          >
-            <i className="bi bi-hand-thumbs-up"></i> {feedback.positivos}
-          </button>
-          <button
-            className="btn btn-outline-danger"
-            onClick={() => handleFeedback("negativo")}
-            disabled={feedbackDado.negativo} // Desabilitar o botão após feedback negativo
-          >
-            <i className="bi bi-hand-thumbs-down"></i> {feedback.negativos}
-          </button>
+            title="Curtir"
+          ></i>
+          
+          <span>{feedback.positivos}</span>
 
+          <i
+            className={`bi bi-hand-thumbs-down nowuknow-feedback-icon ${
+              feedbackDado.negativo ? "active" : ""
+            }`}
+            onClick={() => handleFeedback("negativo")}
+            title="Não curtir"
+          ></i>
+          <span>{feedback.negativos}</span>
+          <i
+            className="bi bi-chat nowuknow-comment-icon"
+            onClick={handleViewContent}
+            title="Ver comentários"
+          ></i>
+          <span className="nowuknow-comment-count">{comentarioCount}</span>
+        </div>
+          
         {usuario && post.usuario_id === usuario.id && (
           <div className="nowuknow-post-actions">
             <button
