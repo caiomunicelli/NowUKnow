@@ -7,11 +7,11 @@ const avaliacaoController = new AvaliacaoController();
 
 // Rota: Criar uma avaliação (POST /)
 router.post("/", verifyJWT, async (req, res) => {
-  const { usuarioId, postagemId, feedback } = req.body;
+  const { postagemId, feedback } = req.body;
 
   try {
     const resultado = await avaliacaoController.criarAvaliacao(
-      usuarioId,
+      req.usuarioId,
       postagemId,
       feedback
     );
