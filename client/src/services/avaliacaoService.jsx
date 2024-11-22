@@ -1,5 +1,5 @@
-const BASE_URL = "/api/v1/avaliacoes";
 import { getToken } from "./authService";
+import { createFeedback, getFeedbacks, deleteFeedback, updateFeedback } from "../api/avaliacaoApi";
 
 /**
  * Busca os dados de feedback para uma postagem específica.
@@ -8,14 +8,7 @@ import { getToken } from "./authService";
  */
 export const fetchFeedback = async (id) => {
   try {
-    console.log(id);
-    const response = await fetch(`${BASE_URL}/postagem/${id}`);
-    if (!response.ok) {
-      throw new Error("Erro ao buscar feedbacks.");
-    }
-    const data = await response.json();
-    console.log(JSON.stringify(data));
-    console.log(response);
+    const data = await getFeedbacks(id);
     return data;
   } catch (error) {
         console.error(error);
@@ -25,21 +18,7 @@ export const fetchFeedback = async (id) => {
 export const enviarFeedback = async (postagemId, feedback) => {
     try {
       const token = getToken(); // Obtém o token do authService
-      console.log(JSON.stringify({ postagemId, feedback }));
-      const response = await fetch(BASE_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": token,
-        },
-        body: JSON.stringify({ postagemId, feedback }),
-      });
-  
-      if (!response.ok) {
-        throw new Error("Erro ao enviar feedback.");
-      }
-  
-      const data = await response.json();
+      const data = await createFeedback(postagemId, feedback, token);
       return data;
     } catch (error) {
       console.error(error);
@@ -50,13 +29,7 @@ export const enviarFeedback = async (postagemId, feedback) => {
 export const deletarFeedback = async (avaliacaoId) => {
   try {
     const token = getToken(); // Obtém o token do authService
-    const response = await fetch(`${BASE_URL}/${avaliacaoId}`, {
-      method: "DELETE",
-      headers: {
-        "x-access-token": token,
-      },
-    });
-
+    const response = await deleteFeedback(avaliacaoId, token);
     if (!response) {
       throw new Error("Erro ao deletar feedback.");
     }
@@ -68,21 +41,11 @@ export const deletarFeedback = async (avaliacaoId) => {
 };
 export const atualizarFeedback = async (avaliacaoId, novoFeedback) => {
     try {
-      const token = getToken();
-      const response = await fetch(`${BASE_URL}/${avaliacaoId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": token,
-        },
-        body: JSON.stringify({ feedback: novoFeedback }),
-      });
-  
-      if (!response.ok) {
+      const token = getToken(); // Obtém o token do authService
+      const data = await updateFeedback(avaliacaoId, novoFeedback, token);
+      if (!data) {
         throw new Error("Erro ao atualizar feedback.");
       }
-  
-      const data = await response.json();
       return data;
     } catch (error) {
       console.error(error);

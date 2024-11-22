@@ -89,22 +89,3 @@
   align-items: center;
   gap: 20px; /* Espaçamento entre os itens */
 }
-
-.nowuknow-feedback-icon {
-  font-size: 1.5rem; /* Aumenta o tamanho dos ícones */
-  color: white; /* Cor padrão do ícone */
-  padding: 2px; /* Adiciona espaçamento interno */
-  cursor: pointer; /* Cursor de pointer ao passar */
-  transition: all 0.3s ease-in-out; /* Transição suave para hover e active */
-}
-
-.nowuknow-feedback-icon:hover {
-  border: 2px solid hsla(211, 53%, 11%, 1); /* Borda azul clara no hover */
-}
-
-.nowuknow-feedback-icon.active {
-  background-color: hsla(211, 53%, 11%, 1);/* Fundo azul claro quando ativo */
-  color: white; /* Mantém o texto visível */
-  border: 1px solid transparent;
-  border-radius: 20%;
-}
