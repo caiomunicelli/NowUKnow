@@ -3,45 +3,35 @@ import { fetchUsuarioLogado } from "../services/usuarioService";
 import { deletaPostagem } from "../services/postagemService";
 import { useAuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import Feedback from "./Feedback";
 import "./Post.css";
 
-const Post = ({ postagemId, post, comentarioCount, }) => {
+const Post = ({ postagemId, post, comentarioCount }) => {
   const [usuario, setUsuario] = useState(null);
   const [postagem, setPostagem] = useState(post);
   const { isAuthenticated } = useAuthContext();
-  const [erro, setErro] = useState(null);
-
   const navigate = useNavigate();
 
-  const formattedDate = new Date(
-    post.postagem_data_publicacao
-  ).toLocaleDateString("pt-BR");
+  const formattedDate = new Date(post.postagem_data_publicacao).toLocaleDateString("pt-BR");
 
+  useEffect(() => {
+    const loadUsuario = async () => {
+      try {
+        const dadosUsuario = await fetchUsuarioLogado();
+        setUsuario(dadosUsuario);
+      } catch (error) {
+        console.error("Erro ao carregar os dados do usuário:", error);
+      }
+    };
+
+    if (isAuthenticated) {
+      loadUsuario();
+    }
+  }, [isAuthenticated]);
 
   const handleViewContent = () => {
     navigate(`/postagem/${postagemId}`);
   };
-
-  useEffect(() => {
-    setPostagem(post);
-    const loadUsuario = async () => {
-      try {
-        const dadosUsuario = await fetchUsuarioLogado();
-        console.log("dadosUsuario:", dadosUsuario);
-        setUsuario(dadosUsuario);
-      } catch (error) {
-        setErro("Erro ao carregar os dados do usuário.");
-        console.error(error);
-      }
-    };
-    if (isAuthenticated) {
-      loadUsuario();
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log("Usuário atualizado:", usuario);
-  }, [usuario]);
 
   return (
     <div className="nowuknow-post-container">
@@ -53,35 +43,15 @@ const Post = ({ postagemId, post, comentarioCount, }) => {
         {post.postagem_tipo === "Discussao" && post.discussao_texto && (
           <p className="nowuknow-post-text">{post.discussao_texto}</p>
         )}
-
-        {post.postagem_tipo === "Conteudo" && (
-          <>
-            {post.conteudo_tipo === "Video" ? (
-              <div className="nowuknow-post-video-container">
-                <video controls className="nowuknow-post-video-player">
-                  <source src={post.conteudo_url} type="video/mp4" />
-                  Seu navegador não suporta a reprodução de vídeo.
-                </video>
-              </div>
-            ) : post.conteudo_tipo === "Material_de_Aprendizado" ? (
-              <a
-                href={post.conteudo_url}
-                download
-                className="nowuknow-download-button"
-              >
-                Baixar Material
-              </a>
-            ) : (
-              <p>Tipo de conteúdo não suportado.</p>
-            )}
-          </>
-        )}
-        <span className="nowuknow-comment-count">{comentarioCount}</span>
-        <i
-          className="bi bi-chat nowuknow-comment-icon"
-          onClick={handleViewContent}
-          title="Ver comentários"
-        ></i>
+        <div className="nowuknow-feedback">
+          <Feedback postagemId={postagemId} usuario={usuario} />
+          <i
+            className="bi bi-chat nowuknow-comment-icon"
+            onClick={handleViewContent}
+            title="Ver comentários"
+          ></i>
+          <span className="nowuknow-comment-count">{comentarioCount}</span>
+        </div>
         {usuario && post.usuario_id === usuario.id && (
           <div className="nowuknow-post-actions">
             <button

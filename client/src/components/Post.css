@@ -70,3 +70,22 @@
   margin-right: 5px;
   
 }
+.nowuknow-icon {
+  color: white;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.nowuknow-icon.selected {
+  color:hsla(211, 53%, 11%, 1); /* Azul claro */
+}
+
+.nowuknow-comment-icon {
+  color: white;
+  cursor: pointer;
+}
+.nowuknow-feedback{
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Espaçamento entre os itens */
+}
