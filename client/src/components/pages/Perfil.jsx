@@ -1,23 +1,45 @@
 import React, { useState, useEffect } from "react";
-import { fetchUsuarioLogado, deletar } from "../../services/usuarioService";
+import {
+  fetchUsuarioLogado,
+  deletar,
+  fetchUsuarioPorUsername,
+} from "../../services/usuarioService";
 import Feed from "../Feed";
+import { Avatar } from "../";
 import "./Perfil.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../../contexts/AuthContext";
 
 const Perfil = () => {
+  const { nomeusuario } = useParams(); // Captura o nomeusuario da URL
   const [usuario, setUsuario] = useState(null);
+  const [usuarioLogado, setUsuarioLogado] = useState(false);
   const [posts, setPosts] = useState([]);
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [erro, setErro] = useState(null);
   const navigate = useNavigate();
-  const { logout } = useAuthContext();
+  const { isAuthenticated, logout, username } = useAuthContext();
 
-  // Função para carregar os dados do usuário logado
+  // Carrega os dados do usuário logado ou do perfil acessado
   useEffect(() => {
     const loadUsuario = async () => {
       try {
-        const dadosUsuario = await fetchUsuarioLogado();
+        let dadosUsuario = null;
+        console.log(username);
+        if (nomeusuario && nomeusuario !== username) {
+          console.log("Nome de usuario", nomeusuario);
+          // Busca o perfil pelo nome de usuário (parâmetro da URL)
+          dadosUsuario = await fetchUsuarioPorUsername(nomeusuario);
+          setUsuarioLogado(false);
+        } else {
+          if (isAuthenticated) {
+            // Busca o perfil do usuário logado
+            dadosUsuario = await fetchUsuarioLogado();
+            setUsuarioLogado(true);
+          } else {
+            navigate("/login");
+          }
+        }
         setUsuario(dadosUsuario);
       } catch (error) {
         setErro("Erro ao carregar os dados do usuário.");
@@ -26,9 +48,9 @@ const Perfil = () => {
     };
 
     loadUsuario();
-  }, []);
+  }, [nomeusuario, isAuthenticated, navigate]);
 
-  // Função para carregar os posts do autor
+  // Carrega os posts do autor
   useEffect(() => {
     const fetchPostsByAutor = async () => {
       if (!usuario) return;
@@ -49,7 +71,7 @@ const Perfil = () => {
     fetchPostsByAutor();
   }, [usuario]);
 
-  // Função para deletar o usuário
+  // Deleta o usuário logado
   const handleDeletarUsuario = async () => {
     try {
       const resposta = await deletar();
@@ -76,13 +98,9 @@ const Perfil = () => {
 
   return (
     <div className="perfil-container">
-      <h1>Meu Perfil</h1>
+      <h1>{usuarioLogado ? "Meu Perfil" : `Perfil de ${usuario.nome}`}</h1>
       <div className="perfil-info">
-        <img
-          src={usuario.imagem}
-          alt={usuario.nome}
-          className="perfil-imagem"
-        />
+        <Avatar imagem={usuario.imagem} nome={usuario.nome} tamanho={100} />
         <div className="perfil-dados">
           <p>
             <strong>Nome:</strong> {usuario.nome}
@@ -99,24 +117,36 @@ const Perfil = () => {
           </p>
         </div>
       </div>
-      <button onClick={handleDeletarUsuario} className="deletar-btn">
-        Deletar Conta
-      </button>
-      <button
-        onClick={() => navigate("/editarPerfil", { state: { usuario } })}
-        className="editar-btn"
-      >
-        Editar Perfil
-      </button>
+
+      {/* Botões de edição e exclusão apenas para o perfil do usuário logado */}
+      {usuarioLogado && (
+        <div className="perfil-acoes">
+          <button onClick={handleDeletarUsuario} className="deletar-btn">
+            Deletar Conta
+          </button>
+          <button
+            onClick={() => navigate("/editarPerfil", { state: { usuario } })}
+            className="editar-btn"
+          >
+            Editar Perfil
+          </button>
+        </div>
+      )}
 
       <div className="perfil-posts">
-        <h2>Minhas Postagens</h2>
+        <h2>
+          {usuarioLogado ? "Minhas Postagens" : `Postagens de ${usuario.nome}`}
+        </h2>
         {loadingPosts ? (
           <p>Carregando posts...</p>
         ) : posts.length > 0 ? (
           <Feed postagens={posts} />
         ) : (
-          <p className="no-posts">Você ainda não possui postagens.</p>
+          <p className="no-posts">
+            {usuarioLogado
+              ? "Você ainda não possui postagens."
+              : `${usuario.nome} ainda não possui postagens.`}
+          </p>
         )}
       </div>
     </div>

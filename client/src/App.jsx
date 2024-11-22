@@ -16,7 +16,7 @@ import {
   Categoria,
   Postagem,
   Sidebar,
-  Certificacao
+  Certificacao,
 } from "./components";
 import {
   BrowserRouter as Router,
@@ -66,6 +66,8 @@ function App() {
                     </PrivateRoute>
                   }
                 />
+                <Route path="/perfil/:nomeusuario" element={<Perfil />} />
+
                 <Route
                   path="/editarPerfil"
                   element={

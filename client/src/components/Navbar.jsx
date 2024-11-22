@@ -3,11 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
 import { fetchUsuarioLogado } from "../services/usuarioService";
 import Sidebar from "./Sidebar";
-import { Login } from "./";
+import { Login, Avatar } from "./";
 import "./Navbar.css";
 
 function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
-  const { isAuthenticated, logout } = useAuthContext();
+  const { isAuthenticated, logout, setUsername } = useAuthContext();
   const [usuario, setUsuario] = useState(null);
   const [erro, setErro] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -26,6 +26,8 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
       try {
         const dadosUsuario = await fetchUsuarioLogado();
         setUsuario(dadosUsuario);
+        console.log("Username é,", dadosUsuario.usuario);
+        setUsername(dadosUsuario.usuario);
       } catch (erro) {
         setErro("Não foi possível carregar os dados do usuário.");
         setUsuario(null);
@@ -88,10 +90,10 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
             {isAuthenticated && usuario && (
               <li className="nowuknow-nav-item">
                 <Link to="/perfil" className="nowuknow-nav-link">
-                  <img
-                    src={usuario.imagem}
-                    alt="Perfil"
-                    className="nowuknow-perfil-icon"
+                  <Avatar
+                    imagem={usuario.imagem}
+                    nome={usuario.nome}
+                    tamanho={32}
                   />
                 </Link>
               </li>
