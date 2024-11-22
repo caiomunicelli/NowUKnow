@@ -55,6 +55,30 @@ const Post = ({ postagemId, post, comentarioCount }) => {
         {post.postagem_tipo === "Discussao" && post.discussao_texto && (
           <p className="nowuknow-post-text">{post.discussao_texto}</p>
         )}
+        
+        {post.postagem_tipo === "Conteudo" && (
+          <>
+            {post.conteudo_tipo === "Video" ? (
+              <div className="nowuknow-post-video-container">
+                <video controls className="nowuknow-post-video-player">
+                  <source src={post.conteudo_url} type="video/mp4" />
+                  Seu navegador não suporta a reprodução de vídeo.
+                </video>
+              </div>
+            ) : post.conteudo_tipo === "Material_de_Aprendizado" ? (
+              <a
+                href={post.conteudo_url}
+                download
+                className="nowuknow-download-button"
+              >
+                Baixar Material
+              </a>
+            ) : (
+              <p>Tipo de conteúdo não suportado.</p>
+            )}
+          </>
+        )}
+        
         <div className="nowuknow-feedback">
           <Feedback postagemId={postagemId} usuario={usuario} />
           <i
