@@ -6,6 +6,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username, setUsername] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Novo estado de carregamento
 
@@ -39,7 +40,9 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, error }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, login, logout, error, username, setUsername }}
+    >
       {children}
     </AuthContext.Provider>
   );

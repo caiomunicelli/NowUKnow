@@ -80,6 +80,24 @@ router.get("/all", async (req, res) => {
   }
 });
 
+// Rota: Buscar usuário por username (GET /username/:username)
+router.get("/username/:username", async (req, res) => {
+  const username = req.params.username;
+  try {
+    const resultado = await usuarioController.listarUsuarioPorUsername(
+      username
+    );
+    if (!resultado.sucesso) {
+      return res.status(404).json({ errors: resultado.erros });
+    }
+    res.status(200).json(resultado.usuario);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Erro ao buscar usuário", details: error.message });
+  }
+});
+
 // Rota: Buscar usuário por ID (GET /)
 router.get("/", verifyJWT, async (req, res) => {
   try {
@@ -146,12 +164,10 @@ router.delete("/imagem", verifyJWT, async (req, res) => {
     }
     res.status(200).json({ mensagem: resultado.mensagem });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        error: "Erro ao remover foto de perfil",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Erro ao remover foto de perfil",
+      details: error.message,
+    });
   }
 });
 

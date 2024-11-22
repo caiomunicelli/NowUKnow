@@ -106,7 +106,8 @@ class ComentarioRepository {
         c.id AS id,
         c.texto AS comentario_texto,
         c.data_comentario AS comentario_data,
-        u.nome AS usuario_nome,
+        u.nome AS usuario_nome_completo,
+        u.usuario AS usuario_nome,
         u.id AS usuario_id,
         u.imagem AS usuario_imagem
       FROM 

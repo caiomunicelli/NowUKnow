@@ -16,3 +16,4 @@ export { default as Perfil } from "./pages/Perfil";
 export { default as Sidebar } from "./Sidebar";
 export { default as Comentario } from "./Comentario";
 export { default as NovoComentario } from "./NovoComentario";
+export { default as Avatar } from "./Avatar";

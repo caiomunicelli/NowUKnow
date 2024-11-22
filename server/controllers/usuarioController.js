@@ -99,6 +99,16 @@ class UsuarioController {
     return { sucesso: true, usuarios };
   }
 
+  async listarUsuarioPorUsername(username) {
+    const usuario = await userRepository.getUserByUsername(username);
+    if (!usuario) {
+      return {
+        sucesso: false,
+        erros: [{ campo: "usuario", mensagem: "Usuário não encontrado." }],
+      };
+    }
+    return { sucesso: true, usuario };
+  }
   async listarUsuarioPorEmail(email) {
     const usuario = await userRepository.getUserByEmail(email);
     if (!usuario) {
