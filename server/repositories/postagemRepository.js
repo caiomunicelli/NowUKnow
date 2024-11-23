@@ -410,6 +410,7 @@ class PostagemRepository {
           p.data_publicacao AS postagem_data_publicacao,
   
           u.id AS usuario_id,
+          u.nome AS usuario_nome_completo,
           u.usuario AS usuario_nome,
           u.email AS usuario_email,
           u.imagem AS usuario_imagem,

@@ -5,7 +5,6 @@ import { useAuthContext } from "../contexts/AuthContext";
 import { fetchUsuarioLogado } from "../services/usuarioService";
 import Sidebar from "./Sidebar";
 import { options, customStyles } from "../utils/selectConfig"; // Importa as configurações
-import { Login } from "./";
 import { useNavigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Importa os ícones
 import { Login, Avatar } from "./";

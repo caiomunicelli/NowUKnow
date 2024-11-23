@@ -10,6 +10,7 @@ const UsuariosPage = ({ usuariosFiltrados = [] }) => {
   const fetchUsuarios = async () => {
     setLoading(true);
     try {
+        console.log(usuariosFiltrados);
       if (usuariosFiltrados.length === 0) {
         const response = await fetch("/api/v1/usuarios/all");
         const usuariosData = await response.json();
@@ -28,8 +29,8 @@ const UsuariosPage = ({ usuariosFiltrados = [] }) => {
 
   const navigate = useNavigate();
 
-  const handleViewProfile = (usuarioId) => {
-    navigate(`/perfil/${usuarioId}`);
+  const handleViewProfile = (username) => {
+    navigate(`/perfil/${username}`);
   };
 
   return (
