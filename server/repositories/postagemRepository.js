@@ -324,6 +324,76 @@ class PostagemRepository {
     }
   }
 
+  async getPostagensWithAllDetailsByUsuarioFeedback(usuarioFeedbackId) {
+    const connection = await this.dbConnection.connect();
+    try {
+      const [rows] = await connection.execute(
+        `
+      SELECT 
+        p.id AS postagem_id,
+        p.titulo AS postagem_titulo,
+        p.tipo_postagem AS postagem_tipo,
+        p.data_publicacao AS postagem_data_publicacao,
+
+        u.id AS usuario_id,
+        u.nome AS usuario_nome_completo,
+        u.usuario AS usuario_nome,
+        u.email AS usuario_email,
+        u.imagem AS usuario_imagem,
+        u.tipo AS usuario_tipo,
+        u.data_criacao AS usuario_data_criacao,
+
+        c.id AS categoria_id,
+        c.nome AS categoria_nome,
+        c.descricao AS categoria_descricao,
+        c.imagem AS categoria_imagem,
+
+        cert.id AS certificacao_id,
+        cert.nome AS certificacao_nome,
+        cert.descricao AS certificacao_descricao,
+        cert.nivel AS certificacao_nivel,
+
+        ct.id AS conteudo_id,
+        ct.tipo_conteudo AS conteudo_tipo,
+        ct.url AS conteudo_url,
+        ct.descricao AS conteudo_descricao,
+
+        d.id AS discussao_id,
+        d.tipo_discussao AS discussao_tipo,
+        d.texto AS discussao_texto,
+        
+        a.usuario_id as usuario_feedback,
+        a.feedback,
+        a.data_avaliacao
+      FROM 
+        Postagens p
+      LEFT JOIN 
+        Usuarios u ON p.autor_id = u.id
+      LEFT JOIN 
+        Categorias c ON p.categoria_id = c.id
+      LEFT JOIN 
+        Certificacoes cert ON p.certificacao_id = cert.id
+      LEFT JOIN 
+        Conteudos ct ON p.id = ct.postagem_id
+      LEFT JOIN 
+        Discussoes d ON p.id = d.postagem_id
+      LEFT JOIN
+      	Avaliacoes a ON p.id = a.postagem_id
+      WHERE
+        a.feedback = 'positivo'
+      AND
+        a.usuario_id = ?
+      ORDER BY 
+        a.data_avaliacao DESC
+      `,
+        [usuarioFeedbackId]
+      );
+      return rows;
+    } catch (error) {
+      console.error("Erro ao obter detalhes das postagens:", error);
+      throw error;
+    }
+  }
   // Obter todas as postagens por autor_id
   async getPostagensByAutorId(autorId) {
     const connection = await this.dbConnection.connect();

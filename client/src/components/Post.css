@@ -1,5 +1,5 @@
 .post {
-  background: #f9f9f9;
+  display: flex;
   padding: 1em;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -34,6 +34,8 @@
 }
 
 .nowuknow-post {
+  display: flex;
+  flex-direction: column;
   border-radius: 20px;
   margin: 10px;
   padding: 30px 15px;
@@ -55,20 +57,18 @@
 }
 
 .nowuknow-comment-icon {
-  cursor: pointer; 
-  font-size: 1.5rem; 
-  color: #333; 
-  transition: color 0.3s ease; 
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #333;
+  transition: color 0.3s ease;
 }
 
 .nowuknow-comment-icon:hover {
   color: var(--nowuknow-border);
-  
 }
 
 .nowuknow-comment-count {
   margin-right: 5px;
-  
 }
 .nowuknow-icon {
   color: white;
@@ -77,15 +77,59 @@
 }
 
 .nowuknow-icon.selected {
-  color:hsla(211, 53%, 11%, 1); /* Azul claro */
+  color: hsla(211, 53%, 11%, 1); /* Azul claro */
 }
 
 .nowuknow-comment-icon {
   color: white;
   cursor: pointer;
 }
-.nowuknow-feedback{
+.nowuknow-feedback {
   display: flex;
   align-items: center;
   gap: 20px; /* Espaçamento entre os itens */
+}
+
+.nowuknow-post-icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 0.5em;
+  margin-top: 0.5em;
+}
+
+.nowuknow-post-icons-left,
+.nowuknow-post-icons-right {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Espaçamento entre os itens */
+}
+
+.nowuknow-post-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Espaçamento entre os itens */
+}
+
+.nowuknow-avatar-container {
+  display: flex;
+}
+
+.nowuknow-post-content {
+  margin: 0.5em 0;
+}
+
+.nowuknow-post-author {
+  display: flex;
+  align-items: center;
+}
+
+.nowuknow-post-author-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.nowuknow-post-author-info p {
+  margin-bottom: 0;
 }

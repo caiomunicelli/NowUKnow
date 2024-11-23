@@ -1,0 +1,15 @@
+.nowuknow-comentario-texto {
+  display: flex;
+  flex-direction: column;
+}
+
+.nowuknow-comentario-bottom {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nowuknow-comentario-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Espaçamento entre os itens */
+}
