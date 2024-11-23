@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { fetchCategorias } from "../../services/categoriaService";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../contexts/AuthContext";
+import { fetchUsuarioLogado } from "../../services/usuarioService";
 
 import "./Categorias.css";
 
 const CategoriasPage = ({ categoriasFiltradas = [] }) => {
   const [categorias, setCategorias] = useState(categoriasFiltradas);
   const [loading, setLoading] = useState(false);
+  const { isAuthenticated } = useAuthContext();
+  const [usuario, setUsuario] = useState(null);
 
   const loadCategorias = async () => {
     setLoading(true);
@@ -26,15 +30,44 @@ const CategoriasPage = ({ categoriasFiltradas = [] }) => {
     loadCategorias();
   }, []); // Executa a lógica ao montar o componente
 
+  useEffect(() => {
+    const loadUsuario = async () => {
+      try {
+        const dadosUsuario = await fetchUsuarioLogado();
+        console.log("dadosUsuario:", dadosUsuario);
+        setUsuario(dadosUsuario);
+      } catch (error) {
+        setErro("Erro ao carregar os dados do usuário.");
+        console.error(error);
+      }
+    };
+    if (isAuthenticated) {
+      loadUsuario();
+    }
+  }, []);
+
   const navigate = useNavigate();
 
   const handleViewContent = (categoriaId) => {
     navigate(`/categoria/${categoriaId}`);
   };
 
+  const handleAddCategoria = () => {
+    navigate("/createCategoria");
+  };
+
   return (
     <div className="nowuknow-box-container">
-      <h1>Categorias de Aprendizado</h1>
+      <div className="nowuknow-add-icon-div">
+        <h1>Categorias de Aprendizado</h1>
+        {usuario && usuario.tipo === "Moderador" && (
+          <i
+            className="bi bi-plus-circle nowuknow-add-icon"
+            onClick={handleAddCategoria}
+            title="Adicionar nova categoria"
+          ></i>
+        )}
+      </div>
       {loading ? (
         <p>Carregando categorias...</p>
       ) : (

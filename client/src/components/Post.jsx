@@ -95,7 +95,7 @@ const Post = ({ postagemId, post, comentarioCount }) => {
             <span className="nowuknow-comment-count">{comentarioCount}</span>
           </div>{" "}
           <div className="nowuknow-post-icons-right">
-            {usuario && post.usuario_id === usuario.id && (
+            {usuario && (post.usuario_id === usuario.id || usuario.tipo === "Moderador") && (
               <div className="nowuknow-post-actions">
                 <i
                   className="bi bi-pencil nowuknow-small-icon"

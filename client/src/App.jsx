@@ -12,6 +12,7 @@ import {
   Perfil,
   About,
   PrivateRoute,
+  CreateCategoria,
   Categorias,
   Categoria,
   Postagem,
@@ -91,6 +92,14 @@ function App() {
                   element={
                     <PrivateRoute>
                       <CreatePost />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/createCategoria"
+                  element={
+                    <PrivateRoute>
+                      <CreateCategoria />
                     </PrivateRoute>
                   }
                 />

@@ -3,10 +3,12 @@ const router = express.Router();
 const CategoriaController = require("../controllers/categoriaController.js");
 const verifyJWT = require("../middleware/jwtService.js"); // Middleware de autenticação
 const categoriaController = new CategoriaController(); // Instância do controlador
+const upload = require("../middleware/multerConfig.js")("imagem");
 
 // Rota: Criar uma nova categoria (POST /) - Protegida com JWT
-router.post("/", verifyJWT, async (req, res) => {
-  const { nome, descricao, imagem } = req.body;
+router.post("/", verifyJWT, upload.single("foto"), async (req, res) => {
+  const { nome, descricao } = req.body;
+  const imagem = req.file; // Acessa a imagem carregada
   try {
     const resultado = await categoriaController.criarCategoria(
       nome,
