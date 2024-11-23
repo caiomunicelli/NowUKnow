@@ -3,9 +3,7 @@ import { Link } from "react-router-dom";
 import { fetchUsuarioLogado } from "../services/usuarioService";
 import { useAuthContext } from "../contexts/AuthContext";
 import {
-  pegaComentarios,
   editaComentario,
-  publicaComentario,
   deletaComentario,
 } from "../services/comentarioService";
 import { Avatar } from "./";

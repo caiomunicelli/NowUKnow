@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import {Avatar} from "./";
 import "./Usuarios.css";
 
 const UsuariosPage = ({ usuariosFiltrados = [] }) => {
@@ -10,7 +10,7 @@ const UsuariosPage = ({ usuariosFiltrados = [] }) => {
   const fetchUsuarios = async () => {
     setLoading(true);
     try {
-        console.log(usuariosFiltrados);
+        console.log(JSON.stringify(usuariosFiltrados));
       if (usuariosFiltrados.length === 0) {
         const response = await fetch("/api/v1/usuarios/all");
         const usuariosData = await response.json();
@@ -44,11 +44,7 @@ const UsuariosPage = ({ usuariosFiltrados = [] }) => {
                 // eslint-disable-next-line react/jsx-key
                 <div className="perfil-container">
                 <div className="perfil-info">
-                  <img
-                    src={usuario.imagem}
-                    alt={usuario.nome}
-                    className="perfil-imagem"
-                  />
+                <Avatar imagem={usuario.imagem} nome={usuario.nome} tamanho={100} />
                   <div className="perfil-dados">
                     <p>
                       <strong>Nome:</strong> {usuario.nome}

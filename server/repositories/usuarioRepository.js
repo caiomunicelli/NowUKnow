@@ -105,7 +105,7 @@ class UserRepository {
       "SELECT * FROM Usuarios WHERE usuario LIKE ? OR nome LIKE ?",
       [`%${query}%`, `%${query}%`]
     );
-    const users = [rows]; // Retorna o usuário encontrado ou undefined
+    const users = rows; // Retorna o usuário encontrado ou undefined
     return users; // Chama o método para pegar a URL da imagem
   }
 

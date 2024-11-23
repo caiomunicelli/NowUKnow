@@ -5,9 +5,7 @@
   --nouwknow-font-family: "Poppins", sans-serif;
   --nowuknow-bg-dark: hsla(211, 53%, 11%, 1); /* Rich Black */
   --nowuknow-bg-light: hsla(75, 6%, 87%, 1); /* Platinum */
-  
-  
-  : hsla(212, 29%, 36%, 1); /* Yinmn Blue (Accent) */
+  --nowuknow-bg-accent: hsla(212, 29%, 36%, 1); /* Yinmn Blue (Accent) */
   --nowuknow-bg-medium: hsla(211, 0.88%, 80.29%, 1);
   --nowuknow-bg-medium-light: hsla(211, 8.26%, 84.71%, 1);
 

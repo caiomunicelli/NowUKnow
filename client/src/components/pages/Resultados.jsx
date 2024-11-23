@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Feed from "../../components/Feed";
 import CategoriasPage from "./Categorias";
-import UsuariosPage from "./Usuarios";
+import UsuariosPage from "../Usuarios";
 import "./Resultados.css";
 
 function ResultsPage() {
@@ -47,16 +47,17 @@ function ResultsPage() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="results-page">
+    <div>
+        
       <h1>Resultados para "{query}"</h1>
-      {filter === "conteudo" ? (
+      {filter === "conteudo" && results.length > 0 ? (
         <Feed postagens={results} />
-      ) : filter === "categoria" ? (
+      ) : filter === "categoria" && results.length > 0 ? (
         <CategoriasPage categoriasFiltradas={results} />
-      ) : filter === "autor" ? (
+      ) : filter === "autor" && results.length > 0 ? (
         <UsuariosPage usuariosFiltrados={results} />)
-         : (
-        <p>Filtro inválido. Verifique os parâmetros.</p>
+      : (
+        <p>Nenhum resultado encontrado.</p>
       )}
     </div>
   );
