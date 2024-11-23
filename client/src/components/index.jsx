@@ -6,6 +6,7 @@ export { default as Login } from "./pages/Login";
 export { default as Signup } from "./pages/Signup";
 export { default as CreatePost } from "./pages/CreatePost";
 export { default as About } from "./pages/About";
+export { default as Resultados } from "./pages/Resultados";
 export { default as Categorias } from "./pages/Categorias";
 export { default as Categoria } from "./pages/Categoria";
 export { default as Postagem } from "./Postagem";

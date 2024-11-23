@@ -1,0 +1,30 @@
+.perfil-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .perfil-info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .perfil-imagem {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .perfil-dados p {
+    font-size: 1.1rem;
+    margin: 5px 0;
+  }
+  
+  .perfil-dados p strong {
+    font-weight: bold;
+  }
+  
