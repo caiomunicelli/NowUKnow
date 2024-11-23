@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { fetchUsuarioLogado } from "../services/usuarioService";
 import { deletaPostagem } from "../services/postagemService";
 import { useAuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -8,34 +7,23 @@ import { Avatar } from "./";
 import Feedback from "./Feedback";
 import "./Post.css";
 
-const Post = ({ postagemId, post, comentarioCount }) => {
-  const [usuario, setUsuario] = useState(null);
+const Post = ({ postagemId, post, comentarioCount, full }) => {
   const [postagem, setPostagem] = useState(post);
-  const { isAuthenticated } = useAuthContext();
+  const { isAuthenticated, usuarioLogado } = useAuthContext();
+  const [usuario, setUsuario] = useState(null);
   const navigate = useNavigate();
 
   const formattedDate = new Date(
     post.postagem_data_publicacao
   ).toLocaleDateString("pt-BR");
 
-  useEffect(() => {
-    const loadUsuario = async () => {
-      try {
-        const dadosUsuario = await fetchUsuarioLogado();
-        setUsuario(dadosUsuario);
-      } catch (error) {
-        console.error("Erro ao carregar os dados do usuário:", error);
-      }
-    };
-
-    if (isAuthenticated) {
-      loadUsuario();
-    }
-  }, [isAuthenticated]);
-
   const handleViewContent = () => {
     navigate(`/postagem/${postagemId}`);
   };
+
+  useEffect(() => {
+    setUsuario(usuarioLogado);
+  }, [usuarioLogado]);
 
   return (
     <div className="nowuknow-post-container">
@@ -55,6 +43,11 @@ const Post = ({ postagemId, post, comentarioCount }) => {
                     <source src={post.conteudo_url} type="video/mp4" />
                     Seu navegador não suporta a reprodução de vídeo.
                   </video>
+                  {full && (
+                    <p className="nowuknow-post-descricao">
+                      {post.conteudo_descricao}
+                    </p>
+                  )}
                 </div>
               ) : post.conteudo_tipo === "Material_de_Aprendizado" ? (
                 <a
@@ -87,28 +80,32 @@ const Post = ({ postagemId, post, comentarioCount }) => {
         <div className="nowuknow-post-icons">
           <div className="nowuknow-post-icons-left">
             <Feedback postagemId={postagemId} usuario={usuario} />
-            <i
-              className="bi bi-chat nowuknow-comment-icon"
-              onClick={handleViewContent}
-              title="Ver comentários"
-            ></i>
-            <span className="nowuknow-comment-count">{comentarioCount}</span>
-          </div>{" "}
+            <div className="nowuknow-post-comments">
+              <i
+                className="bi bi-chat nowuknow-comment-icon"
+                onClick={handleViewContent}
+                title="Ver comentários"
+              ></i>
+              <span className="nowuknow-comment-count">{comentarioCount}</span>
+            </div>
+          </div>
           <div className="nowuknow-post-icons-right">
-            {usuario && (post.usuario_id === usuario.id || usuario.tipo === "Moderador") && (
-              <div className="nowuknow-post-actions">
-                <i
-                  className="bi bi-pencil nowuknow-small-icon"
-                  onClick={() =>
-                    navigate("/editarPost", { state: { postagem } })
-                  }
-                ></i>
-                <i
-                  className="bi bi-trash nowuknow-small-icon nowuknow-red-icon"
-                  onClick={() => deletaPostagem(post.postagem_id)}
-                ></i>
-              </div>
-            )}
+            {usuarioLogado &&
+              (post.usuario_id === usuarioLogado.id ||
+                usuarioLogado.tipo === "Moderador") && (
+                <div className="nowuknow-post-actions">
+                  <i
+                    className="bi bi-pencil nowuknow-small-icon"
+                    onClick={() =>
+                      navigate("/editarPost", { state: { postagem } })
+                    }
+                  ></i>
+                  <i
+                    className="bi bi-trash nowuknow-small-icon nowuknow-red-icon"
+                    onClick={() => deletaPostagem(post.postagem_id)}
+                  ></i>
+                </div>
+              )}
           </div>
         </div>
       </div>

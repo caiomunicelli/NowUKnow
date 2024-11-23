@@ -2,7 +2,7 @@
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 250px;
+  width: var(--nowuknow-sidebar-width);
   height: calc(100% - var(--nowuknow-header-height));
   background-color: var(--nowuknow-bg-medium-light);
   color: var(--nowuknow-text-muted);

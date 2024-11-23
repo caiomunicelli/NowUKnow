@@ -8,7 +8,7 @@ const { compare } = require("bcryptjs");
 const upload = require("../middleware/multerConfig.js")("imagem");
 
 const SECRET = process.env.SECRET_KEY;
-const EXPIRES = 30000;
+const EXPIRES = "24h";
 
 // Rota: Criar um usuário (POST /)
 router.post("/", upload.single("foto"), async (req, res) => {

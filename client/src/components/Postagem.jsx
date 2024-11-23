@@ -53,12 +53,13 @@ const Postagem = () => {
         <p>Carregando detalhes da postagem...</p>
       ) : postagem ? (
         <Post
-      key={postagem.postagem_id}
-      postagemId={postagem.postagem_id}
-      post={postagem}
-      comentarioCount={comentarios.length || 0} // Passa o número de comentários
-    />
-    ) : (
+          key={postagem.postagem_id}
+          postagemId={postagem.postagem_id}
+          post={postagem}
+          comentarioCount={comentarios.length || 0}
+          full={true} // Passa o número de comentários
+        />
+      ) : (
         <p>Postagem não encontrada.</p>
       )}
 

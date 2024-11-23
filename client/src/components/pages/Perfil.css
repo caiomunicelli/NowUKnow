@@ -1,7 +1,10 @@
 .perfil-container {
-  padding: 20px;
+  padding: 2rem;
   max-width: 800px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .perfil-info {
@@ -19,8 +22,8 @@
   object-fit: cover;
 }
 
-.perfil-dados p {
-  font-size: 1.1rem;
+.nowuknow-app .perfil-dados p {
+  font-size: 2rem;
   margin: 5px 0;
 }
 
@@ -30,4 +33,10 @@
 
 .perfil-tabs {
   display: flex;
+}
+
+.perfil-acoes,
+.perfil-tabs {
+  display: flex;
+  gap: 1rem;
 }

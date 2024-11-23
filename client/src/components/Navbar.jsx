@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Select from "react-select";
 import { useAuthContext } from "../contexts/AuthContext";
-import { fetchUsuarioLogado } from "../services/usuarioService";
 import Sidebar from "./Sidebar";
 import { options, customStyles } from "../utils/selectConfig"; // Importa as configurações
 import { useNavigate } from "react-router-dom";
@@ -10,11 +9,11 @@ import "bootstrap-icons/font/bootstrap-icons.css"; // Importa os ícones
 import { Login, Avatar } from "./";
 import "./Navbar.css";
 function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
-  const { isAuthenticated, logout, setUsername } = useAuthContext();
-  const [usuario, setUsuario] = useState(null);
+  const { isAuthenticated, logout, usuarioLogado, setUsuarioLogado } =
+    useAuthContext();
   const [erro, setErro] = useState(null);
   const navigate = useNavigate();
-  const [searchInput, setSearchInput] = useState("")
+  const [searchInput, setSearchInput] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(
     options.find((opt) => opt.default) || options[0]
@@ -30,28 +29,6 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
   };
 
   useEffect(() => {
-    const fetchUsuario = async () => {
-      try {
-        const dadosUsuario = await fetchUsuarioLogado();
-        setUsuario(dadosUsuario);
-        console.log("Username é,", dadosUsuario.usuario);
-        setUsername(dadosUsuario.usuario);
-      } catch (erro) {
-        setErro("Não foi possível carregar os dados do usuário.");
-        setUsuario(null);
-        logout();
-        console.error(erro);
-      }
-    };
-
-    if (isAuthenticated) {
-      fetchUsuario();
-    } else {
-      setUsuario(null);
-    }
-  }, [isAuthenticated]);
-
-  useEffect(() => {
     if (isLoginMenuOpen) {
       setIsLoginMenuOpen(false);
     }
@@ -64,7 +41,11 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
   const handleSearchSubmit = (e) => {
     e.preventDefault(); // Evita o comportamento padrão do formulário
     if (searchInput.trim()) {
-      navigate(`/resultados?query=${encodeURIComponent(searchInput.trim())}&filter=${selectedOption.value}`);
+      navigate(
+        `/resultados?query=${encodeURIComponent(searchInput.trim())}&filter=${
+          selectedOption.value
+        }`
+      );
     }
   };
 
@@ -114,12 +95,12 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
                 <span className="hide-on-resize">Criar Postagem</span>
               </Link>
             )}
-            {isAuthenticated && usuario && (
+            {isAuthenticated && usuarioLogado && (
               <li className="nowuknow-nav-item">
                 <Link to="/perfil" className="nowuknow-nav-link">
                   <Avatar
-                    imagem={usuario.imagem}
-                    nome={usuario.nome}
+                    imagem={usuarioLogado.imagem}
+                    nome={usuarioLogado.nome}
                     tamanho={32}
                   />
                 </Link>
@@ -137,7 +118,9 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
               )}
             </li>
           </ul>
-          {isLoginMenuOpen && <Login onClose={() => setIsLoginMenuOpen(false)} />}
+          {isLoginMenuOpen && (
+            <Login onClose={() => setIsLoginMenuOpen(false)} />
+          )}
         </div>
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       </nav>

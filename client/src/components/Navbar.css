@@ -1,6 +1,6 @@
 .nowuknow-header {
   color: var(--nowuknow-text-primary);
-  padding: 2px 10px;
+  padding: 0.2rem 1rem;
   height: var(--nowuknow-header-height);
   display: flex;
   justify-content: space-around;
@@ -54,7 +54,7 @@
 .nowuknow-brand {
   color: var(--nowuknow-text-highlight);
   text-decoration: none;
-  font-size: 16pt;
+  font-size: 2rem;
   padding-left: 0.5em;
 }
 
@@ -62,7 +62,7 @@
   display: flex;
   width: 45%;
   gap: 0.5rem;
-  padding: 0 20px;
+  padding: 0 2rem;
   align-items: center;
 }
 
@@ -99,8 +99,13 @@
   background-color: var(--nowuknow-bg-dark);
   border: 2px solid var(--nowuknow-bg-accent);
   color: var(--nowuknow-text-primary);
+  cursor: pointer;
 }
 
+.nowuknow-btn-icon:hover {
+  background: none;
+  color: var(--nowuknow-text-secondary);
+}
 .nowuknow-plus {
   font-size: 1.5em;
 }
@@ -110,7 +115,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  gap: 10px;
+  gap: 1rem;
   justify-content: center;
   align-items: center;
 }
@@ -123,8 +128,7 @@
   color: var(--nowuknow-text-primary);
   display: block;
   padding: 0;
-  font-size: 12pt;
-  font-weight: 300;
+  font-size: 1.5rem;
   text-decoration: none;
   background: 0 0;
   border: 0;
@@ -134,17 +138,22 @@
 
 .nowuknow-nav-link:hover {
   color: var(--nowuknow-text-secondary);
+  background: none;
 }
 
 .nowuknow-menu-btn {
   background: none;
   border: none;
   color: var(--nowuknow-bg-light);
-  font-size: 1.5rem;
+  font-size: 2.4rem;
   cursor: pointer;
-  max-width: 60px;
+  max-width: 6rem;
 }
 
+.nowuknow-menu-btn:hover {
+  background: none;
+  color: var(--nowuknow-bg-accent);
+}
 .nowuknow-create-post-btn {
   display: flex;
   border: 2px solid var(--nowuknow-bg-accent);
@@ -169,6 +178,7 @@
   cursor: pointer; /* Cursor de pointer ao passar */
   transition: all 0.3s ease-in-out; /* Transição suave para hover e active */
 }
+
 .nowuknow-select-container {
   display: flex;
   align-items: center;

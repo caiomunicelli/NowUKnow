@@ -7,8 +7,11 @@ import {
   editar,
   removerFotoPerfil,
 } from "../../services/usuarioService";
+import { useAuthContext } from "../../contexts/AuthContext";
+import { Avatar } from "../";
 
 function Signup({ onLoginClick }) {
+  const { atualizaUsuarioLogado } = useAuthContext();
   const location = useLocation();
   const usuario = location.state?.usuario || null;
 
@@ -112,6 +115,7 @@ function Signup({ onLoginClick }) {
       formData.append("tipo", tipo);
       const response = await editar(formData);
       if (response) {
+        atualizaUsuarioLogado();
         navigate("/perfil");
       } else {
         console.error("Erro ao atualizar usuário.");
@@ -223,7 +227,7 @@ function Signup({ onLoginClick }) {
           </label>
           {previewFoto && (
             <div className="nowuknow-foto-preview">
-              <img src={previewFoto} alt="Preview" />
+              <Avatar imagem={previewFoto} nome={nome} tamanho={128} />
             </div>
           )}
           <input

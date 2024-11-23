@@ -4,11 +4,7 @@ import "./Home.css";
 
 function Home() {
   const posts = [];
-  return (
-    <div className="nowuknow-home-container">
-      <Feed postagens={posts}/>
-    </div>
-  );
+  return <Feed postagens={posts} />;
 }
 
 export default Home;

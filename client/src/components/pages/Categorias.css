@@ -8,7 +8,7 @@
 }
 
 .nowuknow-categoria h2 {
-  margin: 0
+  margin: 0;
 }
 
 .nowuknow-categorias-container {
@@ -76,7 +76,6 @@
 
 .nowuknow-add-icon:hover {
   color: var(--nowuknow-border);
-
 }
 
 .nowuknow-add-icon-div {

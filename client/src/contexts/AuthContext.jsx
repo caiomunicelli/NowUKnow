@@ -1,14 +1,15 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { loginUsuario } from "../api/usuarioApi";
 import { saveToken, clearToken, getToken } from "../services/authService";
+import { fetchUsuarioLogado } from "../services/usuarioService";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [username, setUsername] = useState("");
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Novo estado de carregamento
+  const [isLoading, setIsLoading] = useState(true);
+  const [usuarioLogado, setUsuarioLogado] = useState(null); // Novo estado de carregamento
 
   useEffect(() => {
     // Verifica o token armazenado ao carregar o componente
@@ -16,6 +17,23 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(!!token);
     setIsLoading(false); // Depois de verificar o token, define isLoading como false
   }, []);
+
+  useEffect(() => {
+    atualizaUsuarioLogado();
+  }, [isAuthenticated]);
+
+  useEffect(() => {}, [usuarioLogado]);
+
+  const atualizaUsuarioLogado = async () => {
+    if (isAuthenticated) {
+      console.log("Estou chamando o fetchUsuarioLogado");
+      let usuarioData = await fetchUsuarioLogado();
+      delete usuarioData.senha;
+      setUsuarioLogado(usuarioData);
+    } else {
+      setUsuarioLogado(null);
+    }
+  };
 
   const login = async (credentials) => {
     try {
@@ -41,7 +59,15 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, login, logout, error, username, setUsername }}
+      value={{
+        isAuthenticated,
+        login,
+        logout,
+        error,
+        usuarioLogado,
+        setUsuarioLogado,
+        atualizaUsuarioLogado,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -9,7 +9,7 @@ import "./Categorias.css";
 const CategoriasPage = ({ categoriasFiltradas = [] }) => {
   const [categorias, setCategorias] = useState(categoriasFiltradas);
   const [loading, setLoading] = useState(false);
-  const { isAuthenticated } = useAuthContext();
+  const { isAuthenticated, usuarioLogado } = useAuthContext();
   const [usuario, setUsuario] = useState(null);
 
   const loadCategorias = async () => {
@@ -31,20 +31,8 @@ const CategoriasPage = ({ categoriasFiltradas = [] }) => {
   }, []); // Executa a lógica ao montar o componente
 
   useEffect(() => {
-    const loadUsuario = async () => {
-      try {
-        const dadosUsuario = await fetchUsuarioLogado();
-        console.log("dadosUsuario:", dadosUsuario);
-        setUsuario(dadosUsuario);
-      } catch (error) {
-        setErro("Erro ao carregar os dados do usuário.");
-        console.error(error);
-      }
-    };
-    if (isAuthenticated) {
-      loadUsuario();
-    }
-  }, []);
+    setUsuario(usuarioLogado);
+  }, [usuarioLogado]);
 
   const navigate = useNavigate();
 

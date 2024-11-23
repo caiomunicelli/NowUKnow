@@ -10,27 +10,11 @@ import { Avatar } from "./";
 import "./Comentario.css";
 
 const Comentario = ({ comentario, fetchComentariosByPostagem }) => {
-  const { isAuthenticated } = useAuthContext();
+  const { isAuthenticated, usuarioLogado } = useAuthContext();
   const [usuario, setUsuario] = useState(null);
   const [erro, setErro] = useState(null);
   const [editarComentario, setEditarComentario] = useState(false);
   const [textoEditado, setTextoEditado] = useState(comentario.comentario_texto);
-
-  useEffect(() => {
-    const loadUsuario = async () => {
-      try {
-        const dadosUsuario = await fetchUsuarioLogado();
-        console.log("dadosUsuario:", dadosUsuario);
-        setUsuario(dadosUsuario);
-      } catch (error) {
-        setErro("Erro ao carregar os dados do usuário.");
-        console.error(error);
-      }
-    };
-    if (isAuthenticated) {
-      loadUsuario();
-    }
-  }, []);
 
   const handleEditarComentario = () => {
     setEditarComentario(true);
@@ -40,6 +24,10 @@ const Comentario = ({ comentario, fetchComentariosByPostagem }) => {
     setTextoEditado(evento.target.value);
   };
 
+  useEffect(() => {
+    setUsuario(usuarioLogado);
+  }, [usuarioLogado]);
+  
   const handleSalvarEdicao = async () => {
     const comentarioEditado = { texto: textoEditado };
     const response = await editaComentario(comentarioEditado, comentario.id);
@@ -96,37 +84,39 @@ const Comentario = ({ comentario, fetchComentariosByPostagem }) => {
               </div>
             </div>
 
-            {usuario && (usuario.id === comentario.usuario_id || usuario.tipo === "Moderador") && (
-              <div className="nowuknow-comentario-actions">
-                {editarComentario ? (
-                  <>
-                    <i
-                      className="bi bi-check nowuknow-small-icon nowuknow-green-icon"
-                      title="Salvar mudanças"
-                      onClick={handleSalvarEdicao}
-                    ></i>
-                    <i
-                      className="bi bi-x nowuknow-small-icon nowuknow-red-icon"
-                      title="Cancelar edição"
-                      onClick={() => setEditarComentario(false)}
-                    ></i>
-                  </>
-                ) : (
-                  <>
-                    <i
-                      className="bi bi-pencil nowuknow-small-icon"
-                      title="Editar comentário"
-                      onClick={handleEditarComentario}
-                    ></i>
-                    <i
-                      className="bi bi-trash nowuknow-small-icon nowuknow-red-icon"
-                      title="Apagar comentário"
-                      onClick={handleApagarComentario}
-                    ></i>
-                  </>
-                )}
-              </div>
-            )}
+            {usuario &&
+              (usuario.id === comentario.usuario_id ||
+                usuario.tipo === "Moderador") && (
+                <div className="nowuknow-comentario-actions">
+                  {editarComentario ? (
+                    <>
+                      <i
+                        className="bi bi-check nowuknow-small-icon nowuknow-green-icon"
+                        title="Salvar mudanças"
+                        onClick={handleSalvarEdicao}
+                      ></i>
+                      <i
+                        className="bi bi-x nowuknow-small-icon nowuknow-red-icon"
+                        title="Cancelar edição"
+                        onClick={() => setEditarComentario(false)}
+                      ></i>
+                    </>
+                  ) : (
+                    <>
+                      <i
+                        className="bi bi-pencil nowuknow-small-icon"
+                        title="Editar comentário"
+                        onClick={handleEditarComentario}
+                      ></i>
+                      <i
+                        className="bi bi-trash nowuknow-small-icon nowuknow-red-icon"
+                        title="Apagar comentário"
+                        onClick={handleApagarComentario}
+                      ></i>
+                    </>
+                  )}
+                </div>
+              )}
           </div>
         </div>
       </div>

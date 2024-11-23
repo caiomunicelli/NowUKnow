@@ -13,36 +13,34 @@ import { useAuthContext } from "../../contexts/AuthContext";
 const Perfil = () => {
   const { nomeusuario } = useParams();
   const [usuario, setUsuario] = useState(null);
-  const [usuarioLogado, setUsuarioLogado] = useState(false);
+  const [perfilUsuarioLogado, setPerfilUsuarioLogado] = useState(false);
   const [posts, setPosts] = useState([]);
   const [likedPosts, setLikedPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState(null);
   const [activeTab, setActiveTab] = useState("posts");
   const navigate = useNavigate();
-  const { isAuthenticated, logout, username } = useAuthContext();
+  const { isAuthenticated, logout, usuarioLogado } = useAuthContext();
 
   useEffect(() => {
     const loadUsuario = async () => {
-      try {
-        let dadosUsuario = null;
-        if (nomeusuario && nomeusuario !== username) {
-          dadosUsuario = await fetchUsuarioPorUsername(nomeusuario);
-          setUsuarioLogado(false);
-        } else if (isAuthenticated) {
-          dadosUsuario = await fetchUsuarioLogado();
-          setUsuarioLogado(true);
-        } else {
-          navigate("/login");
-        }
-        setUsuario(dadosUsuario);
-      } catch (error) {
-        setErro("Erro ao carregar os dados do usuário.");
-        console.error(error);
+      if (!nomeusuario && !isAuthenticated) {
+        navigate("/login");
+        return;
       }
+      const dadosUsuario =
+        nomeusuario && nomeusuario !== usuarioLogado.usuario
+          ? await fetchUsuarioPorUsername(nomeusuario)
+          : await fetchUsuarioLogado();
+
+      setUsuario(dadosUsuario);
+      setPerfilUsuarioLogado(
+        !nomeusuario || nomeusuario === usuarioLogado.usuario
+      );
     };
+
     loadUsuario();
-  }, [nomeusuario, isAuthenticated, navigate, username]);
+  }, [nomeusuario, isAuthenticated, navigate, usuarioLogado]);
 
   const fetchPosts = async () => {
     if (!usuario) return;
@@ -109,9 +107,11 @@ const Perfil = () => {
 
   return (
     <div className="perfil-container">
-      <h1>{usuarioLogado ? "Meu Perfil" : `Perfil de ${usuario.nome}`}</h1>
+      <h1>
+        {perfilUsuarioLogado ? "Meu Perfil" : `Perfil de ${usuario.nome}`}
+      </h1>
       <div className="perfil-info">
-        <Avatar imagem={usuario.imagem} nome={usuario.nome} tamanho={100} />
+        <Avatar imagem={usuario.imagem} nome={usuario.nome} tamanho={160} />
         <div className="perfil-dados">
           <p>
             <strong>Nome:</strong> {usuario.nome}
@@ -120,25 +120,22 @@ const Perfil = () => {
             <strong>Usuário:</strong> {usuario.usuario}
           </p>
           <p>
-            <strong>Email:</strong> {usuario.email}
-          </p>
-          <p>
             <strong>Data de Criação:</strong>{" "}
             {new Date(usuario.data_criacao).toLocaleDateString()}
           </p>
         </div>
       </div>
 
-      {usuarioLogado && (
+      {perfilUsuarioLogado && (
         <div className="perfil-acoes">
           <button onClick={handleDeletarUsuario} className="deletar-btn">
-            <i className="bi bi-trash"></i>
+            <i className="bi bi-trash">Excluir Perfil</i>
           </button>
           <button
             onClick={() => navigate("/editarPerfil", { state: { usuario } })}
             className="editar-btn"
           >
-            <i className="bi bi-pencil"></i>
+            <i className="bi bi-pencil">Editar Perfil</i>
           </button>
         </div>
       )}
@@ -148,9 +145,9 @@ const Perfil = () => {
           className={`perfil-tab ${activeTab === "posts" ? "active" : ""}`}
           onClick={() => setActiveTab("posts")}
         >
-          {usuarioLogado ? "Minhas Postagens" : "Postagens"}
+          {perfilUsuarioLogado ? "Minhas Postagens" : "Postagens"}
         </button>
-        {usuarioLogado && (
+        {perfilUsuarioLogado && (
           <button
             className={`perfil-tab ${
               activeTab === "likedPosts" ? "active" : ""
