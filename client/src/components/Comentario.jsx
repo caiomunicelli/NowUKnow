@@ -96,7 +96,7 @@ const Comentario = ({ comentario, fetchComentariosByPostagem }) => {
               </div>
             </div>
 
-            {usuario && usuario.id === comentario.usuario_id && (
+            {usuario && (usuario.id === comentario.usuario_id || usuario.tipo === "Moderador") && (
               <div className="nowuknow-comentario-actions">
                 {editarComentario ? (
                   <>

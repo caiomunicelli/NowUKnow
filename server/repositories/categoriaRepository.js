@@ -1,26 +1,48 @@
 const DatabaseConnection = require("../providers/databaseConnection.js");
 const Categoria = require("../entities/categoria.js");
+const S3Provider = require("../providers/s3Provider.js");
 
 class CategoriaRepository {
   constructor() {
     this.dbConnection = new DatabaseConnection();
+    this.S3Provider = new S3Provider();
   }
 
   // Criar uma nova categoria
   async createCategoria(categoria) {
+    console.log("Criando categoria");
     const connection = await this.dbConnection.connect();
+
+    let urlImagem = null;
+
+    if (categoria.imagem) {
+      try {
+        await this.S3Provider.connect();
+        urlImagem = await this.S3Provider.uploadFile(
+          "categorias",
+          categoria.nome,
+          categoria.imagem
+        );
+      } catch (error) {
+        console.error("Erro ao enviar imagem para o S3:", error);
+        throw new Error("Falha no upload da imagem");
+      }
+    }
+
     const [result] = await connection.execute(
       `INSERT INTO Categorias (nome, descricao, imagem) VALUES (?, ?, ?)`,
-      [categoria.nome, categoria.descricao, categoria.imagem]
+      [categoria.nome, categoria.descricao, urlImagem || null]
     );
 
     const newCategoria = new Categoria(
       result.insertId,
       categoria.nome,
       categoria.descricao,
-      categoria.imagem,
+      urlImagem || null,
       new Date()
     );
+
+    console.log("Categoria criada");
     return newCategoria;
   }
 

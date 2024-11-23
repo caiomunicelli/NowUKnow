@@ -26,7 +26,7 @@ class CategoriaController {
   }
 
   // Criar uma nova categoria
-  async criarCategoria(nome, descricao, imagem) {
+  async criarCategoria(nome, descricao, imagem = null) {
     const categoria = new Categoria(0, nome, descricao, imagem);
     const validacao = this.validarDados(categoria);
 
