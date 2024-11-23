@@ -11,34 +11,29 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../../contexts/AuthContext";
 
 const Perfil = () => {
-  const { nomeusuario } = useParams(); // Captura o nomeusuario da URL
+  const { nomeusuario } = useParams();
   const [usuario, setUsuario] = useState(null);
   const [usuarioLogado, setUsuarioLogado] = useState(false);
   const [posts, setPosts] = useState([]);
-  const [loadingPosts, setLoadingPosts] = useState(false);
+  const [likedPosts, setLikedPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState(null);
+  const [activeTab, setActiveTab] = useState("posts");
   const navigate = useNavigate();
   const { isAuthenticated, logout, username } = useAuthContext();
 
-  // Carrega os dados do usuário logado ou do perfil acessado
   useEffect(() => {
     const loadUsuario = async () => {
       try {
         let dadosUsuario = null;
-        console.log(username);
         if (nomeusuario && nomeusuario !== username) {
-          console.log("Nome de usuario", nomeusuario);
-          // Busca o perfil pelo nome de usuário (parâmetro da URL)
           dadosUsuario = await fetchUsuarioPorUsername(nomeusuario);
           setUsuarioLogado(false);
+        } else if (isAuthenticated) {
+          dadosUsuario = await fetchUsuarioLogado();
+          setUsuarioLogado(true);
         } else {
-          if (isAuthenticated) {
-            // Busca o perfil do usuário logado
-            dadosUsuario = await fetchUsuarioLogado();
-            setUsuarioLogado(true);
-          } else {
-            navigate("/login");
-          }
+          navigate("/login");
         }
         setUsuario(dadosUsuario);
       } catch (error) {
@@ -46,32 +41,48 @@ const Perfil = () => {
         console.error(error);
       }
     };
-
     loadUsuario();
-  }, [nomeusuario, isAuthenticated, navigate]);
+  }, [nomeusuario, isAuthenticated, navigate, username]);
 
-  // Carrega os posts do autor
+  const fetchPosts = async () => {
+    if (!usuario) return;
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `/api/v1/postagens/allDetails/autor/${usuario.id}`
+      );
+      const autorPosts = await response.json();
+      setPosts(autorPosts);
+    } catch (error) {
+      console.error("Erro ao carregar posts do autor:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchLikedPosts = async () => {
+    if (!usuario) return;
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `/api/v1/postagens/allDetails/feedback/${usuario.id}`
+      );
+      const likedPostsData = await response.json();
+      setLikedPosts(likedPostsData);
+    } catch (error) {
+      console.error("Erro ao carregar posts curtidos:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchPostsByAutor = async () => {
-      if (!usuario) return;
-      setLoadingPosts(true);
-      try {
-        const response = await fetch(
-          `/api/v1/postagens/allDetails/autor/${usuario.id}`
-        );
-        const autorPosts = await response.json();
-        setPosts(autorPosts);
-      } catch (error) {
-        console.error("Erro ao carregar posts do autor:", error);
-      } finally {
-        setLoadingPosts(false);
-      }
-    };
+    if (usuario) {
+      if (activeTab === "posts") fetchPosts();
+      else if (activeTab === "likedPosts") fetchLikedPosts();
+    }
+  }, [usuario, activeTab]);
 
-    fetchPostsByAutor();
-  }, [usuario]);
-
-  // Deleta o usuário logado
   const handleDeletarUsuario = async () => {
     try {
       const resposta = await deletar();
@@ -118,35 +129,52 @@ const Perfil = () => {
         </div>
       </div>
 
-      {/* Botões de edição e exclusão apenas para o perfil do usuário logado */}
       {usuarioLogado && (
         <div className="perfil-acoes">
           <button onClick={handleDeletarUsuario} className="deletar-btn">
-            Deletar Conta
+            <i className="bi bi-trash"></i>
           </button>
           <button
             onClick={() => navigate("/editarPerfil", { state: { usuario } })}
             className="editar-btn"
           >
-            Editar Perfil
+            <i className="bi bi-pencil"></i>
           </button>
         </div>
       )}
 
+      <div className="perfil-tabs">
+        <button
+          className={`perfil-tab ${activeTab === "posts" ? "active" : ""}`}
+          onClick={() => setActiveTab("posts")}
+        >
+          {usuarioLogado ? "Minhas Postagens" : "Postagens"}
+        </button>
+        {usuarioLogado && (
+          <button
+            className={`perfil-tab ${
+              activeTab === "likedPosts" ? "active" : ""
+            }`}
+            onClick={() => setActiveTab("likedPosts")}
+          >
+            Postagens Curtidas
+          </button>
+        )}
+      </div>
+
       <div className="perfil-posts">
-        <h2>
-          {usuarioLogado ? "Minhas Postagens" : `Postagens de ${usuario.nome}`}
-        </h2>
-        {loadingPosts ? (
-          <p>Carregando posts...</p>
-        ) : posts.length > 0 ? (
-          <Feed postagens={posts} />
+        {loading ? (
+          <p>Carregando...</p>
+        ) : activeTab === "posts" ? (
+          posts.length > 0 ? (
+            <Feed postagens={posts} />
+          ) : (
+            <p className="no-posts">Sem postagens.</p>
+          )
+        ) : likedPosts.length > 0 ? (
+          <Feed postagens={likedPosts} />
         ) : (
-          <p className="no-posts">
-            {usuarioLogado
-              ? "Você ainda não possui postagens."
-              : `${usuario.nome} ainda não possui postagens.`}
-          </p>
+          <p className="no-posts">Sem postagens curtidas.</p>
         )}
       </div>
     </div>

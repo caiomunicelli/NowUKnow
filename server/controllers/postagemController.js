@@ -183,6 +183,14 @@ class PostagemController {
     return { sucesso: true, postagens };
   }
 
+  async listarPostagenmComDetalhesPorUsuarioFeedback(usuarioFeedbackId) {
+    const postagens =
+      await this.postagemRepository.getPostagensWithAllDetailsByUsuarioFeedback(
+        usuarioFeedbackId
+      );
+    return { sucesso: true, postagens };
+  }
+
   // Buscar postagens por certificacaoId
   async listarPostagemPorCertificacao(certificacaoId) {
     if (!certificacaoId) {
@@ -197,9 +205,10 @@ class PostagemController {
       };
     }
 
-    const postagens = await this.postagemRepository.getPostagensWithAllDetailsByCertificacaoId(
-      certificacaoId
-    );
+    const postagens =
+      await this.postagemRepository.getPostagensWithAllDetailsByCertificacaoId(
+        certificacaoId
+      );
     if (postagens.length === 0) {
       return {
         sucesso: false,
