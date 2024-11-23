@@ -11,6 +11,7 @@ const avaliacaoRoutes = require("./avaliacaoRoutes");
 const categoriaRoutes = require("./categoriaRoutes");
 const certificacoesRoutes = require("./certificacaoRoutes");
 const postagemRoutes = require("./postagemRoutes");
+const pesquisaRoutes = require("./pesquisaRoutes");
 
 // Adiciona as rotas ao router principal
 router.use("/usuarios", usuarioRoutes);
@@ -22,5 +23,6 @@ router.use("/avaliacoes", avaliacaoRoutes);
 router.use("/categorias", categoriaRoutes);
 router.use("/certificacoes", certificacoesRoutes);
 router.use("/postagens", postagemRoutes);
+router.use("/pesquisas", pesquisaRoutes);
 
 module.exports = router;

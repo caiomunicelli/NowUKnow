@@ -4,51 +4,17 @@ import Select from "react-select";
 import { useAuthContext } from "../contexts/AuthContext";
 import { fetchUsuarioLogado } from "../services/usuarioService";
 import Sidebar from "./Sidebar";
+import { options, customStyles } from "../utils/selectConfig"; // Importa as configurações
 import { Login } from "./";
+import { useNavigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Importa os ícones
 import "./Navbar.css";
-
-const options = [
-  {
-    value: "autor",
-    label: (
-      <div className="nowuknow-select-container">
-        <i className="bi bi-person"></i>
-        <span>Autor</span>
-      </div>
-    ),
-    icon: "bi bi-person",
-    default: false,
-  },
-  {
-    value: "conteudo",
-    label: (
-      <div className="nowuknow-select-container">
-        <i className="bi bi-file-earmark-text"></i>
-        <span>Conteúdo</span>
-      </div>
-    ),
-    icon: "bi bi-file-earmark-text",
-    default: true,
-  },
-  {
-    value: "categoria",
-    label: (
-      <div className="nowuknow-select-container">
-        <i className="bi bi-folder2"></i>
-        <span>Categoria</span>
-      </div>
-    ),
-    icon: "bi bi-folder2",
-    default: false,
-  },
-];
-
-
 function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
   const { isAuthenticated, logout } = useAuthContext();
   const [usuario, setUsuario] = useState(null);
   const [erro, setErro] = useState(null);
+  const navigate = useNavigate();
+  const [searchInput, setSearchInput] = useState("")
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(
     options.find((opt) => opt.default) || options[0]
@@ -61,42 +27,6 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
 
   const toggleLoginMenu = () => {
     setIsLoginMenuOpen(!isLoginMenuOpen);
-  };
-
-  const customStyles = {
-    control: (base) => ({
-      ...base,
-      minWidth: "50px",
-      height: "36px",
-      border: "1px solid #ccc",
-      borderRadius: "25px",
-      boxShadow: "none",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    }),
-    option: (base, { isFocused, isSelected }) => ({
-      ...base,
-      display: "flex",
-      alignItems: "center",
-      color: isSelected ? "var(--nowuknow-text-muted)" : "#333",
-      backgroundColor: isFocused ? "#f0f0f0" : "#fff",
-      cursor: "pointer",
-      ":hover": { backgroundColor: "#f8f9fa" },
-    }),
-    singleValue: (base) => ({
-      ...base,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    }),
-    dropdownIndicator: (base) => ({
-      ...base,
-      display: "none",
-    }),
-    indicatorSeparator: () => ({
-      display: "none",
-    }),
   };
 
   useEffect(() => {
@@ -129,6 +59,13 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
     setSelectedOption(selected);
   };
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault(); // Evita o comportamento padrão do formulário
+    if (searchInput.trim()) {
+      navigate(`/resultados?query=${encodeURIComponent(searchInput.trim())}&filter=${selectedOption.value}`);
+    }
+  };
+
   return (
     <header className="nowuknow-header">
       <nav className="nowuknow-navbar">
@@ -144,12 +81,10 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
           <form
             className="nowuknow-search-form nowuknow-search hide-on-resize-2"
             role="search"
+            onSubmit={handleSearchSubmit}
           >
             <Select
-              options={options.map((option) => ({
-                value: option.value,
-                label: option.label ,
-              }))}
+              options={options}
               value={selectedOption}
               onChange={handleChange}
               styles={customStyles}
@@ -159,6 +94,7 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
               type="search"
               placeholder="Busque algum conteúdo, categoria ou autor"
               aria-label="Search"
+              onChange={(e) => setSearchInput(e.target.value)}
             />
             <button className="nowuknow-btn-icon" type="submit">
               <i className="bi bi-search"></i>

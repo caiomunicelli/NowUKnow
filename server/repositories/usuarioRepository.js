@@ -99,6 +99,16 @@ class UserRepository {
     return user; // Chama o método para pegar a URL da imagem
   }
 
+  async queryAutor(query) {
+    const connection = await this.dbConnection.connect();
+    const [rows] = await connection.execute(
+      "SELECT * FROM Usuarios WHERE usuario LIKE ? OR nome LIKE ?",
+      [`%${query}%`, `%${query}%`]
+    );
+    const users = [rows]; // Retorna o usuário encontrado ou undefined
+    return users; // Chama o método para pegar a URL da imagem
+  }
+
   async updateUser(usuario) {
     const connection = await this.dbConnection.connect();
     const hashedPassword = usuario.senha

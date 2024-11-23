@@ -40,7 +40,20 @@ class CategoriaRepository {
         )
     );
   }
-
+  async queryCategoria(query) {
+    const connection = await this.dbConnection.connect();
+    const [rows] = await connection.execute("SELECT * FROM Categorias WHERE nome LIKE ?", [`%${query}%`]);
+    return rows.map(
+      (row) =>
+        new Categoria(
+          row.id,
+          row.nome,
+          row.descricao,
+          row.imagem,
+          row.data_criacao
+        )
+    );
+  }
   // Buscar categoria por ID
   async getCategoriaById(id) {
     const connection = await this.dbConnection.connect();

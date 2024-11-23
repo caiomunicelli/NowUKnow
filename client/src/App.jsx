@@ -16,6 +16,7 @@ import {
   Categoria,
   Postagem,
   Sidebar,
+  Resultados,
   Certificacao
 } from "./components";
 import {
@@ -49,6 +50,7 @@ function App() {
                 <Route path="/categoria/:id" element={<Categoria />} />
                 <Route path="/postagem/:id" element={<Postagem />} />
                 <Route path="/certificacao/:id" element={<Certificacao />} />
+                <Route path="/resultados" element={<Resultados />} />
                 <Route
                   path="/signup"
                   element={
