@@ -68,6 +68,8 @@ function App() {
                     </PrivateRoute>
                   }
                 />
+                <Route path="/perfil/:nomeusuario" element={<Perfil />} />
+
                 <Route
                   path="/editarPerfil"
                   element={

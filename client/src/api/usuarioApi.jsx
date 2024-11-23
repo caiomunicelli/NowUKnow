@@ -129,3 +129,19 @@ export const removerFotoUsuario = async (token) => {
     return "Erro inesperado ao comunicar com o servidor.";
   }
 };
+
+export const getUsuarioByUsername = async (username) => {
+  try {
+    const response = await fetch(`/api/v1/usuarios/username/${username}`, {
+      method: "GET",
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log("Sucesso: ", data);
+      return data;
+    }
+  } catch (error) {
+    console.error("Erro no getUsuarioByUsername:", error);
+    return null;
+  }
+};

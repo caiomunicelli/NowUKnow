@@ -48,7 +48,8 @@ class PostagemRepository {
   // Obter uma postagem por ID
   async getPostagemById(id) {
     const connection = await this.dbConnection.connect();
-    const [rows] = await connection.execute(`
+    const [rows] = await connection.execute(
+      `
       
       SELECT 
         p.id AS postagem_id,
@@ -57,6 +58,7 @@ class PostagemRepository {
         p.data_publicacao AS postagem_data_publicacao,
 
         u.id AS usuario_id,
+        u.nome AS usuario_nome_completo,
         u.usuario AS usuario_nome,
         u.email AS usuario_email,
         u.imagem AS usuario_imagem,
@@ -152,6 +154,7 @@ class PostagemRepository {
         p.data_publicacao AS postagem_data_publicacao,
 
         u.id AS usuario_id,
+        u.nome AS usuario_nome_completo,
         u.usuario AS usuario_nome,
         u.email AS usuario_email,
         u.imagem AS usuario_imagem,
@@ -208,6 +211,7 @@ class PostagemRepository {
         p.data_publicacao AS postagem_data_publicacao,
 
         u.id AS usuario_id,
+        u.nome AS usuario_nome_completo,
         u.usuario AS usuario_nome,
         u.email AS usuario_email,
         u.imagem AS usuario_imagem,
@@ -268,6 +272,7 @@ class PostagemRepository {
           p.data_publicacao AS postagem_data_publicacao,
   
           u.id AS usuario_id,
+          u.nome AS usuario_nome_completo,
           u.usuario AS usuario_nome,
           u.email AS usuario_email,
           u.imagem AS usuario_imagem,
@@ -318,9 +323,9 @@ class PostagemRepository {
       throw error;
     }
   }
-  
-   // Obter todas as postagens por autor_id
-   async getPostagensByAutorId(autorId) {
+
+  // Obter todas as postagens por autor_id
+  async getPostagensByAutorId(autorId) {
     const connection = await this.dbConnection.connect();
     const [rows] = await connection.execute(
       "SELECT * FROM Postagens WHERE autor_id = ?",
@@ -341,6 +346,7 @@ class PostagemRepository {
           p.data_publicacao AS postagem_data_publicacao,
   
           u.id AS usuario_id,
+          u.nome AS usuario_nome_completo,
           u.usuario AS usuario_nome,
           u.email AS usuario_email,
           u.imagem AS usuario_imagem,

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { fetchUsuarioLogado } from "../services/usuarioService";
 import { useAuthContext } from "../contexts/AuthContext";
 import {
@@ -7,6 +8,7 @@ import {
   publicaComentario,
   deletaComentario,
 } from "../services/comentarioService";
+import { Avatar } from "./";
 import "./Comentario.css";
 
 const Comentario = ({ comentario, fetchComentariosByPostagem }) => {
@@ -64,7 +66,14 @@ const Comentario = ({ comentario, fetchComentariosByPostagem }) => {
   return (
     <div className="nowuknow-comentario-container">
       <div className="nowuknow-comentario">
-        <h5 className="nowuknow-post-title">{comentario.usuario_nome}</h5>
+        <Link to={`/perfil/${comentario.usuario_nome}`}>
+          <h5 className="nowuknow-post-title">{comentario.usuario_nome}</h5>
+        </Link>
+        <Avatar
+          imagem={comentario.usuario_imagem}
+          nome={comentario.usuario_nome_completo}
+          tamanho={40}
+        />
         {editarComentario ? (
           <textarea
             value={textoEditado}

@@ -5,6 +5,7 @@ import {
   deleteUsuarioAtual,
   updateUsuario,
   removerFotoUsuario,
+  getUsuarioByUsername,
 } from "../api/usuarioApi";
 import { getToken } from "./authService";
 
@@ -14,10 +15,10 @@ export const fetchUsuarioLogado = async () => {
     const token = getToken(); // Obtém o token do authService
     if (!token) throw new Error("Usuário não autenticado");
 
-    const userData = await getUsuarioAtual(token); // Chama o getUsuarioAtual da API
-    if (!userData) throw new Error("Erro ao obter dados do usuário");
+    const response = await getUsuarioAtual(token); // Chama o getUsuarioAtual da API
+    if (!response) throw new Error("Erro ao obter dados do usuário");
 
-    return userData; // Retorna os dados do usuário
+    return response; // Retorna os dados do usuário
   } catch (error) {
     console.error("Erro ao buscar usuário atual:", error);
     throw error; // Lança o erro para o chamador tratar
@@ -79,5 +80,18 @@ export const removerFotoPerfil = async () => {
   } catch (error) {
     console.error("Erro ao remover foto no service:", error);
     throw error;
+  }
+};
+
+// client/src/services/usuarioService.jsx
+export const fetchUsuarioPorUsername = async (username) => {
+  try {
+    const response = await getUsuarioByUsername(username); // Chama o getUsuarioByUsername da API
+    if (!response) throw new Error("Erro ao obter dados do usuário");
+
+    return response; // Retorna os dados do usuário
+  } catch (error) {
+    console.error("Erro ao buscar usuário por username:", error);
+    throw error; // Lança o erro para o chamador tratar
   }
 };
