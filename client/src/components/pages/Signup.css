@@ -1,0 +1,22 @@
+.foto-form {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.nowuknow-login-link {
+  background: none;
+  color: var(--nowuknow-text-secondary);
+  width: auto;
+  padding: 0;
+}
+
+.nowuknow-login-link:hover {
+  color: var(--nowuknow-text-tertiary);
+  background: none;
+}
+
+.nowuknow-input-form {
+  display: flex;
+  gap: 1rem;
+}

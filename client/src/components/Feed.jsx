@@ -7,6 +7,12 @@ const Feed = ({ postagens }) => {
   const [loading, setLoading] = useState(false);
   const [comentarioCount, setComentarioCount] = useState({});
 
+  const handleDeletePost = (postagemId) => {
+    setPosts((prevPosts) =>
+      prevPosts.filter((post) => post.postagem_id !== postagemId)
+    );
+  };
+
   const fetchComentarios = async () => {
     try {
       const response = await fetch(`/api/v1/comentarios/`); // Rota para listar os comentários
@@ -60,6 +66,7 @@ const Feed = ({ postagens }) => {
               post={post}
               comentarioCount={comentarioCount[post.postagem_id] || 0}
               full={false} // Passa o número de comentários
+              onDelete={handleDeletePost}
             />
           ))
         ) : (

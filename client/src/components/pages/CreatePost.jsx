@@ -191,7 +191,6 @@ const CreatePost = () => {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Preencha o título"
             required
-            disabled={!!postagem}
           />
         </div>
 
@@ -217,7 +216,7 @@ const CreatePost = () => {
 
         {categoriaId !== "" && (
           <div className="mb-3">
-            <label>Certificação:</label>
+            <label>Certificação (Opcional):</label>
             <select
               className="nowuknow-input"
               value={certificacaoId}
@@ -335,11 +334,7 @@ const CreatePost = () => {
         )}
 
         <div className="mb-3">
-          <button
-            type="submit"
-            className="nowuknow-button"
-            disabled={isUploading}
-          >
+          <button type="submit" className="nowuknow-btn" disabled={isUploading}>
             {isUploading
               ? "Publicando..."
               : postagem

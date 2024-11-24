@@ -1,10 +1,21 @@
 .nowuknow-categoria {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--nowuknow-bg-accent);
-  padding: 15px;
-  border-radius: 25px;
+  padding: 2rem;
   gap: 10px;
+}
+
+.nowuknow-categoria:nth-child(n) {
+  border-bottom: rgba(0, 0, 0, 0.04) solid 1px;
+  /* border-bottom: var(--nowuknow-bg-accent) solid 1px; */
+}
+
+.nowuknow-categoria:last-child {
+  border-bottom: none;
+}
+
+.nowuknow-categoria:only-child {
+  border-bottom: none; /* Remove a borda se for o único filho */
 }
 
 .nowuknow-categoria h2 {
@@ -35,37 +46,20 @@
   align-items: flex-end;
 }
 
+.nowuknow-categoria-img-nome h2 {
+  margin-bottom: 0 !important;
+}
 .nowuknow-categoria-imagem {
   height: 50px;
   width: 50px;
 }
 
 .nowuknow-categoria-btn {
-  width: 30%;
+  width: 300px;
 }
 
 .nowuknow-categoria-btn-div {
   display: flex;
-}
-
-.nowuknow-tabs {
-  display: flex;
-  margin-bottom: 16px;
-}
-
-.nowuknow-tab {
-  padding: 10px 20px;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  background-color: #499ffa;
-  margin-right: 8px;
-  border-radius: 4px;
-}
-
-.nowuknow-tab.active {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
 }
 
 .nowuknow-add-icon {

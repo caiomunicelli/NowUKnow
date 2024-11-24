@@ -8,6 +8,7 @@
 .nowuknow-comentarios-postagem {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .post {
@@ -35,29 +36,31 @@
 }
 
 .nowuknow-comentarios-post-container {
-  background-color: var(--nowuknow-bg-light);
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
-  color: var(--nowuknow-text-muted);
-  border-bottom: var(--nowuknow-text-primary-dark) solid 3px;
-  max-width: 720px;
 }
 
 .nowuknow-comentario-container {
-  background-color: var(--nowuknow-bg-light);
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
-  color: var(--nowuknow-text-muted);
-  border-bottom: var(--nouwknow-border-lighter) solid 1px;
-  max-width: 720px;
 }
 
 .nowuknow-comentario {
   border-radius: 20px;
   margin: 10px;
   padding: 30px 15px;
+}
+
+.nowuknow-comentario-container:nth-child(n) {
+  border-bottom: rgba(0, 0, 0, 0.04) solid 1px;
+}
+
+.nowuknow-comentario-container:last-child {
+  border-bottom: none;
+}
+
+.nowuknow-comentario-container:only-child {
+  border-bottom: none; /* Remove a borda se for o único filho */
 }
 
 .nowuknow-title-comentario {
@@ -76,4 +79,5 @@
 
 #novoComentario {
   margin-top: 5px;
+  padding: 1.2rem;
 }

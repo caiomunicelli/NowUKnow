@@ -65,34 +65,32 @@ const FeedCategoria = () => {
       {loadingCategoria ? (
         <p>Carregando detalhes da categoria...</p>
       ) : categoria ? (
-        <div className="nowuknow-categoria">
-          <div className="nowuknow-categoria-img-nome">
-            <img
-              src={categoria.imagem}
-              alt={categoria.nome}
-              className="nowuknow-categoria-imagem"
-            />
-            <h2>{categoria.nome}</h2>
+        <div>
+          <div className="nowuknow-categoria">
+            <div className="nowuknow-categoria-img-nome">
+              <img
+                src={categoria.imagem}
+                alt={categoria.nome}
+                className="nowuknow-categoria-imagem"
+              />
+              <h2>{categoria.nome}</h2>
+            </div>
+            <p>{categoria.descricao}</p>
           </div>
-          <p>{categoria.descricao}</p>
         </div>
       ) : (
         <p>Categoria não encontrada.</p>
       )}
-      <br />
-      {/* Tabs */}
       <div className="nowuknow-tabs">
         <button
-          className={`nowuknow-tab ${
-            activeTab === "posts" ? "nowuknow-active" : ""
-          }`}
+          className={`nowuknow-tab ${activeTab === "posts" ? "active" : ""}`}
           onClick={() => setActiveTab("posts")}
         >
           Posts
         </button>
         <button
           className={`nowuknow-tab ${
-            activeTab === "certificacoes" ? "nowuknow-active" : ""
+            activeTab === "certificacoes" ? "active" : ""
           }`}
           onClick={() => setActiveTab("certificacoes")}
         >

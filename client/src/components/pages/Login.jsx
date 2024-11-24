@@ -62,7 +62,7 @@ function Login({ onClose }) {
         <button type="submit" className="nowuknow-btn">
           Entrar
         </button>
-        <p className="mt-3">
+        <p className="cadastro-link mt-3">
           Não tem uma conta?{" "}
           <span className="link" onClick={handleGoToSignUp}>
             Cadastre-se aqui

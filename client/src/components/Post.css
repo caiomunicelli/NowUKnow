@@ -23,13 +23,22 @@
 }
 
 .nowuknow-post-container {
-  background-color: var(--nowuknow-bg-light);
   display: flex;
   flex-direction: column;
   color: var(--nowuknow-text-muted);
-  border-bottom: var(--nouwknow-border-lighter) solid 1px;
-  max-width: 720px;
-  flex: 1 1 auto;
+  flex: 1 1;
+}
+
+.nowuknow-post-container:nth-child(n) {
+  border-bottom: rgba(0, 0, 0, 0.04) solid 1px;
+}
+
+.nowuknow-post-container:last-child {
+  border-bottom: none;
+}
+
+.nowuknow-post-container:only-child {
+  border-bottom: none; /* Remove a borda se for o único filho */
 }
 
 .nowuknow-post {
@@ -40,16 +49,35 @@
   padding: 2.5rem 1.5rem 1rem;
 }
 
+.nowuknow-post p {
+  margin-bottom: 0;
+}
+
+.nowuknow-post a {
+  text-decoration: none;
+}
+.nowuknow-app .nowuknow-post-type {
+  font-weight: 500;
+  font-size: 2rem;
+  color: rgb(101 101 101);
+}
 .nowuknow-post:hover {
   background-color: var(--nowuknow-bg-medium);
 }
 
+.nowuknow-app .nowuknow-post-date {
+  font-size: 1.6rem;
+}
 .nowuknow-post-video-container {
   display: flex;
   align-content: center;
   justify-content: center;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2.5rem;
+}
+
+.nowuknow-post-video-container p {
+  margin-bottom: 0;
 }
 
 .nowuknow-post-video-player {
@@ -90,7 +118,7 @@
   justify-content: space-between;
   align-items: center;
   margin-left: 0.5em;
-  margin-top: 1em;
+  margin-top: 0.5em;
   font-size: 1.3em;
 }
 
@@ -117,7 +145,7 @@
 }
 
 .nowuknow-post-content {
-  margin: 0.5em 0;
+  margin: 1em 0;
 }
 
 .nowuknow-post-author {
@@ -129,6 +157,11 @@
   display: flex;
   flex-direction: column;
   margin-left: 10px;
+}
+
+.nowuknow-post .nowuknow-post-user {
+  color: var(--nowuknow-text-tertiary);
+  font-weight: 500;
 }
 
 .nowuknow-post-author-info p {

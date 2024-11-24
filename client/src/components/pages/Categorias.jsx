@@ -6,7 +6,7 @@ import { fetchUsuarioLogado } from "../../services/usuarioService";
 
 import "./Categorias.css";
 
-const CategoriasPage = ({ categoriasFiltradas = [] }) => {
+const CategoriasPage = ({ categoriasFiltradas = [], hide = false }) => {
   const [categorias, setCategorias] = useState(categoriasFiltradas);
   const [loading, setLoading] = useState(false);
   const { isAuthenticated, usuarioLogado } = useAuthContext();
@@ -47,7 +47,7 @@ const CategoriasPage = ({ categoriasFiltradas = [] }) => {
   return (
     <div className="nowuknow-box-container">
       <div className="nowuknow-add-icon-div">
-        <h1>Categorias de Aprendizado</h1>
+        {!hide && <h1>Categorias de Aprendizado</h1>}
         {usuario && usuario.tipo === "Moderador" && (
           <i
             className="bi bi-plus-circle nowuknow-add-icon"

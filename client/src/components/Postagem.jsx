@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../contexts/AuthContext";
 import { Comentario, NovoComentario } from "../components/";
 import "./Postagem.css";
@@ -14,6 +14,10 @@ const Postagem = () => {
   const [loadingPostagem, setLoadingPostagem] = useState(false);
   const { isAuthenticated } = useAuthContext();
 
+  const navigate = useNavigate();
+  const handleDeletePostagem = () => {
+    navigate("/");
+  };
   const fetchComentariosByPostagem = async () => {
     setLoadingComentarios(true);
     try {
@@ -52,13 +56,16 @@ const Postagem = () => {
       {loadingPostagem ? (
         <p>Carregando detalhes da postagem...</p>
       ) : postagem ? (
-        <Post
-          key={postagem.postagem_id}
-          postagemId={postagem.postagem_id}
-          post={postagem}
-          comentarioCount={comentarios.length || 0}
-          full={true} // Passa o número de comentários
-        />
+        <div>
+          <Post
+            key={postagem.postagem_id}
+            postagemId={postagem.postagem_id}
+            post={postagem}
+            comentarioCount={comentarios.length || 0}
+            full={true} // Passa o número de comentários
+            onDelete={handleDeletePostagem}
+          />
+        </div>
       ) : (
         <p>Postagem não encontrada.</p>
       )}

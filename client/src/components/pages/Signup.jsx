@@ -9,6 +9,7 @@ import {
 } from "../../services/usuarioService";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { Avatar } from "../";
+import "./Signup.css";
 
 function Signup({ onLoginClick }) {
   const { atualizaUsuarioLogado } = useAuthContext();
@@ -146,7 +147,7 @@ function Signup({ onLoginClick }) {
         onSubmit={openConfirmationModal}
         className="nowuknow-form-container"
       >
-        <div className="mb-3">
+        <div>
           <label htmlFor="nome" className="form-label">
             Nome
           </label>
@@ -161,7 +162,7 @@ function Signup({ onLoginClick }) {
           />
           <ErrorMessage message={errors.nome} />
         </div>
-        <div className="mb-3">
+        <div>
           <label htmlFor="usuario" className="form-label">
             Nome de Usuário
           </label>
@@ -176,7 +177,7 @@ function Signup({ onLoginClick }) {
           />
           <ErrorMessage message={errors.usuario} />
         </div>
-        <div className="mb-3">
+        <div>
           <label htmlFor="email" className="form-label">
             E-mail
           </label>
@@ -188,10 +189,11 @@ function Signup({ onLoginClick }) {
             onChange={handleChange}
             required
             autoComplete="off"
+            disabled={!!usuario}
           />
           <ErrorMessage message={errors.email} />
         </div>
-        <div className="mb-3">
+        <div>
           <label htmlFor="senha" className="form-label">
             Senha
           </label>
@@ -206,7 +208,7 @@ function Signup({ onLoginClick }) {
           />
           <ErrorMessage message={errors.senha} />
         </div>
-        <div className="mb-3">
+        <div>
           <label htmlFor="confirmSenha" className="form-label">
             Confirmar Senha
           </label>
@@ -221,7 +223,7 @@ function Signup({ onLoginClick }) {
           />
           <ErrorMessage message={errors.confirmSenha} />
         </div>
-        <div className="mb-3">
+        <div className="foto-form">
           <label htmlFor="foto" className="form-label">
             Foto de Perfil
           </label>
@@ -230,22 +232,24 @@ function Signup({ onLoginClick }) {
               <Avatar imagem={previewFoto} nome={nome} tamanho={128} />
             </div>
           )}
-          <input
-            type="file"
-            className="nowuknow-input"
-            id="foto"
-            onChange={handleFotoChange}
-            accept="image/png, image/jpeg, image/jpg"
-          />
-          {previewFoto && (
-            <button
-              type="button"
-              className="nowuknow-btn-clear"
-              onClick={handleClearFoto}
-            >
-              Limpar Foto
-            </button>
-          )}
+          <div className="nowuknow-input-form">
+            <input
+              type="file"
+              className="nowuknow-input"
+              id="foto"
+              onChange={handleFotoChange}
+              accept="image/png, image/jpeg, image/jpg"
+            />
+            {previewFoto && (
+              <button
+                type="button"
+                className="nowuknow-btn nowuknow-red"
+                onClick={handleClearFoto}
+              >
+                Limpar Foto
+              </button>
+            )}
+          </div>
           <ErrorMessage message={errors.foto} />
         </div>
         <button type="submit" className="nowuknow-btn">

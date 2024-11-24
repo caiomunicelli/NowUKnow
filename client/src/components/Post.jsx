@@ -7,15 +7,17 @@ import { Avatar } from "./";
 import Feedback from "./Feedback";
 import "./Post.css";
 
-const Post = ({ postagemId, post, comentarioCount, full }) => {
+const Post = ({ postagemId, post, comentarioCount, full, onDelete }) => {
   const [postagem, setPostagem] = useState(post);
   const { isAuthenticated, usuarioLogado } = useAuthContext();
   const [usuario, setUsuario] = useState(null);
   const navigate = useNavigate();
 
-  const formattedDate = new Date(
-    post.postagem_data_publicacao
-  ).toLocaleDateString("pt-BR");
+  const formattedDate = new Intl.DateTimeFormat("pt-BR", {
+    day: "numeric",
+    month: "long", // Exibe o mês por extenso
+    year: "numeric",
+  }).format(new Date(post.postagem_data_publicacao));
 
   const handleViewContent = () => {
     navigate(`/postagem/${postagemId}`);
@@ -25,10 +27,36 @@ const Post = ({ postagemId, post, comentarioCount, full }) => {
     setUsuario(usuarioLogado);
   }, [usuarioLogado]);
 
+  const handleDeletarPostagem = async () => {
+    try {
+      const sucesso = await deletaPostagem(postagemId);
+      if (sucesso) {
+        alert("Postagem excluída com sucesso!");
+        onDelete(postagemId); // Notifica o componente pai
+      } else {
+        alert("Erro ao excluir a postagem.");
+      }
+    } catch (error) {
+      console.error("Erro ao excluir postagem:", error);
+    }
+  };
+
   return (
     <div className="nowuknow-post-container">
       <div className="nowuknow-post">
         <h3 className="nowuknow-post-title">{post.postagem_titulo}</h3>
+        <p className="nowuknow-post-type">
+          {post.postagem_tipo === "Discussao"
+            ? post.discussao_tipo === "Duvida"
+              ? "Dúvida"
+              : post.discussao_tipo
+            : post.conteudo_tipo === "Video"
+            ? "Vídeo"
+            : post.conteudo_tipo === "Material_de_Aprendizado"
+            ? "Material de Aprendizado"
+            : post.conteudo_tipo}{" "}
+          - {post.categoria_nome}
+        </p>
 
         <div className="nowuknow-post-content">
           {post.postagem_tipo === "Discussao" && post.discussao_texto && (
@@ -73,7 +101,7 @@ const Post = ({ postagemId, post, comentarioCount, full }) => {
             <Link to={`/perfil/${post.usuario_nome}`}>
               <p className="nowuknow-post-user">{post.usuario_nome}</p>
             </Link>
-            <p className="nowuknow-post-date">Publicado em: {formattedDate}</p>
+            <p className="nowuknow-post-date">{formattedDate}</p>
           </div>
         </div>
 
@@ -102,7 +130,7 @@ const Post = ({ postagemId, post, comentarioCount, full }) => {
                   ></i>
                   <i
                     className="bi bi-trash nowuknow-small-icon nowuknow-red-icon"
-                    onClick={() => deletaPostagem(post.postagem_id)}
+                    onClick={handleDeletarPostagem}
                   ></i>
                 </div>
               )}

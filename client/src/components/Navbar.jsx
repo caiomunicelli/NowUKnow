@@ -14,12 +14,16 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
   const [erro, setErro] = useState(null);
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const narrowWindow = window.innerWidth < 840;
+  const [isSidebarOpen, setIsSidebarOpen] = useState(!narrowWindow);
+  const [isFocused, setIsFocused] = useState(false);
   const [selectedOption, setSelectedOption] = useState(
     options.find((opt) => opt.default) || options[0]
   );
   const location = useLocation();
 
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -72,6 +76,14 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
               onChange={handleChange}
               styles={customStyles}
               isSearchable={false}
+              unstyled={true}
+              className={`nowuknow-search-select ${
+                isFocused ? "nowuknow-search-select-focused" : ""
+              }`}
+              menuPlacement="auto"
+              menuPosition="fixed"
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
             <input
               type="search"

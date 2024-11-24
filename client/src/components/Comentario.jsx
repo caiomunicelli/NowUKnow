@@ -20,6 +20,12 @@ const Comentario = ({ comentario, fetchComentariosByPostagem }) => {
     setEditarComentario(true);
   };
 
+  const formattedDate = new Intl.DateTimeFormat("pt-BR", {
+    day: "numeric",
+    month: "long", // Exibe o mês por extenso
+    year: "numeric",
+  }).format(new Date(comentario.comentario_data));
+
   const handleTextoEditado = (evento) => {
     setTextoEditado(evento.target.value);
   };
@@ -27,7 +33,7 @@ const Comentario = ({ comentario, fetchComentariosByPostagem }) => {
   useEffect(() => {
     setUsuario(usuarioLogado);
   }, [usuarioLogado]);
-  
+
   const handleSalvarEdicao = async () => {
     const comentarioEditado = { texto: textoEditado };
     const response = await editaComentario(comentarioEditado, comentario.id);
@@ -75,12 +81,7 @@ const Comentario = ({ comentario, fetchComentariosByPostagem }) => {
                     {comentario.usuario_nome}
                   </p>
                 </Link>
-                <p className="nowuknow-post-date">
-                  Publicado em:{" "}
-                  {new Date(comentario.comentario_data).toLocaleDateString(
-                    "pt-BR"
-                  )}
-                </p>
+                <p className="nowuknow-post-date">{formattedDate}</p>
               </div>
             </div>
 

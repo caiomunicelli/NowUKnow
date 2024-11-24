@@ -92,7 +92,7 @@ export const deleteUsuarioAtual = async (token) => {
 
     // Tenta processar a resposta JSON, mesmo em caso de erro
     const data = await response.json();
-
+    console.log(data);
     if (response.ok) {
       console.log("Sucesso:", data);
       return data.mensagem; // Retorna a mensagem de sucesso

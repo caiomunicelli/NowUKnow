@@ -1,0 +1,6 @@
+.alert.alert-danger.nowuknow-error {
+  border-radius: 20px;
+  background-color: #ad4b4b;
+  color: var(--nowuknow-bg-light);
+  border: none;
+}

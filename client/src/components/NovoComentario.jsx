@@ -53,11 +53,8 @@ const NovoComentario = ({ postagemId, onComentarioCriado }) => {
   const isComentarioValido = novoComentario.trim().length > 0;
 
   return (
-    <div className="nowuknow-comentario-container">
+    <div className="nowuknow-novocomentario-container">
       <div className="nowuknow-comentario">
-        <h5 htmlFor="novoComentario" className="form-label">
-          Adicionar Comentário
-        </h5>
         <textarea
           id="novoComentario"
           className="nowuknow-input"
