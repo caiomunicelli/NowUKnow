@@ -3,6 +3,7 @@ import { useAuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./Login.css";
+import { toast } from "react-toastify";
 
 function Login({ onClose }) {
   const [email, setEmail] = useState("");
@@ -17,6 +18,7 @@ function Login({ onClose }) {
     const credentials = { email, senha };
     const isLoggedIn = await login(credentials);
     if (isLoggedIn) {
+      toast.success("Login efetuado com sucesso!");
       navigate("/");
       onClose();
     } else {
@@ -62,7 +64,7 @@ function Login({ onClose }) {
         <button type="submit" className="nowuknow-btn">
           Entrar
         </button>
-        <p className="mt-3">
+        <p className="cadastro-link mt-3">
           Não tem uma conta?{" "}
           <span className="link" onClick={handleGoToSignUp}>
             Cadastre-se aqui

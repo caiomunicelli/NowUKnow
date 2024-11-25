@@ -23,7 +23,9 @@ function ResultsPage() {
 
       try {
         const response = await fetch(
-          `/api/v1/pesquisas?query=${encodeURIComponent(query)}&filter=${encodeURIComponent(filter)}`
+          `/api/v1/pesquisas?query=${encodeURIComponent(
+            query
+          )}&filter=${encodeURIComponent(filter)}`
         );
 
         if (!response.ok) {
@@ -47,16 +49,15 @@ function ResultsPage() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
-        
+    <div className="nowuknow-resultados-container">
       <h1>Resultados para "{query}"</h1>
       {filter === "conteudo" && results.length > 0 ? (
         <Feed postagens={results} />
       ) : filter === "categoria" && results.length > 0 ? (
-        <CategoriasPage categoriasFiltradas={results} />
+        <CategoriasPage categoriasFiltradas={results} hide={true} />
       ) : filter === "autor" && results.length > 0 ? (
-        <UsuariosPage usuariosFiltrados={results} />)
-      : (
+        <UsuariosPage usuariosFiltrados={results} />
+      ) : (
         <p>Nenhum resultado encontrado.</p>
       )}
     </div>

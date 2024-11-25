@@ -13,3 +13,12 @@
   align-items: center;
   gap: 10px; /* Espaçamento entre os itens */
 }
+
+.nowuknow-comentario .nowuknow-post-user {
+  color: var(--nowuknow-text-tertiary);
+  font-weight: 500;
+}
+
+.nowuknow-comentario .nowuknow-post-author-info a {
+  text-decoration: none;
+}

@@ -5,10 +5,12 @@
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
+    "start-back": "node server/server.js",
     "build-front": "cd client && npm install && npm run build",
     "start-build": "npm run build-front && npm start",
     "start-front": "cd client && npm run dev",
-    "test-connection": "node server/testconnection.js"
+    "test-connection": "node server/testconnection.js",
+    "start-both": "concurrently \"npm run start-back\" \"npm run start-front\""
   },
   "nyc": {
     "reporter": [
@@ -52,7 +54,6 @@
     "@aws-sdk/s3-request-presigner": "^3.688.0",
     "bcryptjs": "^2.4.3",
     "bootstrap-icons": "^1.11.3",
-    "concurrently": "^9.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
@@ -61,6 +62,7 @@
     "mysql2": "^3.11.4"
   },
   "devDependencies": {
+    "concurrently": "^9.1.0",
     "mocha": "^10.8.2",
     "nyc": "^17.1.0",
     "sinon": "^19.0.2"

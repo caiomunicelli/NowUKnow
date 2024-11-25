@@ -9,40 +9,48 @@ import { Avatar } from "../";
 import "./Perfil.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../../contexts/AuthContext";
+import { toast } from "react-toastify";
 
 const Perfil = () => {
   const { nomeusuario } = useParams();
   const [usuario, setUsuario] = useState(null);
-  const [usuarioLogado, setUsuarioLogado] = useState(false);
+  const [perfilUsuarioLogado, setPerfilUsuarioLogado] = useState(false);
   const [posts, setPosts] = useState([]);
   const [likedPosts, setLikedPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState(null);
   const [activeTab, setActiveTab] = useState("posts");
   const navigate = useNavigate();
-  const { isAuthenticated, logout, username } = useAuthContext();
+  const { isAuthenticated, logout, usuarioLogado } = useAuthContext();
+
+  const formattedDate = (data) => {
+    return new Intl.DateTimeFormat("pt-BR", {
+      day: "numeric",
+      month: "long", // Exibe o mês por extenso
+      year: "numeric",
+    }).format(new Date(data));
+  };
 
   useEffect(() => {
     const loadUsuario = async () => {
-      try {
-        let dadosUsuario = null;
-        if (nomeusuario && nomeusuario !== username) {
-          dadosUsuario = await fetchUsuarioPorUsername(nomeusuario);
-          setUsuarioLogado(false);
-        } else if (isAuthenticated) {
-          dadosUsuario = await fetchUsuarioLogado();
-          setUsuarioLogado(true);
-        } else {
-          navigate("/login");
-        }
-        setUsuario(dadosUsuario);
-      } catch (error) {
-        setErro("Erro ao carregar os dados do usuário.");
-        console.error(error);
+      if (!nomeusuario && !isAuthenticated) {
+        toast.error("Por favor, faca login para ver o seu perfil!");
+        navigate("/");
+        return;
       }
+      const dadosUsuario =
+        nomeusuario && nomeusuario !== (usuarioLogado && usuarioLogado.usuario)
+          ? await fetchUsuarioPorUsername(nomeusuario)
+          : await fetchUsuarioLogado();
+
+      setUsuario(dadosUsuario);
+      setPerfilUsuarioLogado(
+        !nomeusuario || nomeusuario === usuarioLogado.usuario
+      );
     };
+
     loadUsuario();
-  }, [nomeusuario, isAuthenticated, navigate, username]);
+  }, [nomeusuario, isAuthenticated, navigate, usuarioLogado]);
 
   const fetchPosts = async () => {
     if (!usuario) return;
@@ -87,15 +95,14 @@ const Perfil = () => {
     try {
       const resposta = await deletar();
       if (resposta) {
-        alert("Usuário deletado com sucesso!");
+        toast.success("Usuário deletado com sucesso!");
         logout();
         navigate("/");
       } else {
-        alert("Erro ao deletar usuário. (handleDeletarUsuario)");
+        toast.error("Erro ao deletar usuário.");
       }
     } catch (error) {
-      setErro("Erro ao deletar o usuário. (handleDeletarUsuario)");
-      console.error(error);
+      toast.error("Erro ao deletar usuário.");
     }
   };
 
@@ -109,9 +116,36 @@ const Perfil = () => {
 
   return (
     <div className="perfil-container">
-      <h1>{usuarioLogado ? "Meu Perfil" : `Perfil de ${usuario.nome}`}</h1>
+      <div className="perfil-header">
+        <h1>
+          {perfilUsuarioLogado ? "Meu Perfil" : `Perfil de ${usuario.nome}`}
+        </h1>
+        {(perfilUsuarioLogado ||
+          (usuarioLogado && usuarioLogado.tipo == "Moderador")) && (
+          <div className="perfil-acoes">
+            <button
+              onClick={() => navigate("/editarPerfil", { state: { usuario } })}
+              className="editar-btn nowuknow-btn"
+            >
+              <div className="nowuknow-btn-with-icon">
+                <i className="bi bi-pencil"></i>
+                <span>Editar Perfil</span>
+              </div>
+            </button>
+            <button
+              onClick={handleDeletarUsuario}
+              className="deletar-btn nowuknow-btn nowuknow-red"
+            >
+              <div className="nowuknow-btn-with-icon">
+                <i className="bi bi-trash"></i>
+                <span>Excluir Perfil</span>
+              </div>
+            </button>
+          </div>
+        )}
+      </div>
       <div className="perfil-info">
-        <Avatar imagem={usuario.imagem} nome={usuario.nome} tamanho={100} />
+        <Avatar imagem={usuario.imagem} nome={usuario.nome} tamanho={160} />
         <div className="perfil-dados">
           <p>
             <strong>Nome:</strong> {usuario.nome}
@@ -120,37 +154,22 @@ const Perfil = () => {
             <strong>Usuário:</strong> {usuario.usuario}
           </p>
           <p>
-            <strong>Email:</strong> {usuario.email}
-          </p>
-          <p>
-            <strong>Data de Criação:</strong>{" "}
-            {new Date(usuario.data_criacao).toLocaleDateString()}
+            <strong>Data de Cadastro:</strong>{" "}
+            {formattedDate(usuario.data_criacao)}
           </p>
         </div>
       </div>
-
-      {usuarioLogado && (
-        <div className="perfil-acoes">
-          <button onClick={handleDeletarUsuario} className="deletar-btn">
-            <i className="bi bi-trash"></i>
-          </button>
-          <button
-            onClick={() => navigate("/editarPerfil", { state: { usuario } })}
-            className="editar-btn"
-          >
-            <i className="bi bi-pencil"></i>
-          </button>
-        </div>
-      )}
 
       <div className="perfil-tabs">
         <button
           className={`perfil-tab ${activeTab === "posts" ? "active" : ""}`}
           onClick={() => setActiveTab("posts")}
         >
-          {usuarioLogado ? "Minhas Postagens" : "Postagens"}
+          {perfilUsuarioLogado
+            ? "Minhas Postagens"
+            : `Postagens de ${usuario.nome}`}
         </button>
-        {usuarioLogado && (
+        {perfilUsuarioLogado && (
           <button
             className={`perfil-tab ${
               activeTab === "likedPosts" ? "active" : ""
@@ -162,21 +181,19 @@ const Perfil = () => {
         )}
       </div>
 
-      <div className="perfil-posts">
-        {loading ? (
-          <p>Carregando...</p>
-        ) : activeTab === "posts" ? (
-          posts.length > 0 ? (
-            <Feed postagens={posts} />
-          ) : (
-            <p className="no-posts">Sem postagens.</p>
-          )
-        ) : likedPosts.length > 0 ? (
-          <Feed postagens={likedPosts} />
+      {loading ? (
+        <p>Carregando...</p>
+      ) : activeTab === "posts" ? (
+        posts.length > 0 ? (
+          <Feed postagens={posts} />
         ) : (
-          <p className="no-posts">Sem postagens curtidas.</p>
-        )}
-      </div>
+          <p className="no-posts">Sem postagens.</p>
+        )
+      ) : likedPosts.length > 0 ? (
+        <Feed postagens={likedPosts} />
+      ) : (
+        <p className="no-posts">Sem postagens curtidas.</p>
+      )}
     </div>
   );
 };

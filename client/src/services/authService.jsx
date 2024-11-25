@@ -4,7 +4,7 @@ const TOKEN = "authToken";
 
 export const saveToken = (token) => {
   Cookies.set(TOKEN, token, {
-    expires: 30,
+    expires: 86400,
     secure: true,
     sameSite: "Strict",
     path: "/",

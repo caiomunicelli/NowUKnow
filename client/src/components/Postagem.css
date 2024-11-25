@@ -1,100 +1,83 @@
 .no-comentarios {
-    color: #777;
-    border-radius: 20px;
-    margin: 10px;
-    padding: 18px 15px;
+  color: #777;
+  border-radius: 20px;
+  margin: 10px;
+  padding: 18px 15px;
 }
 
 .nowuknow-comentarios-postagem {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .post {
-    background: #f9f9f9;
-    padding: 1em;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: #f9f9f9;
+  padding: 1em;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .post-title {
-    font-size: 1.2em;
-    font-weight: bold;
+  font-size: 1.2em;
+  font-weight: bold;
 }
 
 .post-user,
 .post-date {
-    font-size: 0.9em;
-    color: #555;
+  font-size: 0.9em;
+  color: #555;
 }
 
 .post-text {
-    margin-top: 0.5em;
-    font-size: 1em;
-    color: #333;
+  margin-top: 0.5em;
+  font-size: 1em;
+  color: #333;
 }
 
 .nowuknow-comentarios-post-container {
-    background-color: var(--nowuknow-bg-light);
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-    color: var(--nowuknow-text-muted);
-    border-bottom: var(--nowuknow-text-primary-dark) solid 3px;
-    max-width: 720px;
+  display: flex;
+  flex-direction: column;
 }
 
 .nowuknow-comentario-container {
-    background-color: var(--nowuknow-bg-light);
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-    color: var(--nowuknow-text-muted);
-    border-bottom: var(--nouwknow-border-lighter) solid 1px;
-    max-width: 720px;
-}
-
-.nowuknow-post {
-    border-radius: 20px;
-    margin: 10px;
-    padding: 30px 15px;
-}
-
-.nowuknow-post:hover {
-    background-color: var(--nowuknow-bg-medium);
+  display: flex;
+  flex-direction: column;
 }
 
 .nowuknow-comentario {
-    border-radius: 20px;
-    margin: 10px;
-    padding: 30px 15px;
+  border-radius: 20px;
+  margin: 10px;
+  padding: 30px 15px;
+}
+
+.nowuknow-comentario-container:nth-child(n) {
+  border-bottom: rgba(0, 0, 0, 0.04) solid 1px;
+}
+
+.nowuknow-comentario-container:last-child {
+  border-bottom: none;
+}
+
+.nowuknow-comentario-container:only-child {
+  border-bottom: none; /* Remove a borda se for o único filho */
 }
 
 .nowuknow-title-comentario {
-    border-radius: 20px;
-    margin: 10px;
-    padding: 18px 15px;
+  border-radius: 20px;
+  margin: 10px;
+  padding: 18px 15px;
 }
 
 .nowuknow-comentario:hover {
-    background-color: var(--nowuknow-bg-medium);
-}
-
-.nowuknow-post-video-container {
-    display: flex;
-    align-content: center;
-    justify-content: center;
-}
-
-.nowuknow-post-video-player {
-    border-radius: 12px;
-    width: 100%;
+  background-color: var(--nowuknow-bg-medium);
 }
 
 .erro-comentario {
-    color: red;
+  color: red;
 }
 
 #novoComentario {
-    margin-top: 5px;
+  margin-top: 5px;
+  padding: 1.2rem;
 }

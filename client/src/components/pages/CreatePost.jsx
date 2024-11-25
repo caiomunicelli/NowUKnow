@@ -10,6 +10,7 @@ import {
   editaDiscussao,
 } from "../../services/discussaoService";
 import { publicaConteudo, editaConteudo } from "../../services/conteudoService";
+import { toast } from "react-toastify";
 
 const CreatePost = () => {
   const { error } = useAuthContext();
@@ -113,7 +114,7 @@ const CreatePost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !tipoPostagem || !categoriaId) {
-      alert("Preencha todos os campos obrigatórios.");
+      toast.warning("Preencha todos os campos obrigatórios.");
       return;
     }
 
@@ -164,13 +165,17 @@ const CreatePost = () => {
             await publicaConteudo(conteudoData);
           }
         }
-
+        if (postagem) {
+          toast.success("Postagem editada com sucesso.");
+        } else {
+          toast.success("Postagem criada com sucesso.");
+        }
         navigate("/");
       } else {
-        alert("Erro ao cadastrar ou editar postagem.");
+        toast.error("Erro ao cadastrar ou editar postagem.");
       }
     } catch (error) {
-      alert("Erro na requisição: " + error.message);
+      toast.error("Erro ao cadastrar ou editar postagem.");
     } finally {
       setIsUploading(false);
     }
@@ -191,7 +196,6 @@ const CreatePost = () => {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Preencha o título"
             required
-            disabled={!!postagem}
           />
         </div>
 
@@ -217,7 +221,7 @@ const CreatePost = () => {
 
         {categoriaId !== "" && (
           <div className="mb-3">
-            <label>Certificação:</label>
+            <label>Certificação (Opcional):</label>
             <select
               className="nowuknow-input"
               value={certificacaoId}
@@ -335,11 +339,7 @@ const CreatePost = () => {
         )}
 
         <div className="mb-3">
-          <button
-            type="submit"
-            className="nowuknow-button"
-            disabled={isUploading}
-          >
+          <button type="submit" className="nowuknow-btn" disabled={isUploading}>
             {isUploading
               ? "Publicando..."
               : postagem

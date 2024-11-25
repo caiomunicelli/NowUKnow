@@ -117,7 +117,7 @@ class ComentarioRepository {
       WHERE 
         c.postagem_id = ?
       ORDER BY 
-        c.data_comentario DESC;
+        c.data_comentario ASC;
 
       `,
       [postagemId]

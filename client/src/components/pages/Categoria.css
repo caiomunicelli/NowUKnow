@@ -1,30 +1,30 @@
 .feed-categoria-container {
-    padding: 20px;
-  }
-  
-  .categoria-info {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .categoria-imagem {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    margin: 10px 0;
-  }
-  
-  .no-posts {
-    color: #777;
-  }
-  
-  .nowuknow-categoria-box-container {
-    background-color: var(--nowuknow-bg-light);
-    padding: 20px 40px;
-    border-radius: 30px;
-    box-shadow: rgb(0 0 0 / 30%) 0 1px 4px;
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-    color: var(--nowuknow-text-muted);
+  padding: 20px;
+}
+
+.categoria-info {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.categoria-imagem {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.no-posts {
+  color: #777;
+}
+
+.nowuknow-categoria-box-container {
+  padding: 20px 40px;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  align-items: center;
+  justify-content: center;
+  color: var(--nowuknow-text-muted);
 }

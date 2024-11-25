@@ -38,25 +38,30 @@ export const options = [
 ];
 
 export const customStyles = {
-  control: (base) => ({
-    ...base,
-    minWidth: "50px",
-    height: "36px",
-    border: "1px solid #ccc",
-    borderRadius: "25px",
+  control: () => ({
     boxShadow: "none",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
   }),
+  menuList: (base) => ({
+    ...base,
+    borderRadius: "20px",
+  }),
   option: (base, { isFocused, isSelected }) => ({
     ...base,
     display: "flex",
     alignItems: "center",
-    color: isSelected ? "var(--nowuknow-text-muted)" : "#333",
-    backgroundColor: isFocused ? "#f0f0f0" : "#fff",
+    color: isSelected
+      ? "var(--nowuknow-text-secondary)"
+      : "var(--nowuknow-text-primary)",
+    backgroundColor: isFocused
+      ? "var(--nowuknow-bg-accent)"
+      : "var(--nowuknow-bg-accent-dark)",
     cursor: "pointer",
-    ":hover": { backgroundColor: "#f8f9fa" },
+    ":hover": { backgroundColor: "var(--nowuknow-bg-accent)" },
+    padding: "0.75rem 2rem",
+    width: "100%",
   }),
   singleValue: (base) => ({
     ...base,

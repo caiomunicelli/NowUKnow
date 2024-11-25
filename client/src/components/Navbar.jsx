@@ -2,24 +2,33 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Select from "react-select";
 import { useAuthContext } from "../contexts/AuthContext";
-import { fetchUsuarioLogado } from "../services/usuarioService";
 import Sidebar from "./Sidebar";
 import { options, customStyles } from "../utils/selectConfig"; // Importa as configurações
 import { useNavigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Importa os ícones
 import { Login, Avatar } from "./";
 import "./Navbar.css";
+import { toast } from "react-toastify";
 function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
-  const { isAuthenticated, logout, setUsername } = useAuthContext();
-  const [usuario, setUsuario] = useState(null);
+  const { isAuthenticated, logout, usuarioLogado, setUsuarioLogado } =
+    useAuthContext();
   const [erro, setErro] = useState(null);
   const navigate = useNavigate();
-  const [searchInput, setSearchInput] = useState("")
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const narrowWindow = window.innerWidth < 840;
+  const [isSidebarOpen, setIsSidebarOpen] = useState(!narrowWindow);
+  const [isFocused, setIsFocused] = useState(false);
   const [selectedOption, setSelectedOption] = useState(
     options.find((opt) => opt.default) || options[0]
   );
   const location = useLocation();
+
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
+  const handleLogout = async () => {
+    await logout();
+    toast.success("Logout efetuado com sucesso!");
+  };
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -28,28 +37,6 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
   const toggleLoginMenu = () => {
     setIsLoginMenuOpen(!isLoginMenuOpen);
   };
-
-  useEffect(() => {
-    const fetchUsuario = async () => {
-      try {
-        const dadosUsuario = await fetchUsuarioLogado();
-        setUsuario(dadosUsuario);
-        console.log("Username é,", dadosUsuario.usuario);
-        setUsername(dadosUsuario.usuario);
-      } catch (erro) {
-        setErro("Não foi possível carregar os dados do usuário.");
-        setUsuario(null);
-        logout();
-        console.error(erro);
-      }
-    };
-
-    if (isAuthenticated) {
-      fetchUsuario();
-    } else {
-      setUsuario(null);
-    }
-  }, [isAuthenticated]);
 
   useEffect(() => {
     if (isLoginMenuOpen) {
@@ -64,7 +51,11 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
   const handleSearchSubmit = (e) => {
     e.preventDefault(); // Evita o comportamento padrão do formulário
     if (searchInput.trim()) {
-      navigate(`/resultados?query=${encodeURIComponent(searchInput.trim())}&filter=${selectedOption.value}`);
+      navigate(
+        `/resultados?query=${encodeURIComponent(searchInput.trim())}&filter=${
+          selectedOption.value
+        }`
+      );
     }
   };
 
@@ -85,22 +76,34 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
             role="search"
             onSubmit={handleSearchSubmit}
           >
-            <Select
-              options={options}
-              value={selectedOption}
-              onChange={handleChange}
-              styles={customStyles}
-              isSearchable={false}
-            />
-            <input
-              type="search"
-              placeholder="Busque algum conteúdo, categoria ou autor"
-              aria-label="Search"
-              onChange={(e) => setSearchInput(e.target.value)}
-            />
-            <button className="nowuknow-btn-icon" type="submit">
-              <i className="bi bi-search"></i>
-            </button>
+            <div className="nowuknow-search-bar-with-select">
+              <Select
+                options={options}
+                value={selectedOption}
+                onChange={handleChange}
+                styles={customStyles}
+                isSearchable={false}
+                unstyled={true}
+                className={`nowuknow-search-select ${
+                  isFocused ? "nowuknow-search-select-focused" : ""
+                }`}
+                menuPlacement="auto"
+                menuPosition="fixed"
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+              <input
+                type="search"
+                placeholder="Busque algum conteúdo, categoria ou autor"
+                aria-label="Search"
+                onChange={(e) => setSearchInput(e.target.value)}
+              />
+            </div>
+            <div className="nowuknow-search-btn-separator">
+              <button className="nowuknow-btn-icon" type="submit">
+                <i className="bi bi-search"></i>
+              </button>
+            </div>
           </form>
         </div>
         <div className="nowuknow-navbar-right">
@@ -114,12 +117,12 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
                 <span className="hide-on-resize">Criar Postagem</span>
               </Link>
             )}
-            {isAuthenticated && usuario && (
+            {isAuthenticated && usuarioLogado && (
               <li className="nowuknow-nav-item">
                 <Link to="/perfil" className="nowuknow-nav-link">
                   <Avatar
-                    imagem={usuario.imagem}
-                    nome={usuario.nome}
+                    imagem={usuarioLogado.imagem}
+                    nome={usuarioLogado.nome}
                     tamanho={32}
                   />
                 </Link>
@@ -127,7 +130,7 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
             )}
             <li className="nowuknow-nav-item">
               {isAuthenticated ? (
-                <button onClick={logout} className="nowuknow-nav-link">
+                <button onClick={handleLogout} className="nowuknow-nav-link">
                   Logout
                 </button>
               ) : (
@@ -137,7 +140,9 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
               )}
             </li>
           </ul>
-          {isLoginMenuOpen && <Login onClose={() => setIsLoginMenuOpen(false)} />}
+          {isLoginMenuOpen && (
+            <Login onClose={() => setIsLoginMenuOpen(false)} />
+          )}
         </div>
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       </nav>

@@ -8,37 +8,32 @@ import {
 } from "../services/comentarioService";
 import { Avatar } from "./";
 import "./Comentario.css";
+import { toast } from "react-toastify";
 
 const Comentario = ({ comentario, fetchComentariosByPostagem }) => {
-  const { isAuthenticated } = useAuthContext();
+  const { isAuthenticated, usuarioLogado } = useAuthContext();
   const [usuario, setUsuario] = useState(null);
   const [erro, setErro] = useState(null);
   const [editarComentario, setEditarComentario] = useState(false);
   const [textoEditado, setTextoEditado] = useState(comentario.comentario_texto);
 
-  useEffect(() => {
-    const loadUsuario = async () => {
-      try {
-        const dadosUsuario = await fetchUsuarioLogado();
-        console.log("dadosUsuario:", dadosUsuario);
-        setUsuario(dadosUsuario);
-      } catch (error) {
-        setErro("Erro ao carregar os dados do usuário.");
-        console.error(error);
-      }
-    };
-    if (isAuthenticated) {
-      loadUsuario();
-    }
-  }, []);
-
   const handleEditarComentario = () => {
     setEditarComentario(true);
   };
 
+  const formattedDate = new Intl.DateTimeFormat("pt-BR", {
+    day: "numeric",
+    month: "long", // Exibe o mês por extenso
+    year: "numeric",
+  }).format(new Date(comentario.comentario_data));
+
   const handleTextoEditado = (evento) => {
     setTextoEditado(evento.target.value);
   };
+
+  useEffect(() => {
+    setUsuario(usuarioLogado);
+  }, [usuarioLogado]);
 
   const handleSalvarEdicao = async () => {
     const comentarioEditado = { texto: textoEditado };
@@ -46,18 +41,19 @@ const Comentario = ({ comentario, fetchComentariosByPostagem }) => {
     if (response) {
       setEditarComentario(false);
       fetchComentariosByPostagem();
+      toast.success("Comentário editado com sucesso!");
     } else {
-      console.error("Erro ao editar comentário");
+      toast.error("Erro ao editar comentário");
     }
   };
 
   const handleApagarComentario = async () => {
     const response = await deletaComentario(comentario.id);
     if (response) {
-      console.log("Comentário apagado");
+      toast.success("Comentário apagado com sucesso!");
       fetchComentariosByPostagem();
     } else {
-      console.error("Erro ao apagar comentário");
+      toast.error("Erro ao apagar comentário");
     }
   };
 
@@ -87,46 +83,43 @@ const Comentario = ({ comentario, fetchComentariosByPostagem }) => {
                     {comentario.usuario_nome}
                   </p>
                 </Link>
-                <p className="nowuknow-post-date">
-                  Publicado em:{" "}
-                  {new Date(comentario.comentario_data).toLocaleDateString(
-                    "pt-BR"
-                  )}
-                </p>
+                <p className="nowuknow-post-date">{formattedDate}</p>
               </div>
             </div>
 
-            {usuario && (usuario.id === comentario.usuario_id || usuario.tipo === "Moderador") && (
-              <div className="nowuknow-comentario-actions">
-                {editarComentario ? (
-                  <>
-                    <i
-                      className="bi bi-check nowuknow-small-icon nowuknow-green-icon"
-                      title="Salvar mudanças"
-                      onClick={handleSalvarEdicao}
-                    ></i>
-                    <i
-                      className="bi bi-x nowuknow-small-icon nowuknow-red-icon"
-                      title="Cancelar edição"
-                      onClick={() => setEditarComentario(false)}
-                    ></i>
-                  </>
-                ) : (
-                  <>
-                    <i
-                      className="bi bi-pencil nowuknow-small-icon"
-                      title="Editar comentário"
-                      onClick={handleEditarComentario}
-                    ></i>
-                    <i
-                      className="bi bi-trash nowuknow-small-icon nowuknow-red-icon"
-                      title="Apagar comentário"
-                      onClick={handleApagarComentario}
-                    ></i>
-                  </>
-                )}
-              </div>
-            )}
+            {usuario &&
+              (usuario.id === comentario.usuario_id ||
+                usuario.tipo === "Moderador") && (
+                <div className="nowuknow-comentario-actions">
+                  {editarComentario ? (
+                    <>
+                      <i
+                        className="bi bi-check nowuknow-small-icon nowuknow-green-icon"
+                        title="Salvar mudanças"
+                        onClick={handleSalvarEdicao}
+                      ></i>
+                      <i
+                        className="bi bi-x nowuknow-small-icon nowuknow-red-icon"
+                        title="Cancelar edição"
+                        onClick={() => setEditarComentario(false)}
+                      ></i>
+                    </>
+                  ) : (
+                    <>
+                      <i
+                        className="bi bi-pencil nowuknow-small-icon"
+                        title="Editar comentário"
+                        onClick={handleEditarComentario}
+                      ></i>
+                      <i
+                        className="bi bi-trash nowuknow-small-icon nowuknow-red-icon"
+                        title="Apagar comentário"
+                        onClick={handleApagarComentario}
+                      ></i>
+                    </>
+                  )}
+                </div>
+              )}
           </div>
         </div>
       </div>
