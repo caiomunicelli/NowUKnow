@@ -76,9 +76,9 @@ const CreatePost = () => {
   }, []);
 
   const handleCategoriaChange = (value) => {
-    console.log(value);
+    // console.log(value);
     setCategoriaId(value);
-    console.log(JSON.stringify(certificacoes));
+    // console.log(JSON.stringify(certificacoes));
     const categoriaIdNumerico = Number(value);
     const certificacoesPorCategoria = certificacoes.filter((certificacao) => {
       return certificacao.categoriaId === categoriaIdNumerico;

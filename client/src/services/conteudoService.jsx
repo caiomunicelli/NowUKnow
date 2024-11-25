@@ -7,10 +7,7 @@ import { getToken } from "./authService";
 
 export const publicaConteudo = async (conteudo) => {
   try {
-    console.log("Estamos no publicaConteudo", conteudo);
-    conteudo.forEach((value, key) => {
-      console.log(key, value);
-    });
+    // console.log("Estamos no publicaConteudo", conteudo);
     const token = getToken(); // Obtém o token do authService
     if (!token) throw new Error("Usuário não autenticado");
     const response = await createConteudo(conteudo, token); // Chama a API de cadastro do usuário
@@ -40,7 +37,7 @@ export const editaConteudo = async (conteudo, conteudo_id) => {
     const token = getToken(); // Obtém o token do authService
     if (!token) throw new Error("Usuário não autenticado");
     const response = await updateConteudo(conteudo, conteudo_id, token);
-    console.log("Resposta:", response);
+    // console.log("Resposta:", response);
     if (response.mensagem) {
       return response.mensagem;
     }

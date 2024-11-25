@@ -24,7 +24,7 @@ export const deletePostagem = async (postagem_id, token) => {
     const data = await response.json();
 
     if (response.ok) {
-      console.log("Sucesso:", data);
+      // console.log("Sucesso:", data);
       return data.mensagem; // Retorna a mensagem de sucesso
     } else {
       console.error("Erro retornado pela API:", data.errors || data.error);
@@ -37,7 +37,7 @@ export const deletePostagem = async (postagem_id, token) => {
 };
 
 export const updatePostagem = async (postagem, postagem_id, token) => {
-  console.log("Postagem json:", JSON.stringify(postagem));
+  // console.log("Postagem json:", JSON.stringify(postagem));
   try {
     const response = await fetch(`/api/v1/postagens/${postagem_id}`, {
       method: "PUT",
