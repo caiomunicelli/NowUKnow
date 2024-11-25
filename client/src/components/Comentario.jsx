@@ -8,6 +8,7 @@ import {
 } from "../services/comentarioService";
 import { Avatar } from "./";
 import "./Comentario.css";
+import { toast } from "react-toastify";
 
 const Comentario = ({ comentario, fetchComentariosByPostagem }) => {
   const { isAuthenticated, usuarioLogado } = useAuthContext();
@@ -40,18 +41,19 @@ const Comentario = ({ comentario, fetchComentariosByPostagem }) => {
     if (response) {
       setEditarComentario(false);
       fetchComentariosByPostagem();
+      toast.success("Comentário editado com sucesso!");
     } else {
-      console.error("Erro ao editar comentário");
+      toast.error("Erro ao editar comentário");
     }
   };
 
   const handleApagarComentario = async () => {
     const response = await deletaComentario(comentario.id);
     if (response) {
-      console.log("Comentário apagado");
+      toast.success("Comentário apagado com sucesso!");
       fetchComentariosByPostagem();
     } else {
-      console.error("Erro ao apagar comentário");
+      toast.error("Erro ao apagar comentário");
     }
   };
 

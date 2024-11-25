@@ -8,7 +8,7 @@
   --nowuknow-bg-accent: hsla(212, 29%, 36%, 1); /* Yinmn Blue (Accent) */
   --nowuknow-bg-medium: hsl(211 5% 91% / 1);
   --nowuknow-bg-medium-light: hsl(211 5% 93% / 1);
-
+  --nowuknow-bg-accent-dark: hsl(211 29.54% 18.96%);
   /* Textos */
   --nowuknow-text-primary: hsla(75, 6%, 87%, 1);
   --nowuknow-text-primary-dark: hsla(211, 53%, 11%, 1); /* Platinum */
@@ -287,7 +287,7 @@ input::file-selector-button {
 }
 
 .nowuknow-btn {
-  background-color: var(--nowuknow-border);
+  background-color: var(--nowuknow-bg-dark);
   border-radius: 20px;
 }
 .nowuknow-button2 {

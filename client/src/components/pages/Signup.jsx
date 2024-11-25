@@ -9,6 +9,13 @@ import {
 } from "../../services/usuarioService";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { Avatar } from "../";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 import "./Signup.css";
 
 function Signup({ onLoginClick }) {
@@ -256,25 +263,23 @@ function Signup({ onLoginClick }) {
           {usuario ? "Salvar Alterações" : "Cadastrar"}
         </button>
       </form>
-      {showConfirmation && (
-        <div className="nowuknow-modal">
-          <div className="nowuknow-modal-content">
-            <p>
-              Tem certeza que deseja{" "}
-              {usuario ? "salvar as alterações" : "cadastrar"}?
-            </p>
-            <button onClick={handleSubmit} className="nowuknow-btn-confirm">
-              Confirmar
-            </button>
-            <button
-              onClick={closeConfirmationModal}
-              className="nowuknow-btn-cancel"
-            >
-              Cancelar
-            </button>
-          </div>
-        </div>
-      )}
+      <Dialog open={showConfirmation} onClose={closeConfirmationModal}>
+        <DialogTitle>Confirmação</DialogTitle>
+        <DialogContent>
+          <p>
+            Tem certeza que deseja{" "}
+            {usuario ? "salvar as alterações" : "cadastrar"}?
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeConfirmationModal} color="secondary">
+            Cancelar
+          </Button>
+          <Button onClick={handleSubmit} color="primary">
+            Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
       {!usuario && (
         <p className="mt-3">
           Já tem uma conta?{" "}

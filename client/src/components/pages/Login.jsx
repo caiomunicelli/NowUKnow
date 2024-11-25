@@ -3,6 +3,7 @@ import { useAuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./Login.css";
+import { toast } from "react-toastify";
 
 function Login({ onClose }) {
   const [email, setEmail] = useState("");
@@ -17,6 +18,7 @@ function Login({ onClose }) {
     const credentials = { email, senha };
     const isLoggedIn = await login(credentials);
     if (isLoggedIn) {
+      toast.success("Login efetuado com sucesso!");
       navigate("/");
       onClose();
     } else {

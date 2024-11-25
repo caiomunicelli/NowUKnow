@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css"; // Importa os ícones
 import { Login, Avatar } from "./";
 import "./Navbar.css";
+import { toast } from "react-toastify";
 function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
   const { isAuthenticated, logout, usuarioLogado, setUsuarioLogado } =
     useAuthContext();
@@ -24,6 +25,11 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
 
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
+  const handleLogout = async () => {
+    await logout();
+    toast.success("Logout efetuado com sucesso!");
+  };
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -70,30 +76,34 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
             role="search"
             onSubmit={handleSearchSubmit}
           >
-            <Select
-              options={options}
-              value={selectedOption}
-              onChange={handleChange}
-              styles={customStyles}
-              isSearchable={false}
-              unstyled={true}
-              className={`nowuknow-search-select ${
-                isFocused ? "nowuknow-search-select-focused" : ""
-              }`}
-              menuPlacement="auto"
-              menuPosition="fixed"
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-            />
-            <input
-              type="search"
-              placeholder="Busque algum conteúdo, categoria ou autor"
-              aria-label="Search"
-              onChange={(e) => setSearchInput(e.target.value)}
-            />
-            <button className="nowuknow-btn-icon" type="submit">
-              <i className="bi bi-search"></i>
-            </button>
+            <div className="nowuknow-search-bar-with-select">
+              <Select
+                options={options}
+                value={selectedOption}
+                onChange={handleChange}
+                styles={customStyles}
+                isSearchable={false}
+                unstyled={true}
+                className={`nowuknow-search-select ${
+                  isFocused ? "nowuknow-search-select-focused" : ""
+                }`}
+                menuPlacement="auto"
+                menuPosition="fixed"
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+              <input
+                type="search"
+                placeholder="Busque algum conteúdo, categoria ou autor"
+                aria-label="Search"
+                onChange={(e) => setSearchInput(e.target.value)}
+              />
+            </div>
+            <div className="nowuknow-search-btn-separator">
+              <button className="nowuknow-btn-icon" type="submit">
+                <i className="bi bi-search"></i>
+              </button>
+            </div>
           </form>
         </div>
         <div className="nowuknow-navbar-right">
@@ -120,7 +130,7 @@ function Navbar({ isLoginMenuOpen, setIsLoginMenuOpen }) {
             )}
             <li className="nowuknow-nav-item">
               {isAuthenticated ? (
-                <button onClick={logout} className="nowuknow-nav-link">
+                <button onClick={handleLogout} className="nowuknow-nav-link">
                   Logout
                 </button>
               ) : (

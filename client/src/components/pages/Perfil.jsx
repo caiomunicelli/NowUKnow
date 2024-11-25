@@ -9,6 +9,7 @@ import { Avatar } from "../";
 import "./Perfil.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../../contexts/AuthContext";
+import { toast } from "react-toastify";
 
 const Perfil = () => {
   const { nomeusuario } = useParams();
@@ -33,7 +34,8 @@ const Perfil = () => {
   useEffect(() => {
     const loadUsuario = async () => {
       if (!nomeusuario && !isAuthenticated) {
-        navigate("/login");
+        toast.error("Por favor, faca login para ver o seu perfil!");
+        navigate("/");
         return;
       }
       const dadosUsuario =
@@ -93,15 +95,14 @@ const Perfil = () => {
     try {
       const resposta = await deletar();
       if (resposta) {
-        alert("Usuário deletado com sucesso!");
+        toast.success("Usuário deletado com sucesso!");
         logout();
         navigate("/");
       } else {
-        alert("Erro ao deletar usuário. (handleDeletarUsuario)");
+        toast.error("Erro ao deletar usuário.");
       }
     } catch (error) {
-      setErro("Erro ao deletar o usuário. (handleDeletarUsuario)");
-      console.error(error);
+      toast.error("Erro ao deletar usuário.");
     }
   };
 
@@ -119,7 +120,8 @@ const Perfil = () => {
         <h1>
           {perfilUsuarioLogado ? "Meu Perfil" : `Perfil de ${usuario.nome}`}
         </h1>
-        {perfilUsuarioLogado && (
+        {(perfilUsuarioLogado ||
+          (usuarioLogado && usuarioLogado.tipo == "Moderador")) && (
           <div className="perfil-acoes">
             <button
               onClick={() => navigate("/editarPerfil", { state: { usuario } })}

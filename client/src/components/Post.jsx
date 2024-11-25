@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Avatar } from "./";
 import Feedback from "./Feedback";
 import "./Post.css";
-
+import { toast } from "react-toastify";
 const Post = ({ postagemId, post, comentarioCount, full, onDelete }) => {
   const [postagem, setPostagem] = useState(post);
   const { isAuthenticated, usuarioLogado } = useAuthContext();
@@ -31,13 +31,13 @@ const Post = ({ postagemId, post, comentarioCount, full, onDelete }) => {
     try {
       const sucesso = await deletaPostagem(postagemId);
       if (sucesso) {
-        alert("Postagem excluída com sucesso!");
+        toast.success("Postagem excluída com sucesso!");
         onDelete(postagemId); // Notifica o componente pai
       } else {
-        alert("Erro ao excluir a postagem.");
+        toast.error("Erro ao excluir a postagem.");
       }
     } catch (error) {
-      console.error("Erro ao excluir postagem:", error);
+      toast.error("Erro ao excluir postagem.");
     }
   };
 
@@ -78,13 +78,20 @@ const Post = ({ postagemId, post, comentarioCount, full, onDelete }) => {
                   )}
                 </div>
               ) : post.conteudo_tipo === "Material_de_Aprendizado" ? (
-                <a
-                  href={post.conteudo_url}
-                  download
-                  className="nowuknow-download-button"
-                >
-                  Baixar Material
-                </a>
+                <div>
+                  <a
+                    href={post.conteudo_url}
+                    download
+                    className="nowuknow-download-button"
+                  >
+                    Baixar Material
+                  </a>
+                  {full && (
+                    <p className="nowuknow-post-descricao">
+                      {post.conteudo_descricao}
+                    </p>
+                  )}
+                </div>
               ) : (
                 <p>Tipo de conteúdo não suportado.</p>
               )}

@@ -10,6 +10,7 @@ import {
   editaDiscussao,
 } from "../../services/discussaoService";
 import { publicaConteudo, editaConteudo } from "../../services/conteudoService";
+import { toast } from "react-toastify";
 
 const CreatePost = () => {
   const { error } = useAuthContext();
@@ -113,7 +114,7 @@ const CreatePost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !tipoPostagem || !categoriaId) {
-      alert("Preencha todos os campos obrigatórios.");
+      toast.warning("Preencha todos os campos obrigatórios.");
       return;
     }
 
@@ -164,13 +165,17 @@ const CreatePost = () => {
             await publicaConteudo(conteudoData);
           }
         }
-
+        if (postagem) {
+          toast.success("Postagem editada com sucesso.");
+        } else {
+          toast.success("Postagem criada com sucesso.");
+        }
         navigate("/");
       } else {
-        alert("Erro ao cadastrar ou editar postagem.");
+        toast.error("Erro ao cadastrar ou editar postagem.");
       }
     } catch (error) {
-      alert("Erro na requisição: " + error.message);
+      toast.error("Erro ao cadastrar ou editar postagem.");
     } finally {
       setIsUploading(false);
     }

@@ -3,3 +3,8 @@
   flex-direction: column;
   color: var(--nowuknow-text-muted);
 }
+
+.nowuknow-novo-comentario {
+  border-radius: 20px;
+  margin: 1rem;
+}

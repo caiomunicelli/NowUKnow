@@ -54,7 +54,7 @@ const NovoComentario = ({ postagemId, onComentarioCriado }) => {
 
   return (
     <div className="nowuknow-novocomentario-container">
-      <div className="nowuknow-comentario">
+      <div className="nowuknow-nono-comentario">
         <textarea
           id="novoComentario"
           className="nowuknow-input"
