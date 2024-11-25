@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
   const atualizaUsuarioLogado = async () => {
     if (isAuthenticated) {
-      console.log("Estou chamando o fetchUsuarioLogado");
+      // console.log("Estou chamando o fetchUsuarioLogado");
       let usuarioData = await fetchUsuarioLogado();
       delete usuarioData.senha;
       setUsuarioLogado(usuarioData);
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
       const data = await loginUsuario(credentials);
       saveToken(data.token); // Salva o token no cookie
       setIsAuthenticated(true); // Atualiza o estado para refletir que o usuário está autenticado
-      console.log("login feito");
+      // console.log("login feito");
       setError(null); // Limpa qualquer erro de autenticação
       return true;
     } catch (error) {

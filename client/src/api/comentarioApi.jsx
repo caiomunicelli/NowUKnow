@@ -24,10 +24,10 @@ export const deleteComentario = async (comentario_id, token) => {
     const data = await response.json();
 
     if (response.ok) {
-      console.log("Sucesso:", data);
+      // console.log("Sucesso:", data);
       return data.mensagem; // Retorna a mensagem de sucesso
     } else {
-      console.error("Erro retornado pela API:", data.errors || data.error);
+      // console.error("Erro retornado pela API:", data.errors || data.error);
       return data.errors || data.error; // Retorna os erros da API
     }
   } catch (error) {
@@ -37,7 +37,7 @@ export const deleteComentario = async (comentario_id, token) => {
 };
 
 export const updateComentario = async (comentario, comentario_id, token) => {
-  console.log("Comentario json:", JSON.stringify(comentario));
+  // console.log("Comentario json:", JSON.stringify(comentario));
   try {
     const response = await fetch(`/api/v1/comentarios/${comentario_id}`, {
       method: "PUT",
@@ -45,7 +45,7 @@ export const updateComentario = async (comentario, comentario_id, token) => {
       body: JSON.stringify(comentario),
     });
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     return data;
   } catch (error) {
     console.error("Erro nos comentários:", error);

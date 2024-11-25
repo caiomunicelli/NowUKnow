@@ -38,7 +38,7 @@ export const updateConteudo = async (conteudo, conteudo_id, token) => {
       body: conteudo,
     });
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     return data;
   } catch (error) {
     console.error("Erro interno do servidor:", error);
