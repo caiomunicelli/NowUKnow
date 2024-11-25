@@ -29,6 +29,22 @@ router.post("/", verifyJWT, async (req, res) => {
   }
 });
 
+// Rota: Buscar postagem por ID (GET /postagem/:id)
+router.get("/postagem/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const resultado = await postagemController.listarPostagemPorId(id);
+    if (!resultado.sucesso) {
+      return res.status(404).json({ erros: resultado.erros });
+    }
+    res.status(200).json(resultado.postagem); // Retorna a postagem encontrada
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Erro ao buscar postagem", details: error.message });
+  }
+});
+
 router.delete("/:id", verifyJWT, async (req, res) => {
   try {
     const resultado = await postagemController.deletarPostagem(req.params.id);
@@ -36,6 +52,32 @@ router.delete("/:id", verifyJWT, async (req, res) => {
       return res.status(404).json({ errors: resultado.erros });
     }
     res.status(200).json({ mensagem: resultado.mensagem }); // Retorna a mensagem de sucesso
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Erro ao deletar postagem", details: error.message });
+  }
+});
+
+router.put("/:id", verifyJWT, async (req, res) => {
+  const { titulo, tipoPostagem, autorId, categoriaId, certificacaoId } =
+    req.body;
+  console.log("Body:", req.body);
+  try {
+    const resultado = await postagemController.atualizarPostagem(
+      req.params.id,
+      titulo,
+      tipoPostagem,
+      req.usuarioId,
+      categoriaId,
+      certificacaoId
+    );
+    if (!resultado.sucesso) {
+      return res.status(404).json({ errors: resultado.erros });
+    }
+    res.status(200).json({
+      mensagem: resultado.mensagem,
+    });
   } catch (error) {
     res
       .status(500)
@@ -84,6 +126,19 @@ router.get("/allDetails/autor/:id", async (req, res) => {
     const { id } = req.params;
     const resultado =
       await postagemController.listarPostagensComDetalhesPorAutorId(id);
+    res.status(200).json(resultado.postagens); // Retorna a lista de postagens
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Erro ao buscar postagens", details: error.message });
+  }
+});
+
+router.get("/allDetails/feedback/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const resultado =
+      await postagemController.listarPostagenmComDetalhesPorUsuarioFeedback(id);
     res.status(200).json(resultado.postagens); // Retorna a lista de postagens
   } catch (error) {
     res

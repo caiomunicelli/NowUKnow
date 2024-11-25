@@ -100,21 +100,30 @@ class ComentarioRepository {
   async getComentariosPorPostagem(postagemId) {
     const connection = await this.dbConnection.connect();
     const [rows] = await connection.execute(
-      "SELECT * FROM Comentarios WHERE postagem_id = ?",
+      `
+
+      SELECT 
+        c.id AS id,
+        c.texto AS comentario_texto,
+        c.data_comentario AS comentario_data,
+        u.nome AS usuario_nome_completo,
+        u.usuario AS usuario_nome,
+        u.id AS usuario_id,
+        u.imagem AS usuario_imagem
+      FROM 
+        Comentarios c
+      JOIN 
+        Usuarios u ON c.usuario_id = u.id
+      WHERE 
+        c.postagem_id = ?
+      ORDER BY 
+        c.data_comentario DESC;
+
+      `,
       [postagemId]
     );
 
-    return rows.map(
-      (row) =>
-        new Comentario(
-          row.id,
-          row.postagem_id,
-          row.usuario_id,
-          row.texto,
-          row.parent_id,
-          row.data_comentario
-        )
-    );
+    return rows;
   }
 }
 

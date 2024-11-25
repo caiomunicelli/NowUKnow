@@ -12,9 +12,13 @@ import {
   Perfil,
   About,
   PrivateRoute,
+  CreateCategoria,
   Categorias,
   Categoria,
+  Postagem,
   Sidebar,
+  Resultados,
+  Certificacao
 } from "./components";
 import {
   BrowserRouter as Router,
@@ -23,6 +27,8 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 function App() {
   const [isLoginMenuOpen, setIsLoginMenuOpen] = useState(false);
@@ -43,6 +49,9 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/categorias" element={<Categorias />} />
                 <Route path="/categoria/:id" element={<Categoria />} />
+                <Route path="/postagem/:id" element={<Postagem />} />
+                <Route path="/certificacao/:id" element={<Certificacao />} />
+                <Route path="/resultados" element={<Resultados />} />
                 <Route
                   path="/signup"
                   element={
@@ -60,6 +69,8 @@ function App() {
                     </PrivateRoute>
                   }
                 />
+                <Route path="/perfil/:nomeusuario" element={<Perfil />} />
+
                 <Route
                   path="/editarPerfil"
                   element={
@@ -73,6 +84,22 @@ function App() {
                   element={
                     <PrivateRoute>
                       <CreatePost />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/editarPost"
+                  element={
+                    <PrivateRoute>
+                      <CreatePost />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/createCategoria"
+                  element={
+                    <PrivateRoute>
+                      <CreateCategoria />
                     </PrivateRoute>
                   }
                 />

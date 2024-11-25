@@ -1,10 +1,9 @@
 class Avaliacao {
-    constructor(id, usuarioId, postagemId, nota, comentario, dataAvaliacao) {
+    constructor(id, usuarioId, postagemId, feedback, dataAvaliacao) {
         this.id = id;
         this.usuarioId = usuarioId;
         this.postagemId = postagemId;
-        this.nota = nota;
-        this.comentario = comentario || null;
+        this.feedback = feedback; // Deve ser 'positivo' ou 'negativo'
         this.dataAvaliacao = dataAvaliacao || new Date();
     }
 }

@@ -39,6 +39,7 @@
   --nowuknow-error: hsla(0, 100%, 50%, 1); /* Error - Vermelho */
   --nowuknow-error-light: hsla(0, 100%, 70%, 1); /* Error - Vermelho Claro */
 
+  --nowuknow-danger: hsl(0, 56%, 31%); /* Error - Vermelho */
   /* Gradientes */
   --nowuknow-gradient-top: linear-gradient(
     0deg,
@@ -156,7 +157,6 @@ body {
 }
 
 .nowuknow-middle-container {
-  display: flex;
   box-sizing: border-box;
   overflow-y: auto;
   padding: 40px;
@@ -235,6 +235,16 @@ body {
 .nowuknow-form-container {
   display: flex;
   flex-direction: column;
+}
+
+.nowuknow-small-icon {
+  color: var(--nowuknow-text-muted);
+  cursor: pointer;
+  font-size: 1.5em;
+}
+
+.nowuknow-red-icon {
+  color: var(--nowuknow-danger);
 }
 
 @media (max-width: 840px) {

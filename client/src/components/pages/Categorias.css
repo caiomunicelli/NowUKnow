@@ -1,10 +1,10 @@
 .nowuknow-categoria {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid var(--nowuknow-bg-accent);
-    padding: 15px;
-    border-radius: 25px;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--nowuknow-bg-accent);
+  padding: 15px;
+  border-radius: 25px;
+  gap: 10px;
 }
 
 .nowuknow-categoria h2 {
@@ -12,27 +12,27 @@
 }
 
 .nowuknow-categorias-container {
-    padding: 20px;
-    border: 1px solid var(--nowuknow-bg-accent);
-    display: flex;
-    flex-direction: column;
-    gap: 2em;
-    border-radius: 25px;
+  padding: 20px;
+  border: 1px solid var(--nowuknow-bg-accent);
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  border-radius: 25px;
 }
 
 .nowuknow-categorias-lista {
-    display: grid;
-    /* flex-direction: column; */
-    /* align-items: center; */
-    /* align-content: stretch; */
-    justify-content: center;
-    gap: 20px;
+  display: grid;
+  /* flex-direction: column; */
+  /* align-items: center; */
+  /* align-content: stretch; */
+  justify-content: center;
+  gap: 20px;
 }
 
 .nowuknow-categoria-img-nome {
-    display: flex;
-    gap: 20px;
-    align-items: flex-end;
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
 }
 
 .nowuknow-categoria-imagem {
@@ -41,9 +41,46 @@
 }
 
 .nowuknow-categoria-btn {
-    width: 30%;
+  width: 30%;
 }
 
 .nowuknow-categoria-btn-div {
-    display: flex;
+  display: flex;
+}
+
+.nowuknow-tabs {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.nowuknow-tab {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background-color: #499ffa;
+  margin-right: 8px;
+  border-radius: 4px;
+}
+
+.nowuknow-tab.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.nowuknow-add-icon {
+  cursor: pointer;
+  font-size: 2.7rem;
+  margin-left: 15px;
+}
+
+.nowuknow-add-icon:hover {
+  color: var(--nowuknow-border);
+
+}
+
+.nowuknow-add-icon-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

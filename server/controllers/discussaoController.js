@@ -26,7 +26,19 @@ class DiscussaoController {
     return { sucesso: true, discussao };
   }
 
-  async atualizarDiscussao(id, tipo_discussao, texto) {
+  async listarDiscussaoPorPostagemId(postagem_id) {
+    const discussao = await discussaoRepository.getDiscussaoByPostagemId(
+      postagem_id
+    );
+    if (!discussao) {
+      return {
+        sucesso: false,
+        erros: [{ campo: "id", mensagem: "Discussão não encontrada." }],
+      };
+    }
+    return { sucesso: true, discussao };
+  }
+  async atualizarDiscussao(id, postagem_id, tipo_discussao, texto) {
     const discussaoExistente = await discussaoRepository.getDiscussaoById(id);
     if (!discussaoExistente) {
       return {
@@ -34,9 +46,17 @@ class DiscussaoController {
         erros: [{ campo: "id", mensagem: "Discussão não encontrada." }],
       };
     }
+    if (postagem_id != discussaoExistente.postagem_id) {
+      return {
+        sucesso: false,
+        erros: [
+          { campo: "postagem_id", mensagem: "Id da Postagem diferente." },
+        ],
+      };
+    }
     const discussaoAtualizada = new Discussao(
       id,
-      discussaoExistente.postagemId,
+      postagem_id,
       tipo_discussao,
       texto || discussaoExistente.texto
     );

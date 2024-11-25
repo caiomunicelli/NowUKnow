@@ -7,14 +7,13 @@ const avaliacaoController = new AvaliacaoController();
 
 // Rota: Criar uma avaliação (POST /)
 router.post("/", verifyJWT, async (req, res) => {
-  const { usuarioId, postagemId, nota, comentario } = req.body;
+  const { postagemId, feedback } = req.body;
 
   try {
     const resultado = await avaliacaoController.criarAvaliacao(
-      usuarioId,
+      req.usuarioId,
       postagemId,
-      nota,
-      comentario
+      feedback
     );
     if (!resultado.sucesso) {
       return res.status(400).json({ erros: resultado.erros });
@@ -58,12 +57,12 @@ router.get("/:id", async (req, res) => {
 // Rota: Atualizar avaliação (PUT /:id)
 router.put("/:id", verifyJWT, async (req, res) => {
   const { id } = req.params;
-  const { nota, comentario } = req.body;
+  const { feedback } = req.body;
+
   try {
     const resultado = await avaliacaoController.atualizarAvaliacao(
       id,
-      nota,
-      comentario
+      feedback
     );
     if (!resultado.sucesso) {
       return res.status(400).json({ erros: resultado.erros });
@@ -93,20 +92,18 @@ router.delete("/:id", verifyJWT, async (req, res) => {
 });
 
 // Rota: Listar avaliações por postagem (GET /postagem/:postagemId)
-router.get("/postagem/:postagemId", async (req, res) => {
-  const { postagemId } = req.params;
+router.get("/postagem/:id", async (req, res) => {
+  const { id } = req.params;
   try {
     const resultado = await avaliacaoController.listarAvaliacoesPorPostagem(
-      postagemId
+      id
     );
     res.status(200).json(resultado.avaliacoes); // Retorna as avaliações da postagem
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        error: "Erro ao buscar avaliações da postagem",
-        details: error.message,
-      });
+    res.status(500).json({
+      error: "Erro ao buscar avaliações da postagem",
+      details: error.message,
+    });
   }
 });
 

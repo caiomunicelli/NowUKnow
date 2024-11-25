@@ -1,0 +1,18 @@
+.nowuknow-feedback{
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Espaçamento entre os itens */
+  }
+  
+  .nowuknow-feedback-icon {
+    font-size: 1.5rem; /* Aumenta o tamanho dos ícones */
+    color: var(--nowuknow-bg-accent); /* Cor padrão do ícone */
+    cursor: pointer; /* Cursor de pointer ao passar */
+    transition: all 0.3s ease-in-out; /* Transição suave para hover e active */
+  }
+  
+  .nowuknow-feedback-icon:hover {
+    border: 2px solid rgb(12, 26, 41); /* Borda azul clara no hover */
+  }
+  
+ 

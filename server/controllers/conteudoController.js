@@ -65,7 +65,7 @@ class ConteudoController {
     return { sucesso: true, conteudo };
   }
 
-  async atualizarConteudo(id, postagem_id, tipo_conteudo, url, descricao) {
+  async atualizarConteudo(id, postagem_id, tipo_conteudo, arquivo, descricao) {
     const conteudoExistente = await conteudoRepository.getConteudoById(id);
     if (!conteudoExistente) {
       return {
@@ -78,8 +78,9 @@ class ConteudoController {
       id,
       postagem_id,
       tipo_conteudo,
-      url,
-      descricao || conteudoExistente.descricao
+      conteudoExistente.url || null,
+      descricao || conteudoExistente.descricao,
+      arquivo
     );
     const validacao = this.validarDados(conteudoAtualizado);
 
@@ -90,7 +91,7 @@ class ConteudoController {
     const resultadoAtualizacao = await conteudoRepository.updateConteudo(
       conteudoAtualizado
     );
-    return { sucesso: true, conteudo: resultadoAtualizacao };
+    return { sucesso: true, mensagem: resultadoAtualizacao };
   }
 
   async deletarConteudo(id) {

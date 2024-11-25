@@ -27,3 +27,7 @@
 .perfil-dados p strong {
   font-weight: bold;
 }
+
+.perfil-tabs {
+  display: flex;
+}

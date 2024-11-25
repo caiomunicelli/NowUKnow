@@ -7,6 +7,8 @@ import {
   deleteCategoria,
 } from "../api/categoriaApi";
 
+import { getToken } from "../services/authService";
+
 export const fetchCategorias = async () => {
   try {
     const categorias = await getCategorias(); // Chama a API para obter todas as categorias
@@ -31,7 +33,10 @@ export const fetchCategoriaPorId = async (id) => {
 
 export const criarCategoria = async (categoria) => {
   try {
-    const novaCategoria = await createCategoria(categoria); // Chama a API para criar uma categoria
+    const token = getToken();
+    if (!token) throw new Error("Usuário não autenticado");
+
+    const novaCategoria = await createCategoria(categoria, token); // Chama a API para criar uma categoria
     if (!novaCategoria) throw new Error("Erro ao criar categoria");
     return novaCategoria;
   } catch (error) {

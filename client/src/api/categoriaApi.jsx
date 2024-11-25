@@ -22,7 +22,7 @@ export const getCategorias = async () => {
 
 export const getCategoriaById = async (id) => {
   try {
-    const response = await fetch(`/api/categorias/${id}`, {
+    const response = await fetch(`/api/v1/categorias/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -42,14 +42,12 @@ export const getCategoriaById = async (id) => {
   }
 };
 
-export const createCategoria = async (categoria) => {
+export const createCategoria = async (categoria, token) => {
   try {
-    const response = await fetch("/api/categorias", {
+    const response = await fetch("/api/v1/categorias/", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(categoria),
+      headers: { "x-access-token": token },
+      body: categoria,
     });
 
     if (response.ok) {
@@ -67,7 +65,7 @@ export const createCategoria = async (categoria) => {
 
 export const updateCategoria = async (id, categoria) => {
   try {
-    const response = await fetch(`/api/categorias/${id}`, {
+    const response = await fetch(`/api/v1/categorias/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -90,7 +88,7 @@ export const updateCategoria = async (id, categoria) => {
 
 export const deleteCategoria = async (id) => {
   try {
-    const response = await fetch(`/api/categorias/${id}`, {
+    const response = await fetch(`/api/v1/categorias/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

@@ -99,6 +99,16 @@ class UserRepository {
     return user; // Chama o método para pegar a URL da imagem
   }
 
+  async queryAutor(query) {
+    const connection = await this.dbConnection.connect();
+    const [rows] = await connection.execute(
+      "SELECT * FROM Usuarios WHERE usuario LIKE ? OR nome LIKE ?",
+      [`%${query}%`, `%${query}%`]
+    );
+    const users = rows; // Retorna o usuário encontrado ou undefined
+    return users; // Chama o método para pegar a URL da imagem
+  }
+
   async updateUser(usuario) {
     const connection = await this.dbConnection.connect();
     const hashedPassword = usuario.senha
@@ -185,6 +195,32 @@ class UserRepository {
     );
     console.log(result);
     return result.affectedRows > 0; // Retorna true se o usuário foi deletado
+  }
+
+  async removerFotoPerfil(idUsuario) {
+    const connection = await this.dbConnection.connect();
+
+    const usuarioExistente = await this.getUserById(idUsuario);
+    if (!usuarioExistente) {
+      throw new Error("Usuário não encontrado.");
+    }
+
+    if (usuarioExistente.imagem) {
+      try {
+        await this.S3Provider.connect();
+        await this.S3Provider.deleteFile(usuarioExistente.imagem);
+      } catch (error) {
+        console.error("Erro ao remover imagem do S3:", error);
+        throw new Error("Falha ao remover a imagem.");
+      }
+    }
+
+    const [result] = await connection.execute(
+      "UPDATE Usuarios SET imagem = NULL WHERE id = ?",
+      [idUsuario]
+    );
+
+    return result.affectedRows > 0; // Retorna true se a operação foi bem-sucedida
   }
 }
 

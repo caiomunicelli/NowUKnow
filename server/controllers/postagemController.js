@@ -183,6 +183,14 @@ class PostagemController {
     return { sucesso: true, postagens };
   }
 
+  async listarPostagenmComDetalhesPorUsuarioFeedback(usuarioFeedbackId) {
+    const postagens =
+      await this.postagemRepository.getPostagensWithAllDetailsByUsuarioFeedback(
+        usuarioFeedbackId
+      );
+    return { sucesso: true, postagens };
+  }
+
   // Buscar postagens por certificacaoId
   async listarPostagemPorCertificacao(certificacaoId) {
     if (!certificacaoId) {
@@ -197,9 +205,10 @@ class PostagemController {
       };
     }
 
-    const postagens = await this.postagemRepository.getPostagemByCertificacaoId(
-      certificacaoId
-    );
+    const postagens =
+      await this.postagemRepository.getPostagensWithAllDetailsByCertificacaoId(
+        certificacaoId
+      );
     if (postagens.length === 0) {
       return {
         sucesso: false,
@@ -231,7 +240,17 @@ class PostagemController {
         erros: [{ campo: "id", mensagem: "Postagem não encontrada." }],
       };
     }
-
+    if (postagemExistente.autor_id != autorId) {
+      return {
+        sucesso: false,
+        erros: [
+          {
+            campo: "autor_id",
+            mensagem: "Somente o autor da postagem pode alterá-la.",
+          },
+        ],
+      };
+    }
     const postagemAtualizada = new Postagem(
       id,
       titulo,
@@ -249,7 +268,7 @@ class PostagemController {
     const resultadoAtualizacao = await this.postagemRepository.updatePostagem(
       postagemAtualizada
     );
-    return { sucesso: true, postagem: resultadoAtualizacao };
+    return { sucesso: true, mensagem: resultadoAtualizacao };
   }
 
   // Deletar uma postagem

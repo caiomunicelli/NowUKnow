@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ErrorMessage from "../ErrorMessage";
 import { gerenciarErros } from "../../utils/validacoesUsuario";
-import { signup, editar } from "../../services/usuarioService";
+import {
+  signup,
+  editar,
+  removerFotoPerfil,
+} from "../../services/usuarioService";
 
 function Signup({ onLoginClick }) {
   const location = useLocation();
@@ -14,6 +18,7 @@ function Signup({ onLoginClick }) {
   const [senha, setPassword] = useState("");
   const [confirmSenha, setConfirmSenha] = useState("");
   const [foto, setFoto] = useState(null);
+  const [previewFoto, setPreviewFoto] = useState(null);
   const [campoAlterado, setCampoAlterado] = useState("");
   const [errors, setErrors] = useState({
     nome: "",
@@ -23,13 +28,12 @@ function Signup({ onLoginClick }) {
     confirmSenha: "",
     foto: "",
   });
+  const [tipo, setTipo] = useState("Basico");
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [limparFoto, setLimparFoto] = useState(false);
 
-  const [previewFoto, setPreviewFoto] = useState(null);
-  const [tipo, setTipo] = useState(null);
-  const [showConfirmation, setShowConfirmation] = useState(false); // Estado para controlar o modal
   const navigate = useNavigate();
 
-  // Preencher campos no modo edição
   useEffect(() => {
     if (usuario) {
       setName(usuario.nome || "");
@@ -71,17 +75,27 @@ function Signup({ onLoginClick }) {
     setFoto(file);
     setPreviewFoto(URL.createObjectURL(file));
     setCampoAlterado("foto");
+    setLimparFoto(false);
   };
 
   const handleClearFoto = () => {
     setFoto(null);
     setPreviewFoto(null);
     setCampoAlterado("foto");
+    setLimparFoto(true);
   };
 
   const handleSubmit = async () => {
     if (Object.values(errors).some((error) => error !== "")) {
       return;
+    }
+
+    if (usuario && limparFoto && !foto) {
+      const response = await removerFotoPerfil(usuario.id);
+      if (!response) {
+        console.error("Erro ao remover foto de perfil.");
+        return;
+      }
     }
 
     const formData = new FormData();
@@ -95,7 +109,7 @@ function Signup({ onLoginClick }) {
     }
 
     if (usuario) {
-      formData.append("tipo,", tipo);
+      formData.append("tipo", tipo);
       const response = await editar(formData);
       if (response) {
         navigate("/perfil");
@@ -160,7 +174,7 @@ function Signup({ onLoginClick }) {
         </div>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
-            Email
+            E-mail
           </label>
           <input
             type="email"
@@ -170,7 +184,6 @@ function Signup({ onLoginClick }) {
             onChange={handleChange}
             required
             autoComplete="off"
-            disabled={!!usuario}
           />
           <ErrorMessage message={errors.email} />
         </div>
@@ -185,7 +198,7 @@ function Signup({ onLoginClick }) {
             value={senha}
             onChange={handleChange}
             required
-            autoComplete="new-password"
+            autoComplete="off"
           />
           <ErrorMessage message={errors.senha} />
         </div>
@@ -200,7 +213,7 @@ function Signup({ onLoginClick }) {
             value={confirmSenha}
             onChange={handleChange}
             required
-            autoComplete="new-password"
+            autoComplete="off"
           />
           <ErrorMessage message={errors.confirmSenha} />
         </div>
