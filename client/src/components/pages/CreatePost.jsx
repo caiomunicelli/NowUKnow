@@ -118,6 +118,11 @@ const CreatePost = () => {
       return;
     }
 
+    if (tipoPostagem === "Conteudo" && !conteudoArquivo) {
+      toast.warning("Selecione um arquivo.");
+      return;
+    }
+
     const postData = {
       titulo: title,
       tipoPostagem: tipoPostagem,
@@ -283,26 +288,30 @@ const CreatePost = () => {
                   />
                 </div>
 
-                <div className="mb-3">
+                <div className="mb-3 nowuknow-file-preview-container">
                   <label>Arquivo de Conteúdo:</label>
-                  <input
-                    type="file"
-                    onChange={handleArquivoChange}
-                    accept="video/*,.pdf,.doc,.docx,.ppt,.pptx"
-                  />
                   {previewConteudoArquivo && (
-                    <div className="file-preview">
+                    <div className="mb-3 file-preview">
                       {tipoConteudo === "Video" ? (
-                        <video
-                          src={previewConteudoArquivo}
-                          controls
-                          style={{ width: "100%" }}
-                        />
+                        <div className="nowuknow-post-video-container">
+                          <video
+                            className="nowuknow-post-video-player"
+                            src={previewConteudoArquivo}
+                            controls
+                            style={{ width: "100%" }}
+                          />
+                        </div>
                       ) : (
                         <span>{previewConteudoArquivo}</span>
                       )}
                     </div>
                   )}
+                  <input
+                    type="file"
+                    onChange={handleArquivoChange}
+                    accept="video/*,.pdf,.doc,.docx,.ppt,.pptx"
+                    className="nowuknow-input"
+                  />
                 </div>
               </div>
             )}

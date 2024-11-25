@@ -365,7 +365,7 @@ input::file-selector-button {
   border-bottom: 2px solid var(--nowuknow-bg-accent); /* Cor da aba ativa */
 }
 
-@media (max-width: 840px) {
+@media (max-width: 960px) {
   .nowuknow-left-container,
   .nowuknow-right-container {
     display: none;

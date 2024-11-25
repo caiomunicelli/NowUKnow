@@ -324,7 +324,7 @@ body {
   background-color: var(--nowuknow-danger);
 }
 
-@media (max-width: 840px) {
+@media (max-width: 960px) {
   .nowuknow-left-container,
   .nowuknow-right-container {
     display: none;
