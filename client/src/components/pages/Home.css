@@ -37,3 +37,15 @@
     font-size: 7.2rem !important;
   }
 }
+
+@media (max-width: 650px) {
+  .nowuknow-home-container h1 {
+    font-size: 6rem !important;
+  }
+  .nowuknow-home-container h2 {
+    font-size: 4rem !important;
+  }
+  .nowuknow-home-container h3 {
+    font-size: 2.8rem !important;
+  }
+}
