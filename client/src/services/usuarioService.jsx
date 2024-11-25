@@ -27,7 +27,7 @@ export const fetchUsuarioLogado = async () => {
 
 export const signup = async (usuario) => {
   try {
-    console.log(usuario);
+    // console.log(usuario);
     const response = await signupUsuario(usuario); // Chama a API de cadastro do usuário
     if (!response) throw new Error("Erro ao cadastrar usuário no service");
     return response;
@@ -52,10 +52,7 @@ export const deletar = async () => {
 
 export const editar = async (usuario) => {
   try {
-    console.log("Editar:");
-    for (let [key, value] of usuario.entries()) {
-      console.log(`${key}:`, value);
-    }
+    // console.log("Editar:");
     const token = getToken(); // Obtém o token do authService
     if (!token) throw new Error("Usuário não autenticado");
     const response = await updateUsuario(token, usuario); // Chama a API de cadastro do usuário

@@ -10,7 +10,7 @@ const UsuariosPage = ({ usuariosFiltrados = [] }) => {
   const fetchUsuarios = async () => {
     setLoading(true);
     try {
-        console.log(JSON.stringify(usuariosFiltrados));
+        // console.log(JSON.stringify(usuariosFiltrados));
       if (usuariosFiltrados.length === 0) {
         const response = await fetch("/api/v1/usuarios/all");
         const usuariosData = await response.json();

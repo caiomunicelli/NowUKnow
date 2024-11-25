@@ -33,7 +33,7 @@ const Feed = ({ postagens }) => {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      console.log(JSON.stringify(postagens) + " posts - ");
+      // console.log(JSON.stringify(postagens) + " posts - ");
       if (postagens.length == 0) {
         const response = await fetch(`/api/v1/postagens/allDetails`);
         const newPosts = await response.json();

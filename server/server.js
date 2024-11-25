@@ -3,7 +3,7 @@ const cors = require("cors");
 const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, "./.env") });
 
-console.log(process.env.BUCKET_NAME);
+// console.log(process.env.BUCKET_NAME);
 
 const app = express();
 const port = process.env.PORT || 8080;

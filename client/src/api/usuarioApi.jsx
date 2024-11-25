@@ -1,5 +1,5 @@
 export const loginUsuario = async (credenciais) => {
-  console.log(JSON.stringify(credenciais));
+  // console.log(JSON.stringify(credenciais));
   try {
     const response = await fetch("/api/v1/usuarios/login", {
       method: "POST",
@@ -18,7 +18,7 @@ export const loginUsuario = async (credenciais) => {
 
 export const signupUsuario = async (novoUsuario) => {
   try {
-    console.log("Novo Usuario: ", novoUsuario);
+    // console.log("Novo Usuario: ", novoUsuario);
     const response = await fetch("/api/v1/usuarios", {
       method: "POST",
       body: novoUsuario,
@@ -26,7 +26,7 @@ export const signupUsuario = async (novoUsuario) => {
 
     if (response.ok) {
       const data = await response.json();
-      console.log("Sucesso: ", data);
+      // console.log("Sucesso: ", data);
       return true;
     } else {
       console.error("Erro na resposta:", response.statusText);
@@ -50,7 +50,7 @@ export const updateUsuario = async (token, updatedUsuario) => {
     const data = await response.json();
 
     if (response.ok) {
-      console.log("Sucesso:", data);
+      // console.log("Sucesso:", data);
       return data.mensagem; // Retorna a mensagem de sucesso
     } else {
       console.error("Erro retornado pela API:", data.errors || data.error);
@@ -72,7 +72,7 @@ export const getUsuarioAtual = async (token) => {
     });
     if (response.ok) {
       const data = await response.json();
-      console.log("Sucesso: ", data);
+      // console.log("Sucesso: ", data);
       return data;
     }
   } catch (error) {
@@ -92,9 +92,9 @@ export const deleteUsuarioAtual = async (token) => {
 
     // Tenta processar a resposta JSON, mesmo em caso de erro
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     if (response.ok) {
-      console.log("Sucesso:", data);
+      // console.log("Sucesso:", data);
       return data.mensagem; // Retorna a mensagem de sucesso
     } else {
       console.error("Erro retornado pela API:", data.errors || data.error);
@@ -118,7 +118,7 @@ export const removerFotoUsuario = async (token) => {
     const data = await response.json();
 
     if (response.ok) {
-      console.log("Foto de perfil removida com sucesso:", data);
+      // console.log("Foto de perfil removida com sucesso:", data);
       return data.mensagem; // Retorna a mensagem de sucesso
     } else {
       console.error("Erro retornado pela API:", data.errors || data.error);
@@ -137,7 +137,7 @@ export const getUsuarioByUsername = async (username) => {
     });
     if (response.ok) {
       const data = await response.json();
-      console.log("Sucesso: ", data);
+      // console.log("Sucesso: ", data);
       return data;
     }
   } catch (error) {
