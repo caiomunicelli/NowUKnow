@@ -33,21 +33,21 @@ const About = () => {
         democrática e gratuita, com foco em certificações técnicas, com conteúdo
         feito integralmente por usuários, para usuários.
       </p>
-      <h2>Sobre a Equipe</h2>
-      <p>
-        Somos estudantes de Engenharia de Computação da Faculdade Engenheiro
-        Salvador Arena (FESA), localizada em São Bernardo do Campo. Buscamos
-        sempre incluir em nossos projetos questões sociais, trazendo soluções
-        tecnológicas que ampliem a acessibilidade à informação e serviços de
-        qualidade. Estamos sempre buscando diferentes tecnologias a fim de
-        expandir nossas habilidades e conhecimentos arquiteturais e de
-        desenvolvimento.
-      </p>
       <p>
         Nosso projeto atual procura atender aos Objetivos de Desenvolvimento
         Sustentável (ODS), utilizando a enorme comunidade da internet para
         promover o foco principal na <strong>Educação de Qualidade</strong> e{" "}
         <strong>Redução da Desigualdade</strong>.
+      </p>
+      <h2>Sobre a Equipe</h2>
+      <p>
+        Somos estudantes de Engenharia de Computação da{" "}
+        <strong>Faculdade Engenheiro Salvador Arena (FESA)</strong>, localizada
+        em São Bernardo do Campo. Buscamos sempre incluir em nossos projetos
+        questões sociais, trazendo soluções tecnológicas que ampliem a
+        acessibilidade à informação e serviços de qualidade. Estamos sempre
+        buscando diferentes tecnologias a fim de expandir nossas habilidades e
+        conhecimentos arquiteturais e de desenvolvimento.
       </p>
       <div className="integrantes-container">
         {integrantes.map((integrante, index) => (

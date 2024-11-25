@@ -1,7 +1,8 @@
 .integrantes-container {
   margin-top: 2rem;
   display: flex;
-  gap: 4rem;
+  width: 100%;
+  justify-content: space-between;
 }
 
 .integrante {
@@ -19,6 +20,7 @@
 }
 
 .sobre-container {
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
