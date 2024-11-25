@@ -256,7 +256,7 @@
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .hide-on-resize-2 {
     display: none;
   }
