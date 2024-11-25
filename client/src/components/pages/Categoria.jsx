@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Feed from "../Feed";
-import "./Categorias.css";
+import "./Categoria.css";
 
 const FeedCategoria = () => {
   const { id } = useParams();
@@ -65,31 +65,33 @@ const FeedCategoria = () => {
       {loadingCategoria ? (
         <p>Carregando detalhes da categoria...</p>
       ) : categoria ? (
-        <div className="nowuknow-categoria">
-          <div className="nowuknow-categoria-img-nome">
-            <img
-              src={categoria.imagem}
-              alt={categoria.nome}
-              className="nowuknow-categoria-imagem"
-            />
-            <h2>{categoria.nome}</h2>
+        <div>
+          <div className="nowuknow-categoria">
+            <div className="nowuknow-categoria-img-nome">
+              <img
+                src={categoria.imagem}
+                alt={categoria.nome}
+                className="nowuknow-categoria-imagem"
+              />
+              <h2>{categoria.nome}</h2>
+            </div>
+            <p>{categoria.descricao}</p>
           </div>
-          <p>{categoria.descricao}</p>
         </div>
       ) : (
         <p>Categoria não encontrada.</p>
       )}
-      <br />
-      {/* Tabs */}
       <div className="nowuknow-tabs">
         <button
-          className={`nowuknow-tab ${activeTab === "posts" ? "nowuknow-active" : ""}`}
+          className={`nowuknow-tab ${activeTab === "posts" ? "active" : ""}`}
           onClick={() => setActiveTab("posts")}
         >
           Posts
         </button>
         <button
-          className={`nowuknow-tab ${activeTab === "certificacoes" ? "nowuknow-active" : ""}`}
+          className={`nowuknow-tab ${
+            activeTab === "certificacoes" ? "active" : ""
+          }`}
           onClick={() => setActiveTab("certificacoes")}
         >
           Certificações
@@ -118,10 +120,15 @@ const FeedCategoria = () => {
                   className="nowuknow-certificacao-imagem"
                 />
                 <div className="nowuknow-certificacao-info">
-                  <Link to={`/certificacao/${cert.id}`} className="nowuknow-certificacao-nome">
+                  <Link
+                    to={`/certificacao/${cert.id}`}
+                    className="nowuknow-certificacao-nome"
+                  >
                     {cert.nome}
                   </Link>
-                  <p className="nowuknow-certificacao-descricao">{cert.descricao}</p>
+                  <p className="nowuknow-certificacao-descricao">
+                    {cert.descricao}
+                  </p>
                   <p className="nowuknow-certificacao-requisitos">
                     <strong>Requisitos:</strong> {cert.requisitos}
                   </p>

@@ -7,8 +7,19 @@ import {
   editar,
   removerFotoPerfil,
 } from "../../services/usuarioService";
+import { useAuthContext } from "../../contexts/AuthContext";
+import { Avatar } from "../";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
+import "./Signup.css";
 
 function Signup({ onLoginClick }) {
+  const { atualizaUsuarioLogado } = useAuthContext();
   const location = useLocation();
   const usuario = location.state?.usuario || null;
 
@@ -112,6 +123,7 @@ function Signup({ onLoginClick }) {
       formData.append("tipo", tipo);
       const response = await editar(formData);
       if (response) {
+        atualizaUsuarioLogado();
         navigate("/perfil");
       } else {
         console.error("Erro ao atualizar usuário.");
@@ -142,7 +154,7 @@ function Signup({ onLoginClick }) {
         onSubmit={openConfirmationModal}
         className="nowuknow-form-container"
       >
-        <div className="mb-3">
+        <div>
           <label htmlFor="nome" className="form-label">
             Nome
           </label>
@@ -157,7 +169,7 @@ function Signup({ onLoginClick }) {
           />
           <ErrorMessage message={errors.nome} />
         </div>
-        <div className="mb-3">
+        <div>
           <label htmlFor="usuario" className="form-label">
             Nome de Usuário
           </label>
@@ -172,7 +184,7 @@ function Signup({ onLoginClick }) {
           />
           <ErrorMessage message={errors.usuario} />
         </div>
-        <div className="mb-3">
+        <div>
           <label htmlFor="email" className="form-label">
             E-mail
           </label>
@@ -184,10 +196,11 @@ function Signup({ onLoginClick }) {
             onChange={handleChange}
             required
             autoComplete="off"
+            disabled={!!usuario}
           />
           <ErrorMessage message={errors.email} />
         </div>
-        <div className="mb-3">
+        <div>
           <label htmlFor="senha" className="form-label">
             Senha
           </label>
@@ -202,7 +215,7 @@ function Signup({ onLoginClick }) {
           />
           <ErrorMessage message={errors.senha} />
         </div>
-        <div className="mb-3">
+        <div>
           <label htmlFor="confirmSenha" className="form-label">
             Confirmar Senha
           </label>
@@ -217,56 +230,56 @@ function Signup({ onLoginClick }) {
           />
           <ErrorMessage message={errors.confirmSenha} />
         </div>
-        <div className="mb-3">
+        <div className="foto-form">
           <label htmlFor="foto" className="form-label">
             Foto de Perfil
           </label>
           {previewFoto && (
             <div className="nowuknow-foto-preview">
-              <img src={previewFoto} alt="Preview" />
+              <Avatar imagem={previewFoto} nome={nome} tamanho={128} />
             </div>
           )}
-          <input
-            type="file"
-            className="nowuknow-input"
-            id="foto"
-            onChange={handleFotoChange}
-            accept="image/png, image/jpeg, image/jpg"
-          />
-          {previewFoto && (
-            <button
-              type="button"
-              className="nowuknow-btn-clear"
-              onClick={handleClearFoto}
-            >
-              Limpar Foto
-            </button>
-          )}
+          <div className="nowuknow-input-form">
+            <input
+              type="file"
+              className="nowuknow-input"
+              id="foto"
+              onChange={handleFotoChange}
+              accept="image/png, image/jpeg, image/jpg"
+            />
+            {previewFoto && (
+              <button
+                type="button"
+                className="nowuknow-btn nowuknow-red"
+                onClick={handleClearFoto}
+              >
+                Limpar Foto
+              </button>
+            )}
+          </div>
           <ErrorMessage message={errors.foto} />
         </div>
         <button type="submit" className="nowuknow-btn">
           {usuario ? "Salvar Alterações" : "Cadastrar"}
         </button>
       </form>
-      {showConfirmation && (
-        <div className="nowuknow-modal">
-          <div className="nowuknow-modal-content">
-            <p>
-              Tem certeza que deseja{" "}
-              {usuario ? "salvar as alterações" : "cadastrar"}?
-            </p>
-            <button onClick={handleSubmit} className="nowuknow-btn-confirm">
-              Confirmar
-            </button>
-            <button
-              onClick={closeConfirmationModal}
-              className="nowuknow-btn-cancel"
-            >
-              Cancelar
-            </button>
-          </div>
-        </div>
-      )}
+      <Dialog open={showConfirmation} onClose={closeConfirmationModal}>
+        <DialogTitle>Confirmação</DialogTitle>
+        <DialogContent>
+          <p>
+            Tem certeza que deseja{" "}
+            {usuario ? "salvar as alterações" : "cadastrar"}?
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeConfirmationModal} color="secondary">
+            Cancelar
+          </Button>
+          <Button onClick={handleSubmit} color="primary">
+            Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
       {!usuario && (
         <p className="mt-3">
           Já tem uma conta?{" "}

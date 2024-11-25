@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { fetchFeedback, enviarFeedback, deletarFeedback, atualizarFeedback } from "../services/avaliacaoService";
+import {
+  fetchFeedback,
+  enviarFeedback,
+  deletarFeedback,
+  atualizarFeedback,
+} from "../services/avaliacaoService";
 import { useNavigate } from "react-router-dom";
 import "./Feedback.css";
-
+import { toast } from "react-toastify";
 const Feedback = ({ postagemId, usuario }) => {
   const [feedback, setFeedback] = useState({ positivos: 0, negativos: 0 });
-  const [feedbackDado, setFeedbackDado] = useState({ positivo: false, negativo: false });
+  const [feedbackDado, setFeedbackDado] = useState({
+    positivo: false,
+    negativo: false,
+  });
   const [avaliacao, setAvaliacao] = useState(null);
   const navigate = useNavigate();
 
@@ -48,7 +56,7 @@ const Feedback = ({ postagemId, usuario }) => {
 
   const handleFeedback = async (tipo) => {
     if (!usuario) {
-      navigate("/signup");
+      toast.warning("Efetue o login para dar feedback!");
       return;
     }
 
@@ -99,14 +107,22 @@ const Feedback = ({ postagemId, usuario }) => {
   return (
     <div className="nowuknow-feedback">
       <i
-        className={`nowuknow-feedback-icon ${feedbackDado.positivo ? "bi bi-hand-thumbs-up-fill" : "bi bi-hand-thumbs-up"}`}
+        className={`nowuknow-feedback-icon ${
+          feedbackDado.positivo
+            ? "bi bi-hand-thumbs-up-fill"
+            : "bi bi-hand-thumbs-up"
+        }`}
         onClick={() => handleFeedback("positivo")}
         title="Curtir"
       ></i>
       <span>{feedback.positivos}</span>
 
       <i
-        className={`nowuknow-feedback-icon ${feedbackDado.negativo ? "bi bi-hand-thumbs-down-fill" : "bi bi-hand-thumbs-down"}`}
+        className={`nowuknow-feedback-icon ${
+          feedbackDado.negativo
+            ? "bi bi-hand-thumbs-down-fill"
+            : "bi bi-hand-thumbs-down"
+        }`}
         onClick={() => handleFeedback("negativo")}
         title="Não curtir"
       ></i>

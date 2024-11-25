@@ -18,7 +18,7 @@ import {
   Postagem,
   Sidebar,
   Resultados,
-  Certificacao
+  Certificacao,
 } from "./components";
 import {
   BrowserRouter as Router,
@@ -27,6 +27,8 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -107,6 +109,7 @@ function App() {
             </div>
             <div className="nowuknow-right-container"></div>
           </main>
+          <ToastContainer />
         </div>
       </Router>
     </AuthProvider>

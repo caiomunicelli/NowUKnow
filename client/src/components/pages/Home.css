@@ -1,7 +1,39 @@
 .nowuknow-home-container {
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  width: 75%;
+}
+
+.nowuknow-home-container h1 {
+  font-size: 6vw !important;
+  margin-bottom: 2rem !important;
+}
+
+.nowuknow-home-container h2 {
+  color: var(--nowuknow-text-muted) !important;
+  margin-bottom: 2rem !important;
+}
+
+.nowuknow-home-heading {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  border-bottom: 2px solid hsl(219deg 19.59% 46.21% / 21%);
+  margin: 0 4rem !important;
+}
+
+@media (max-width: 960px) {
+  .nowuknow-home-container h1 {
+    font-size: 8rem !important;
+  }
+}
+
+@media (max-width: 840px) {
+  .nowuknow-home-container h1 {
+    font-size: 7.2rem !important;
+  }
 }

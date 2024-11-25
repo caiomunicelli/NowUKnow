@@ -63,3 +63,8 @@ button:hover {
     transform: rotate(360deg);
   }
 }
+
+.nowuknow-file-preview-container {
+  display: flex;
+  flex-direction: column;
+}

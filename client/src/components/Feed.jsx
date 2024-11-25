@@ -2,10 +2,16 @@ import React, { useState, useEffect } from "react";
 import Post from "./Post";
 import "./Feed.css";
 
-const Feed = ({postagens}) => {
+const Feed = ({ postagens }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [comentarioCount, setComentarioCount] = useState({});
+
+  const handleDeletePost = (postagemId) => {
+    setPosts((prevPosts) =>
+      prevPosts.filter((post) => post.postagem_id !== postagemId)
+    );
+  };
 
   const fetchComentarios = async () => {
     try {
@@ -17,7 +23,7 @@ const Feed = ({postagens}) => {
         acc[comentario.postagemId] = (acc[comentario.postagemId] || 0) + 1;
         return acc;
       }, {});
-      
+
       setComentarioCount(countMap);
     } catch (error) {
       console.error("Erro ao buscar comentários:", error);
@@ -27,13 +33,12 @@ const Feed = ({postagens}) => {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      console.log(JSON.stringify(postagens) + " posts - ")
-      if(postagens.length == 0){
+      console.log(JSON.stringify(postagens) + " posts - ");
+      if (postagens.length == 0) {
         const response = await fetch(`/api/v1/postagens/allDetails`);
         const newPosts = await response.json();
         setPosts(newPosts);
-      }
-      else{
+      } else {
         setPosts(postagens);
       }
     } catch (error) {
@@ -59,7 +64,9 @@ const Feed = ({postagens}) => {
               key={post.postagem_id || index}
               postagemId={post.postagem_id}
               post={post}
-              comentarioCount={comentarioCount[post.postagem_id] || 0} // Passa o número de comentários
+              comentarioCount={comentarioCount[post.postagem_id] || 0}
+              full={false} // Passa o número de comentários
+              onDelete={handleDeletePost}
             />
           ))
         ) : (

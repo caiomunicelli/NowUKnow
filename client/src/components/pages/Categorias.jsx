@@ -6,10 +6,10 @@ import { fetchUsuarioLogado } from "../../services/usuarioService";
 
 import "./Categorias.css";
 
-const CategoriasPage = ({ categoriasFiltradas = [] }) => {
+const CategoriasPage = ({ categoriasFiltradas = [], hide = false }) => {
   const [categorias, setCategorias] = useState(categoriasFiltradas);
   const [loading, setLoading] = useState(false);
-  const { isAuthenticated } = useAuthContext();
+  const { isAuthenticated, usuarioLogado } = useAuthContext();
   const [usuario, setUsuario] = useState(null);
 
   const loadCategorias = async () => {
@@ -31,20 +31,8 @@ const CategoriasPage = ({ categoriasFiltradas = [] }) => {
   }, []); // Executa a lógica ao montar o componente
 
   useEffect(() => {
-    const loadUsuario = async () => {
-      try {
-        const dadosUsuario = await fetchUsuarioLogado();
-        console.log("dadosUsuario:", dadosUsuario);
-        setUsuario(dadosUsuario);
-      } catch (error) {
-        setErro("Erro ao carregar os dados do usuário.");
-        console.error(error);
-      }
-    };
-    if (isAuthenticated) {
-      loadUsuario();
-    }
-  }, []);
+    setUsuario(usuarioLogado);
+  }, [usuarioLogado]);
 
   const navigate = useNavigate();
 
@@ -59,7 +47,7 @@ const CategoriasPage = ({ categoriasFiltradas = [] }) => {
   return (
     <div className="nowuknow-box-container">
       <div className="nowuknow-add-icon-div">
-        <h1>Categorias de Aprendizado</h1>
+        {!hide && <h1>Categorias de Aprendizado</h1>}
         {usuario && usuario.tipo === "Moderador" && (
           <i
             className="bi bi-plus-circle nowuknow-add-icon"
